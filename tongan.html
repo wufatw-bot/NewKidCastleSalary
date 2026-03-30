@@ -425,7 +425,7 @@
 //
 //  3. 貼到下方 SHEETS_CSV_URL
 // ════════════════════════════════════════════════════════════════
-const SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/1VVfknd_T3RPK2Wfh6J8c9Cdx-MAAPERDskODR6qpmgU/export?format=csv&gid=1628334000';
+// API URL defined inside loadCreds
 
 // 同安校 Google Apps Script 連結（工作輸入 & 後台）
 const TA_INPUT_URL = 'https://script.google.com/macros/s/AKfycbzBHEndqfatexVF5ZgDQDwH8yWJorcxclbtvCSxvXyxZCFDjrNbAHmIPTWzUX322uNr/exec';
@@ -474,20 +474,12 @@ function showDebug(msg) {
 async function loadCreds() {
   if (_creds) return _creds;
   try {
-    const res = await fetch(SHEETS_CSV_URL);
-    if (!res.ok) { showDebug('❌ HTTP ' + res.status + '：請確認 Sheets 已「發布到網路」'); return null; }
-    const text = await res.text();
-    if (text.trim().startsWith('<')) { showDebug('❌ 回傳 HTML，Sheets 尚未公開\n請：檔案→共用→發布到網路→CSV'); return null; }
-    showDebug('✅ CSV 原始內容:\n' + text.trim());
-    const rows = text.trim().split(/\r?\n/).slice(1);
-    _creds = rows
-      .filter(r => r.trim())
-      .map(row => {
-        const cols = parseCSVRow(row);
-        return { u: String(cols[0]||'').trim(), p: String(cols[1]||'').trim(), role: (cols[2]||'input').trim(), n: (cols[3]||'').trim() };
-      })
-      .filter(x => x.u && x.p);
-    showDebug('✅ 帳號列表：' + _creds.map(x => '"'+x.u+'" role='+x.role).join('、'));
+    const res = await fetch('https://script.google.com/macros/s/AKfycbzBHEndqfatexVF5ZgDQDwH8yWJorcxclbtvCSxvXyxZCFDjrNbAHmIPTWzUX322uNr/exec?action=getUsers');
+    if (!res.ok) { showDebug('❌ HTTP ' + res.status); return null; }
+    const json = await res.json();
+    if (!json.success) { showDebug('❌ API 錯誤：' + json.message); return null; }
+    _creds = json.users;
+    showDebug('✅ [同安] 帳號列表：' + _creds.map(x => '"'+x.u+'" '+x.role).join('、'));
     return _creds;
   } catch(e) {
     showDebug('❌ 讀取失敗：' + e.message);
@@ -505,13 +497,9 @@ function saveLocalUsers(arr) {
 
 // 統一取得帳密（Sheets 優先，失敗則 localStorage）
 async function getAllUsers() {
-  if (SHEETS_CSV_URL.includes('YOUR_SHEET_ID')) {
-    // 尚未設定 Sheets，使用 localStorage
-    return getLocalUsers();
-  }
   const creds = await loadCreds();
-  if (creds) return creds;
-  return getLocalUsers(); // Sheets 讀取失敗時的備援
+  if (creds && creds.length > 0) return creds;
+  return getLocalUsers(); // API 失敗時備援至 localStorage
 }
 
 // ── 分頁切換 ──
