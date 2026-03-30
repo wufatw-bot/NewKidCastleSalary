@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>🏮 莊敬校 – 吉的堡薪資系統</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #faf6ee;
+      --warm: #e8dcc8;
+      --brown: #8b6f47;
+      --text-dark: #2c2018;
+      --text-mid: #5a4a35;
+      --text-light: #8a7560;
+      --gold: #c9922a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+    /* NAV */
+    .nav {
+      background: linear-gradient(90deg, #6b4f2e 0%, #8b6f47 50%, #6b4f2e 100%);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 20;
+    }
+    .nav-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fef3dc;
+      letter-spacing: 2px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    .nav-back {
+      font-size: 14px;
+      color: rgba(254,243,220,0.75);
+      text-decoration: none;
+      border: 1px solid rgba(254,243,220,0.35);
+      border-radius: 999px;
+      padding: 4px 14px;
+      transition: background .2s;
+    }
+    .nav-back:hover { background: rgba(255,255,255,0.15); color: #fef3dc; }
+    /* DIVIDER */
+    .divider {
+      width: 100%;
+      height: 14px;
+      background: repeating-linear-gradient(90deg, #c9a96e 0px, #c9a96e 8px, #e8d5b0 8px, #e8d5b0 16px);
+      flex-shrink: 0;
+    }
+    /* TABS */
+    .tabs {
+      display: flex;
+      background: var(--warm);
+      border-bottom: 2px solid #c9a96e;
+      flex-shrink: 0;
+    }
+    .stab {
+      flex: 1;
+      padding: 14px 0;
+      text-align: center;
+      cursor: pointer;
+      font-family: 'Noto Serif TC', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-light);
+      border-bottom: 3px solid transparent;
+      transition: .2s;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      background: var(--warm);
+    }
+    .stab:hover { background: #ede4d0; color: var(--text-mid); }
+    .stab.active { color: #8b3a1a; border-bottom-color: #8b3a1a; background: var(--cream); }
+    .stab.active.tab-admin2 { color: #7c2d12; border-bottom-color: #7c2d12; }
+    /* USER MANAGE */
+    .user-manage { padding: 16px 20px; overflow-y: auto; }
+    .um-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-mid);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .um-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .um-num { font-size: 14px; font-weight: 700; color: var(--text-light); width: 22px; flex-shrink: 0; text-align: right; }
+    .um-input {
+      flex: 1;
+      padding: 8px 10px;
+      border: 1.5px solid var(--warm);
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'Noto Sans TC', sans-serif;
+      color: var(--text-dark);
+      background: var(--cream);
+      outline: none;
+    }
+    .um-input:focus { border-color: #9d6b3a; }
+    .um-perm { display: flex; gap: 6px; flex-shrink: 0; }
+    .um-perm-label {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-mid);
+      cursor: pointer;
+      background: var(--warm);
+      border-radius: 6px;
+      padding: 5px 9px;
+      border: 1.5px solid transparent;
+      transition: .15s;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .um-perm-label:has(input:checked) { border-color: var(--gold); background: #fff8ee; color: var(--brown); }
+    .um-perm-label input { width: 14px; height: 14px; accent-color: var(--gold); cursor: pointer; }
+    .um-save-btn {
+      margin-top: 10px;
+      padding: 12px 32px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #7c2d12 0%, #a84332 100%);
+      color: #fef3dc;
+      font-family: 'Noto Serif TC', serif;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+    .um-save-btn:hover { opacity: 0.85; }
+    .um-ok { font-size: 14px; color: #7c2d12; font-weight: 700; min-height: 20px; margin-top: 6px; }
+    .um-divider { border: none; border-top: 1px dashed #c9a96e; margin: 14px 0; }
+    .logout-btn {
+      font-size: 14px;
+      color: var(--text-light);
+      background: none;
+      border: 1px solid #c9a96e;
+      border-radius: 999px;
+      padding: 4px 16px;
+      cursor: pointer;
+      font-family: 'Noto Sans TC', sans-serif;
+      margin-left: auto;
+      display: block;
+    }
+    .logout-btn:hover { background: var(--warm); }
+    /* LOGIN */
+    .login-screen {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(ellipse at 30% 70%, rgba(139,58,26,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 75% 25%, rgba(201,146,42,0.07) 0%, transparent 55%),
+        var(--cream);
+      padding: 24px;
+    }
+    .login-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 36px 40px;
+      box-shadow: 0 0 0 3px #c9a96e, 0 0 0 5px #e8d5b0, 0 12px 40px rgba(0,0,0,0.13);
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      position: relative;
+    }
+    .login-icon { font-size: 44px; text-align: center; }
+    .login-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-dark);
+      text-align: center;
+      letter-spacing: 2px;
+    }
+    .login-sub { font-size: 14px; color: var(--text-light); text-align: center; letter-spacing: 1px; margin-top: -10px; }
+    .login-field { display: flex; flex-direction: column; gap: 6px; }
+    .login-label { font-size: 15px; font-weight: 700; color: var(--text-mid); letter-spacing: 1px; }
+    .login-input {
+      padding: 12px 14px;
+      border: 1.5px solid var(--warm);
+      border-radius: 10px;
+      font-size: 17px;
+      font-family: 'Noto Sans TC', sans-serif;
+      color: var(--text-dark);
+      background: var(--cream);
+      outline: none;
+      transition: border-color .2s;
+    }
+    .login-input:focus { border-color: #9d6b3a; }
+    .login-btn {
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #6b4f2e 0%, #9d6b3a 100%);
+      color: #fef3dc;
+      font-family: 'Noto Serif TC', serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: opacity .2s, transform .1s;
+      margin-top: 4px;
+    }
+    .login-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .login-btn:active { transform: translateY(0); }
+    .login-error { font-size: 14px; color: #c0392b; text-align: center; min-height: 18px; font-weight: 600; }
+    .login-deco {
+      position: absolute;
+      top: -18px; left: 50%; transform: translateX(-50%);
+      background: var(--warm);
+      border: 2px solid #c9a96e;
+      border-radius: 999px;
+      padding: 5px 20px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brown);
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+    /* MAIN */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      background:
+        radial-gradient(ellipse at 20% 80%, rgba(139,58,26,0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(201,146,42,0.06) 0%, transparent 50%),
+        var(--cream);
+    }
+    .panels { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+    .spanel { display: none; flex: 1; flex-direction: column; min-height: 0; }
+    .spanel.active { display: flex; }
+    /* IFRAME */
+    .frame-container {
+      flex: 1;
+      position: relative;
+      margin: 0 16px 16px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 0 3px #c9a96e, 0 0 0 5px #e8d5b0, 0 8px 32px rgba(0,0,0,0.15);
+      background: #fff;
+      min-height: 400px;
+    }
+    .frame-corner { position: absolute; width: 20px; height: 20px; z-index: 5; pointer-events: none; }
+    .fc-tl { top: 6px; left: 6px; border-top: 3px solid var(--gold); border-left: 3px solid var(--gold); border-radius: 4px 0 0 0; }
+    .fc-tr { top: 6px; right: 6px; border-top: 3px solid var(--gold); border-right: 3px solid var(--gold); border-radius: 0 4px 0 0; }
+    .fc-bl { bottom: 6px; left: 6px; border-bottom: 3px solid var(--gold); border-left: 3px solid var(--gold); border-radius: 0 0 0 4px; }
+    .fc-br { bottom: 6px; right: 6px; border-bottom: 3px solid var(--gold); border-right: 3px solid var(--gold); border-radius: 0 0 4px 0; }
+    .loading {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: var(--cream); z-index: 3; gap: 12px; transition: opacity .5s;
+    }
+    .loading.done { opacity: 0; pointer-events: none; }
+    .loading-text { font-family: 'Noto Serif TC', serif; font-size: 15px; color: var(--text-light); letter-spacing: 2px; }
+    .spinner { width: 32px; height: 32px; border: 3px solid var(--warm); border-top-color: var(--gold); border-radius: 50%; animation: spin .9s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    iframe { width: 100%; height: 100%; border: none; display: block; }
+    .footer { text-align: center; padding: 8px; font-size: 13px; color: var(--text-light); letter-spacing: 1px; flex-shrink: 0; }
+    /* FULLSCREEN */
+    .fs-toolbar { display: flex; align-items: center; padding: 6px 14px; background: #fff; border-bottom: 1px solid #e8dcc8; flex-shrink: 0; }
+    .fs-label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 15px; font-weight: 600; color: var(--text-mid); user-select: none; }
+    .fs-label input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--gold); cursor: pointer; }
+    body.fs-mode .nav, body.fs-mode .divider, body.fs-mode .tabs, body.fs-mode .footer { display: none !important; }
+    body.fs-mode .main { position: fixed; inset: 0; z-index: 100; background: var(--cream); }
+    body.fs-mode .fs-toolbar { position: relative; z-index: 101; }
+    @media (max-width: 560px) {
+      .stab { font-size: 14px; padding: 12px 4px; }
+      .nav-title { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <span class="nav-title">🏮 莊敬校 – 員工薪資系統</span>
+    <a class="nav-back" href="index.html">← 首頁</a>
+  </nav>
+  <div class="divider"></div>
+  <div class="tabs">
+    <div class="stab active" id="stab0" onclick="switchSTab(0)">🏮 莊敬校每月工作輸入</div>
+    <div class="stab tab-admin2" id="stab1" onclick="switchSTab(1)">🔑 莊敬校後台</div>
+  </div>
+
+  <div class="main">
+    <div class="panels">
+
+      <!-- ═══ 莊敬校每月工作輸入 ═══ -->
+      <div class="spanel active" id="spanel0">
+        <div class="fs-toolbar">
+          <label class="fs-label"><input type="checkbox" id="fscb0" onchange="toggleFS(this)"> 全螢幕</label>
+        </div>
+        <div class="login-screen" id="zjLogin">
+          <div class="login-card">
+            <div class="login-deco">🏮 莊敬校每月工作輸入</div>
+            <div class="login-icon">📋</div>
+            <div class="login-title">請先登入</div>
+            <div class="login-sub">請輸入您的帳號與密碼</div>
+            <div class="login-field">
+              <div class="login-label">帳號 Username</div>
+              <input class="login-input" id="zjUser" type="text" placeholder="請輸入帳號" autocomplete="username">
+            </div>
+            <div class="login-field">
+              <div class="login-label">密碼 Password</div>
+              <input class="login-input" id="zjPass" type="password" placeholder="請輸入密碼" autocomplete="current-password">
+            </div>
+            <div class="login-error" id="zjError"></div>
+            <button class="login-btn" onclick="doLoginZJ()">登 入</button>
+          </div>
+        </div>
+        <div id="zjFrame" style="display:none; flex:1; flex-direction:column; min-height:0;">
+          <div style="padding:8px 16px; display:flex; align-items:center; gap:8px; flex-shrink:0;">
+            <span id="zjWelcome" style="font-size:15px; color:var(--text-mid); font-weight:600;"></span>
+            <button class="logout-btn" onclick="doLogoutZJ()">登出</button>
+          </div>
+          <div class="frame-container" style="margin-top:0;">
+            <div class="fc-tl frame-corner"></div><div class="fc-tr frame-corner"></div>
+            <div class="fc-bl frame-corner"></div><div class="fc-br frame-corner"></div>
+            <div class="loading" id="loader0"><div class="spinner"></div><div class="loading-text">系統載入中...</div></div>
+            <iframe id="zjIframe" onload="document.getElementById('loader0').classList.add('done')" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ 莊敬校後台 ═══ -->
+      <div class="spanel" id="spanel1">
+        <div class="fs-toolbar">
+          <label class="fs-label"><input type="checkbox" id="fscb1" onchange="toggleFS(this)"> 全螢幕</label>
+        </div>
+        <div class="login-screen" id="adminLogin2">
+          <div class="login-card">
+            <div class="login-deco">🔑 管理員專區</div>
+            <div class="login-icon">🏮</div>
+            <div class="login-title">莊敬校後台</div>
+            <div class="login-sub">請輸入管理員帳號密碼</div>
+            <div class="login-field">
+              <div class="login-label">帳號 Username</div>
+              <input class="login-input" id="adminUser2" type="text" placeholder="請輸入帳號" autocomplete="username">
+            </div>
+            <div class="login-field">
+              <div class="login-label">密碼 Password</div>
+              <input class="login-input" id="adminPass2" type="password" placeholder="請輸入密碼" autocomplete="current-password">
+            </div>
+            <div class="login-error" id="loginError2"></div>
+            <button class="login-btn" onclick="doLogin2()">登 入</button>
+          </div>
+        </div>
+        <div class="frame-container" id="adminFrame2" style="display:none; flex:1; margin:0 16px 16px;">
+          <div class="fc-tl frame-corner"></div><div class="fc-tr frame-corner"></div>
+          <div class="fc-bl frame-corner"></div><div class="fc-br frame-corner"></div>
+          <div class="loading" id="loader1"><div class="spinner"></div><div class="loading-text">後台載入中...</div></div>
+          <iframe id="adminIframe2" onload="document.getElementById('loader1').classList.add('done')" allowfullscreen></iframe>
+        </div>
+      </div>
+
+    </div><!-- /panels -->
+  </div><!-- /main -->
+
+  <div class="footer">© 吉的堡托育機構 ・ 員工薪資系統</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+//  Google Sheets 帳密設定（莊敬校）
+//
+//  【設定步驟】
+//  1. Google Sheets 格式：
+//     A欄(username) | B欄(password) | C欄(role)   | D欄(name)
+//     alice         | pass123       | input       | 王小明
+//     bob           | secret        | both        | 李美華
+//     d8600010      | Shona550505   | superadmin  | 系統管理員
+//
+//     role: input / admin / both / superadmin
+//
+//  2. 「檔案」→「共用」→「發布到網路」→ CSV 格式 → 複製連結
+//  3. 貼到下方 SHEETS_CSV_URL
+//
+//  ※ 可與同安校共用同一張 Sheets（同一連結），
+//     也可各自建立獨立的 Sheets。
+// ════════════════════════════════════════════════════════════════
+const SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/1gWQOJTEvMAtlxE3rCNBT8MYRcUXVbg2f3K4ABDEkj_U/export?format=csv&gid=1519178890';
+
+// 莊敬校 Google Apps Script 連結
+const ZJ_INPUT_URL = 'https://script.google.com/macros/s/AKfycbwpAJAJhf_6HKNiTO3iz7GS2keCFkEPjb30CHQllV9iLl1amJbSbpYWUKoHnXC0luNe/exec';
+const ZJ_ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwpAJAJhf_6HKNiTO3iz7GS2keCFkEPjb30CHQllV9iLl1amJbSbpYWUKoHnXC0luNe/exec?page=admin';
+
+// ════════════════════════════════════════════════════════════════
+
+const MAX_USERS = 10;
+let _creds = null;
+
+async function loadCreds() {
+  if (_creds) return _creds;
+  try {
+    const res = await fetch(SHEETS_CSV_URL);
+    const text = await res.text();
+    const rows = text.trim().split('\n').slice(1);
+    _creds = rows.map(row => {
+      const cols = row.split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+      return { u: cols[0]||'', p: cols[1]||'', role: cols[2]||'input', n: cols[3]||'' };
+    }).filter(x => x.u && x.p);
+    return _creds;
+  } catch(e) {
+    console.error('無法讀取帳密表:', e);
+    return null;
+  }
+}
+
+function getLocalUsers() {
+  try { return JSON.parse(localStorage.getItem('users_zj') || '[]'); } catch { return []; }
+}
+function saveLocalUsers(arr) {
+  localStorage.setItem('users_zj', JSON.stringify(arr));
+}
+
+async function getAllUsers() {
+  if (SHEETS_CSV_URL.includes('YOUR_SHEET_ID')) return getLocalUsers();
+  const creds = await loadCreds();
+  return creds || getLocalUsers();
+}
+
+function switchSTab(i) {
+  document.querySelectorAll('.stab').forEach((t,j) => t.classList.toggle('active', i===j));
+  document.querySelectorAll('.spanel').forEach((p,j) => p.classList.toggle('active', i===j));
+}
+
+function autoFullscreen(idx) {
+  const cb = document.getElementById('fscb'+idx);
+  if (cb && !cb.checked) { cb.checked = true; toggleFS(cb); }
+}
+function toggleFS(cb) {
+  document.body.classList.toggle('fs-mode', cb.checked);
+  document.querySelectorAll('.fs-label input[type=checkbox]').forEach(el => {
+    if (el !== cb) el.checked = false;
+  });
+}
+function exitFullscreen() {
+  document.body.classList.remove('fs-mode');
+  document.querySelectorAll('.fs-label input[type=checkbox]').forEach(el => el.checked = false);
+}
+function roleTag(role) {
+  if (role === 'superadmin') return ' 【超級管理員】';
+  if (role === 'admin') return ' 【後台】';
+  if (role === 'both')  return ' 【輸入+後台】';
+  return ' 【工作輸入】';
+}
+
+// ── 莊敬校工作輸入 登入 ──
+async function doLoginZJ() {
+  const u = document.getElementById('zjUser').value.trim();
+  const p = document.getElementById('zjPass').value;
+  const err = document.getElementById('zjError');
+  err.textContent = '⏳ 驗證中…';
+
+  const users = await getAllUsers();
+  if (!users) { err.textContent = '❌ 無法連接帳密來源，請稍後再試'; return; }
+
+  const match = users.find(x => x.u === u && x.p === p);
+  if (match && ['input','both','superadmin'].includes(match.role)) {
+    document.getElementById('zjLogin').style.display = 'none';
+    const fd = document.getElementById('zjFrame');
+    fd.style.display = 'flex';
+    document.getElementById('zjWelcome').textContent = '👋 歡迎，' + (match.n || u) + roleTag(match.role);
+    const iframe = document.getElementById('zjIframe');
+    if (!iframe.src || iframe.src === 'about:blank') iframe.src = ZJ_INPUT_URL;
+    err.textContent = '';
+    autoFullscreen(0);
+  } else if (match && match.role === 'admin') {
+    err.textContent = '❌ 您的帳號無工作輸入權限，請切換到後台分頁';
+  } else {
+    err.textContent = '❌ 帳號或密碼錯誤，請再試一次';
+    document.getElementById('zjPass').value = '';
+  }
+}
+
+function doLogoutZJ() {
+  document.getElementById('zjFrame').style.display = 'none';
+  document.getElementById('zjLogin').style.display = 'flex';
+  document.getElementById('zjUser').value = '';
+  document.getElementById('zjPass').value = '';
+  document.getElementById('zjError').textContent = '';
+  document.getElementById('zjIframe').src = 'about:blank';
+  exitFullscreen();
+}
+
+// ── 莊敬校後台 登入 ──
+async function doLogin2() {
+  const u = document.getElementById('adminUser2').value.trim();
+  const p = document.getElementById('adminPass2').value;
+  const err = document.getElementById('loginError2');
+  err.textContent = '⏳ 驗證中…';
+
+  const users = await getAllUsers();
+  if (!users) { err.textContent = '❌ 無法連接帳密來源，請稍後再試'; return; }
+
+  const match = users.find(x => x.u === u && x.p === p);
+  if (match && match.role === 'superadmin') {
+    document.getElementById('adminLogin2').style.display = 'none';
+    showAdminPanel();
+    err.textContent = '';
+    return;
+  }
+  if (match && ['admin','both'].includes(match.role)) {
+    document.getElementById('adminLogin2').style.display = 'none';
+    const frame = document.getElementById('adminFrame2');
+    frame.style.display = 'flex';
+    const iframe = document.getElementById('adminIframe2');
+    if (!iframe.src || iframe.src === 'about:blank') iframe.src = ZJ_ADMIN_URL;
+    err.textContent = '';
+    autoFullscreen(1);
+  } else {
+    err.textContent = '❌ 帳號或密碼錯誤，或無後台權限';
+    document.getElementById('adminPass2').value = '';
+  }
+}
+
+// ── 超級管理員帳密管理 ──
+function showAdminPanel() {
+  const container = document.getElementById('spanel1');
+  document.getElementById('adminFrame2').style.display = 'none';
+  let um = document.getElementById('um_zj');
+  if (!um) {
+    um = document.createElement('div');
+    um.id = 'um_zj';
+    um.className = 'user-manage';
+    um.style.flex = '1';
+    um.style.overflowY = 'auto';
+    um.innerHTML = buildUMHtml();
+    container.appendChild(um);
+  }
+  um.style.display = 'block';
+}
+
+function buildUMHtml() {
+  const users = getLocalUsers();
+  let rows = '';
+  for (let i = 0; i < MAX_USERS; i++) {
+    const usr = users[i] || {};
+    const u = usr.u||'', p = usr.p||'', n = usr.n||'';
+    const ri = usr.role==='input' || (!usr.role && !u);
+    const ra = usr.role==='admin';
+    const rb = usr.role==='both' || (!usr.role && !!u);
+    rows += `<div class="um-row">
+      <span class="um-num">${i+1}</span>
+      <input class="um-input" id="um_n_${i}" type="text" placeholder="姓名" value="${n}" style="max-width:90px;">
+      <input class="um-input" id="um_u_${i}" type="text" placeholder="帳號" value="${u}" style="max-width:110px;">
+      <input class="um-input" id="um_p_${i}" type="password" placeholder="密碼" value="${p}" style="max-width:110px;">
+      <div class="um-perm">
+        <label class="um-perm-label"><input type="radio" name="role_${i}" value="input" ${ri?'checked':''}> 輸入</label>
+        <label class="um-perm-label"><input type="radio" name="role_${i}" value="admin" ${ra?'checked':''}> 後台</label>
+        <label class="um-perm-label"><input type="radio" name="role_${i}" value="both"  ${rb?'checked':''}> 兩者</label>
+      </div>
+    </div>`;
+  }
+  return `<div class="um-title">⚙️ 🏮 莊敬校 使用者帳密管理（最多10組）</div>
+    <div style="font-size:13px;color:var(--text-light);margin-bottom:10px;padding-left:30px;">
+      輸入＝每月工作輸入　後台＝後台系統　兩者＝皆可
+    </div>
+    ${rows}
+    <hr class="um-divider">
+    <button class="um-save-btn" onclick="saveUM()">儲 存 並 進 入 後 台</button>
+    <div class="um-ok" id="um_ok"></div>`;
+}
+
+function saveUM() {
+  const arr = [];
+  for (let i = 0; i < MAX_USERS; i++) {
+    const n = (document.getElementById(`um_n_${i}`)?.value||'').trim();
+    const u = (document.getElementById(`um_u_${i}`)?.value||'').trim();
+    const p = (document.getElementById(`um_p_${i}`)?.value||'').trim();
+    const roleEl = document.querySelector(`input[name="role_${i}"]:checked`);
+    const role = roleEl ? roleEl.value : 'input';
+    if (u && p) arr.push({ n, u, p, role });
+  }
+  saveLocalUsers(arr);
+  const ok = document.getElementById('um_ok');
+  ok.textContent = '✅ 已儲存 ' + arr.length + ' 組帳密，正在進入後台…';
+  setTimeout(() => {
+    const um = document.getElementById('um_zj');
+    if (um) um.style.display = 'none';
+    const frame = document.getElementById('adminFrame2');
+    frame.style.display = 'flex';
+    const iframe = document.getElementById('adminIframe2');
+    if (!iframe.src || iframe.src === 'about:blank') iframe.src = ZJ_ADMIN_URL;
+    autoFullscreen(1);
+  }, 1200);
+}
+
+// ESC / Enter
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && document.body.classList.contains('fs-mode')) { exitFullscreen(); return; }
+  if (e.key !== 'Enter') return;
+  const active = document.querySelector('.spanel.active');
+  if (!active) return;
+  if (active.id === 'spanel0') doLoginZJ();
+  else if (active.id === 'spanel1') doLogin2();
+});
+</script>
+</body>
+</html>
