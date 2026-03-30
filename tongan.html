@@ -436,7 +436,7 @@ const TA_ADMIN_URL = 'https://script.google.com/macros/s/AKfycbzBHEndqfatexVF5Zg
 const MAX_USERS = 10;
 let _creds = null; // 快取
 
-// ── 正確解析 CSV 一行（處理引號包覆、純數字欄位）──
+// ── 正確解析 CSV 一行（處理引號包覆、純數字欄位、前後空白）──
 function parseCSVRow(row) {
   const result = [];
   let cur = '', inQ = false;
@@ -456,25 +456,41 @@ function parseCSVRow(row) {
   return result;
 }
 
+// ── 偵錯訊息區（登入時顯示在畫面上，確認後可刪除）──
+function showDebug(msg) {
+  let el = document.getElementById('ta-debug-box');
+  if (!el) {
+    el = document.createElement('pre');
+    el.id = 'ta-debug-box';
+    el.style.cssText = 'position:fixed;bottom:0;left:0;right:0;max-height:40vh;overflow:auto;background:#1a1a1a;color:#7fff7f;font-size:12px;padding:10px 14px;z-index:9999;white-space:pre-wrap;border-top:2px solid #3a3;font-family:monospace;';
+    el.innerHTML = '<span style="color:#aaa;cursor:pointer;float:right" onclick="this.parentElement.remove()">✕ 關閉偵錯</span>\n';
+    document.body.appendChild(el);
+  }
+  el.innerHTML += msg + '\n─────\n';
+  el.scrollTop = el.scrollHeight;
+}
+
 // ── 從 Google Sheets 讀取帳密 ──
 async function loadCreds() {
   if (_creds) return _creds;
   try {
     const res = await fetch(SHEETS_CSV_URL);
+    if (!res.ok) { showDebug('❌ HTTP ' + res.status + '：請確認 Sheets 已「發布到網路」'); return null; }
     const text = await res.text();
-    console.log('[同安] CSV 內容預覽:', text.substring(0, 200));
-    const rows = text.trim().split(/\r?\n/).slice(1); // 跳過標題列，相容 \r\n
+    if (text.trim().startsWith('<')) { showDebug('❌ 回傳 HTML，Sheets 尚未公開\n請：檔案→共用→發布到網路→CSV'); return null; }
+    showDebug('✅ CSV 原始內容:\n' + text.trim());
+    const rows = text.trim().split(/\r?\n/).slice(1);
     _creds = rows
       .filter(r => r.trim())
       .map(row => {
         const cols = parseCSVRow(row);
-        return { u: String(cols[0]||''), p: String(cols[1]||''), role: cols[2]||'input', n: cols[3]||'' };
+        return { u: String(cols[0]||'').trim(), p: String(cols[1]||'').trim(), role: (cols[2]||'input').trim(), n: (cols[3]||'').trim() };
       })
       .filter(x => x.u && x.p);
-    console.log('[同安] 帳密載入:', _creds.length, '筆 →', _creds.map(x => x.u));
+    showDebug('✅ 帳號列表：' + _creds.map(x => '"'+x.u+'" role='+x.role).join('、'));
     return _creds;
   } catch(e) {
-    console.error('[同安] 無法讀取帳密表:', e);
+    showDebug('❌ 讀取失敗：' + e.message);
     return null;
   }
 }
