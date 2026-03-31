@@ -1,657 +1,463 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>🏮 莊敬校 – 吉的堡薪資系統</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --cream: #faf6ee;
-      --warm: #e8dcc8;
-      --brown: #8b6f47;
-      --text-dark: #2c2018;
-      --text-mid: #5a4a35;
-      --text-light: #8a7560;
-      --gold: #c9922a;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Noto Sans TC', sans-serif;
-      background: var(--cream);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-    }
-    /* NAV */
-    .nav {
-      background: linear-gradient(90deg, #6b4f2e 0%, #8b6f47 50%, #6b4f2e 100%);
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.25);
-      flex-shrink: 0;
-      position: relative;
-      z-index: 20;
-    }
-    .nav-title {
-      font-family: 'Noto Serif TC', serif;
-      font-size: 20px;
-      font-weight: 700;
-      color: #fef3dc;
-      letter-spacing: 2px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    }
-    .nav-back {
-      font-size: 14px;
-      color: rgba(254,243,220,0.75);
-      text-decoration: none;
-      border: 1px solid rgba(254,243,220,0.35);
-      border-radius: 999px;
-      padding: 4px 14px;
-      transition: background .2s;
-    }
-    .nav-back:hover { background: rgba(255,255,255,0.15); color: #fef3dc; }
-    /* DIVIDER */
-    .divider {
-      width: 100%;
-      height: 14px;
-      background: repeating-linear-gradient(90deg, #c9a96e 0px, #c9a96e 8px, #e8d5b0 8px, #e8d5b0 16px);
-      flex-shrink: 0;
-    }
-    /* TABS */
-    .tabs {
-      display: flex;
-      background: var(--warm);
-      border-bottom: 2px solid #c9a96e;
-      flex-shrink: 0;
-    }
-    .stab {
-      flex: 1;
-      padding: 14px 0;
-      text-align: center;
-      cursor: pointer;
-      font-family: 'Noto Serif TC', serif;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text-light);
-      border-bottom: 3px solid transparent;
-      transition: .2s;
-      user-select: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      background: var(--warm);
-    }
-    .stab:hover { background: #ede4d0; color: var(--text-mid); }
-    .stab.active { color: #8b3a1a; border-bottom-color: #8b3a1a; background: var(--cream); }
-    .stab.active.tab-admin2 { color: #7c2d12; border-bottom-color: #7c2d12; }
-    /* USER MANAGE */
-    .user-manage { padding: 16px 20px; overflow-y: auto; }
-    .um-title {
-      font-family: 'Noto Serif TC', serif;
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--text-mid);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .um-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-    .um-num { font-size: 14px; font-weight: 700; color: var(--text-light); width: 22px; flex-shrink: 0; text-align: right; }
-    .um-input {
-      flex: 1;
-      padding: 8px 10px;
-      border: 1.5px solid var(--warm);
-      border-radius: 8px;
-      font-size: 15px;
-      font-family: 'Noto Sans TC', sans-serif;
-      color: var(--text-dark);
-      background: var(--cream);
-      outline: none;
-    }
-    .um-input:focus { border-color: #9d6b3a; }
-    .um-perm { display: flex; gap: 6px; flex-shrink: 0; }
-    .um-perm-label {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-mid);
-      cursor: pointer;
-      background: var(--warm);
-      border-radius: 6px;
-      padding: 5px 9px;
-      border: 1.5px solid transparent;
-      transition: .15s;
-      user-select: none;
-      white-space: nowrap;
-    }
-    .um-perm-label:has(input:checked) { border-color: var(--gold); background: #fff8ee; color: var(--brown); }
-    .um-perm-label input { width: 14px; height: 14px; accent-color: var(--gold); cursor: pointer; }
-    .um-save-btn {
-      margin-top: 10px;
-      padding: 12px 32px;
-      border: none;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #7c2d12 0%, #a84332 100%);
-      color: #fef3dc;
-      font-family: 'Noto Serif TC', serif;
-      font-size: 17px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      cursor: pointer;
-      transition: opacity .2s;
-    }
-    .um-save-btn:hover { opacity: 0.85; }
-    .um-ok { font-size: 14px; color: #7c2d12; font-weight: 700; min-height: 20px; margin-top: 6px; }
-    .um-divider { border: none; border-top: 1px dashed #c9a96e; margin: 14px 0; }
-    .logout-btn {
-      font-size: 14px;
-      color: var(--text-light);
-      background: none;
-      border: 1px solid #c9a96e;
-      border-radius: 999px;
-      padding: 4px 16px;
-      cursor: pointer;
-      font-family: 'Noto Sans TC', sans-serif;
-      margin-left: auto;
-      display: block;
-    }
-    .logout-btn:hover { background: var(--warm); }
-    /* LOGIN */
-    .login-screen {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background:
-        radial-gradient(ellipse at 30% 70%, rgba(139,58,26,0.07) 0%, transparent 55%),
-        radial-gradient(ellipse at 75% 25%, rgba(201,146,42,0.07) 0%, transparent 55%),
-        var(--cream);
-      padding: 24px;
-    }
-    .login-card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 36px 40px;
-      box-shadow: 0 0 0 3px #c9a96e, 0 0 0 5px #e8d5b0, 0 12px 40px rgba(0,0,0,0.13);
-      width: 100%;
-      max-width: 400px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      position: relative;
-    }
-    .login-icon { font-size: 44px; text-align: center; }
-    .login-title {
-      font-family: 'Noto Serif TC', serif;
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--text-dark);
-      text-align: center;
-      letter-spacing: 2px;
-    }
-    .login-sub { font-size: 14px; color: var(--text-light); text-align: center; letter-spacing: 1px; margin-top: -10px; }
-    .login-field { display: flex; flex-direction: column; gap: 6px; }
-    .login-label { font-size: 15px; font-weight: 700; color: var(--text-mid); letter-spacing: 1px; }
-    .login-input {
-      padding: 12px 14px;
-      border: 1.5px solid var(--warm);
-      border-radius: 10px;
-      font-size: 17px;
-      font-family: 'Noto Sans TC', sans-serif;
-      color: var(--text-dark);
-      background: var(--cream);
-      outline: none;
-      transition: border-color .2s;
-    }
-    .login-input:focus { border-color: #9d6b3a; }
-    .login-btn {
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #6b4f2e 0%, #9d6b3a 100%);
-      color: #fef3dc;
-      font-family: 'Noto Serif TC', serif;
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      cursor: pointer;
-      transition: opacity .2s, transform .1s;
-      margin-top: 4px;
-    }
-    .login-btn:hover { opacity: 0.88; transform: translateY(-1px); }
-    .login-btn:active { transform: translateY(0); }
-    .login-error { font-size: 14px; color: #c0392b; text-align: center; min-height: 18px; font-weight: 600; }
-    .login-deco {
-      position: absolute;
-      top: -18px; left: 50%; transform: translateX(-50%);
-      background: var(--warm);
-      border: 2px solid #c9a96e;
-      border-radius: 999px;
-      padding: 5px 20px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--brown);
-      letter-spacing: 1px;
-      white-space: nowrap;
-    }
-    /* MAIN */
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-      background:
-        radial-gradient(ellipse at 20% 80%, rgba(139,58,26,0.05) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(201,146,42,0.06) 0%, transparent 50%),
-        var(--cream);
-    }
-    .panels { flex: 1; display: flex; flex-direction: column; min-height: 0; }
-    .spanel { display: none; flex: 1; flex-direction: column; min-height: 0; }
-    .spanel.active { display: flex; }
-    /* IFRAME */
-    .frame-container {
-      flex: 1;
-      position: relative;
-      margin: 0 16px 16px;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 0 0 3px #c9a96e, 0 0 0 5px #e8d5b0, 0 8px 32px rgba(0,0,0,0.15);
-      background: #fff;
-      min-height: 400px;
-    }
-    .frame-corner { position: absolute; width: 20px; height: 20px; z-index: 5; pointer-events: none; }
-    .fc-tl { top: 6px; left: 6px; border-top: 3px solid var(--gold); border-left: 3px solid var(--gold); border-radius: 4px 0 0 0; }
-    .fc-tr { top: 6px; right: 6px; border-top: 3px solid var(--gold); border-right: 3px solid var(--gold); border-radius: 0 4px 0 0; }
-    .fc-bl { bottom: 6px; left: 6px; border-bottom: 3px solid var(--gold); border-left: 3px solid var(--gold); border-radius: 0 0 0 4px; }
-    .fc-br { bottom: 6px; right: 6px; border-bottom: 3px solid var(--gold); border-right: 3px solid var(--gold); border-radius: 0 0 4px 0; }
-    .loading {
-      position: absolute; inset: 0;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      background: var(--cream); z-index: 3; gap: 12px; transition: opacity .5s;
-    }
-    .loading.done { opacity: 0; pointer-events: none; }
-    .loading-text { font-family: 'Noto Serif TC', serif; font-size: 15px; color: var(--text-light); letter-spacing: 2px; }
-    .spinner { width: 32px; height: 32px; border: 3px solid var(--warm); border-top-color: var(--gold); border-radius: 50%; animation: spin .9s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    iframe { width: 100%; height: 100%; border: none; display: block; }
-    .footer { text-align: center; padding: 8px; font-size: 13px; color: var(--text-light); letter-spacing: 1px; flex-shrink: 0; }
-    /* FULLSCREEN */
-    .fs-toolbar { display: flex; align-items: center; padding: 6px 14px; background: #fff; border-bottom: 1px solid #e8dcc8; flex-shrink: 0; }
-    .fs-label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 15px; font-weight: 600; color: var(--text-mid); user-select: none; }
-    .fs-label input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--gold); cursor: pointer; }
-    body.fs-mode .nav, body.fs-mode .divider, body.fs-mode .tabs, body.fs-mode .footer { display: none !important; }
-    body.fs-mode .main { position: fixed; inset: 0; z-index: 100; background: var(--cream); }
-    body.fs-mode .fs-toolbar { position: relative; z-index: 101; }
-    @media (max-width: 560px) {
-      .stab { font-size: 14px; padding: 12px 4px; }
-      .nav-title { font-size: 15px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>獎金與加班資料填報</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #F0D080;
+    --purple: #4A3F8F;
+    --purple-light: #6B5FBB;
+    --blue-btn: #3B6FE8;
+    --bg: #F4F3FA;
+    --card: #FFFFFF;
+    --text: #2D2A4A;
+    --muted: #8A87A8;
+    --red: #E86060;
+    --green: #4CAF82;
+    --border: #E2E0F0;
+    --shadow: 0 4px 24px rgba(74,63,143,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    padding: 32px 16px 48px;
+    color: var(--text);
+  }
+
+  .page-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 20px;
+    border: 2px solid var(--gold);
+    box-shadow: 0 8px 48px rgba(201,168,76,0.15);
+    padding: 40px 36px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-wrapper::before, .page-wrapper::after {
+    content: '';
+    position: absolute;
+    width: 60px; height: 60px;
+    border-color: var(--gold);
+    border-style: solid;
+  }
+  .page-wrapper::before { top: 12px; right: 12px; border-width: 0 2px 0 0; border-top: 2px solid var(--gold); }
+  .page-wrapper::after  { bottom: 12px; left: 12px; border-width: 0 0 2px 2px; }
+
+  .header { text-align: center; margin-bottom: 36px; }
+  .header .icon { font-size: 2.4rem; margin-bottom: 8px; }
+  .header h1 { font-size: 1.9rem; font-weight: 700; color: var(--purple); letter-spacing: 2px; }
+  .header p  { font-size: 0.88rem; color: var(--muted); margin-top: 6px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 960px) { .grid { grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    border: 1.5px solid var(--border);
+    padding: 24px 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--purple);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1.5px solid var(--border);
+  }
+
+  .field { margin-bottom: 18px; }
+  .field label {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .field label .required { color: var(--red); margin-left: 2px; }
+  .field label .rate {
+    color: var(--green);
+    font-size: 0.78rem;
+    margin-left: 6px;
+    font-weight: 600;
+  }
+  .field label .deduct {
+    color: var(--red);
+    font-size: 0.78rem;
+    margin-left: 6px;
+    font-weight: 600;
+  }
+
+  select, input[type="text"], input[type="month"], input[type="number"] {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.92rem;
+    font-family: 'Noto Sans TC', sans-serif;
+    color: var(--text);
+    background: #FAFAFE;
+    transition: border 0.2s, box-shadow 0.2s;
+    outline: none;
+    -webkit-appearance: none;
+  }
+  select:focus, input:focus {
+    border-color: var(--purple-light);
+    box-shadow: 0 0 0 3px rgba(107,95,187,0.12);
+  }
+
+  .hint {
+    font-size: 0.76rem;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.7;
+  }
+
+  .total-box {
+    background: linear-gradient(135deg, #FFF5E0 0%, #FFE9C8 100%);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 8px;
+  }
+  .total-box .label { font-size: 0.82rem; color: var(--gold); font-weight: 600; margin-bottom: 6px; }
+  .total-box .amount { font-size: 2.4rem; font-weight: 700; color: var(--purple); line-height: 1; }
+  .total-box .unit   { font-size: 1rem; color: var(--muted); margin-left: 4px; }
+
+  .btn-row { margin-top: 8px; }
+  .btn-preview {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(90deg, #3B6FE8 0%, #5B4FD8 100%);
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    font-family: 'Noto Sans TC', sans-serif;
+  }
+  .btn-preview:hover { opacity: 0.92; transform: translateY(-1px); }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(30,20,70,0.45);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 20px;
+    padding: 36px 32px;
+    max-width: 520px;
+    width: 100%;
+    box-shadow: 0 16px 64px rgba(74,63,143,0.22);
+  }
+  .modal h2 { font-size: 1.3rem; color: var(--purple); margin-bottom: 20px; font-weight: 700; }
+  .modal-row {
+    display: flex; justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.92rem;
+  }
+  .modal-row .k { color: var(--muted); }
+  .modal-row .v { font-weight: 600; color: var(--text); }
+  .modal-total {
+    margin-top: 16px;
+    background: linear-gradient(135deg, #FFF5E0, #FFE9C8);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .modal-total .k { font-size: 1rem; font-weight: 600; color: var(--gold); }
+  .modal-total .v { font-size: 1.8rem; font-weight: 700; color: var(--purple); }
+  .modal-btns { display: flex; gap: 12px; margin-top: 20px; }
+  .modal-btns button {
+    flex: 1; padding: 12px;
+    border-radius: 10px; border: none;
+    font-size: 0.95rem; font-weight: 600; cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    transition: opacity 0.2s;
+  }
+  .btn-cancel { background: var(--bg); color: var(--muted); }
+  .btn-submit { background: linear-gradient(90deg,#3B6FE8,#5B4FD8); color: #fff; }
+  .btn-submit:hover, .btn-cancel:hover { opacity: 0.85; }
+
+  .loading-text { color: var(--muted); font-size: 0.85rem; padding: 6px 0; }
+
+  .toast {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+    background: #2D2A4A; color: #fff;
+    padding: 12px 28px; border-radius: 30px;
+    font-size: 0.9rem; font-weight: 500;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    z-index: 200; opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .toast.show { opacity: 1; }
+</style>
 </head>
 <body>
-  <nav class="nav">
-    <span class="nav-title">🏮 莊敬校 – 員工薪資系統</span>
-    <a class="nav-back" href="index.html">← 首頁</a>
-  </nav>
-  <div class="divider"></div>
-  <div class="tabs">
-    <div class="stab active" id="stab0" onclick="switchSTab(0)">🏮 莊敬校每月工作輸入</div>
-    <div class="stab tab-admin2" id="stab1" onclick="switchSTab(1)">🔑 莊敬校後台</div>
+
+<div class="page-wrapper">
+  <div class="header">
+    <div class="icon">📋</div>
+    <h1>獎金與加班資料填報</h1>
+    <p>吉的堡莊敬校 ｜ 請確實填寫本月相關資料，每人每月僅限提交一次</p>
   </div>
 
-  <div class="main">
-    <div class="panels">
-
-      <!-- ═══ 莊敬校每月工作輸入 ═══ -->
-      <div class="spanel active" id="spanel0">
-        <div class="fs-toolbar">
-          <label class="fs-label"><input type="checkbox" id="fscb0" onchange="toggleFS(this)"> 全螢幕</label>
-        </div>
-        <div class="login-screen" id="zjLogin">
-          <div class="login-card">
-            <div class="login-deco">🏮 莊敬校每月工作輸入</div>
-            <div class="login-icon">📋</div>
-            <div class="login-title">請先登入</div>
-            <div class="login-sub">請輸入您的帳號與密碼</div>
-            <div class="login-field">
-              <div class="login-label">帳號 Username</div>
-              <input class="login-input" id="zjUser" type="text" placeholder="請輸入帳號" autocomplete="username">
-            </div>
-            <div class="login-field">
-              <div class="login-label">密碼 Password</div>
-              <input class="login-input" id="zjPass" type="password" placeholder="請輸入密碼" autocomplete="current-password">
-            </div>
-            <div class="login-error" id="zjError"></div>
-            <button class="login-btn" onclick="doLoginZJ()">登 入</button>
-          </div>
-        </div>
-        <div id="zjFrame" style="display:none; flex:1; flex-direction:column; min-height:0;">
-          <div style="padding:8px 16px; display:flex; align-items:center; gap:8px; flex-shrink:0;">
-            <span id="zjWelcome" style="font-size:15px; color:var(--text-mid); font-weight:600;"></span>
-            <button class="logout-btn" onclick="doLogoutZJ()">登出</button>
-          </div>
-          <div class="frame-container" style="margin-top:0;">
-            <div class="fc-tl frame-corner"></div><div class="fc-tr frame-corner"></div>
-            <div class="fc-bl frame-corner"></div><div class="fc-br frame-corner"></div>
-            <div class="loading" id="loader0"><div class="spinner"></div><div class="loading-text">系統載入中...</div></div>
-            <iframe id="zjIframe" onload="document.getElementById('loader0').classList.add('done')" allowfullscreen></iframe>
-          </div>
-        </div>
+  <div class="grid">
+    <!-- 基本資料 -->
+    <div class="card">
+      <div class="card-title">👤 基本資料</div>
+      <div class="field">
+        <label>姓名 <span class="required">*</span></label>
+        <select id="name">
+          <option value="">載入中...</option>
+        </select>
       </div>
-
-      <!-- ═══ 莊敬校後台 ═══ -->
-      <div class="spanel" id="spanel1">
-        <div class="fs-toolbar">
-          <label class="fs-label"><input type="checkbox" id="fscb1" onchange="toggleFS(this)"> 全螢幕</label>
-        </div>
-        <div class="login-screen" id="adminLogin2">
-          <div class="login-card">
-            <div class="login-deco">🔑 管理員專區</div>
-            <div class="login-icon">🏮</div>
-            <div class="login-title">莊敬校後台</div>
-            <div class="login-sub">請輸入管理員帳號密碼</div>
-            <div class="login-field">
-              <div class="login-label">帳號 Username</div>
-              <input class="login-input" id="adminUser2" type="text" placeholder="請輸入帳號" autocomplete="username">
-            </div>
-            <div class="login-field">
-              <div class="login-label">密碼 Password</div>
-              <input class="login-input" id="adminPass2" type="password" placeholder="請輸入密碼" autocomplete="current-password">
-            </div>
-            <div class="login-error" id="loginError2"></div>
-            <button class="login-btn" onclick="doLogin2()">登 入</button>
-          </div>
-        </div>
-        <div class="frame-container" id="adminFrame2" style="display:none; flex:1; margin:0 16px 16px;">
-          <div class="fc-tl frame-corner"></div><div class="fc-tr frame-corner"></div>
-          <div class="fc-bl frame-corner"></div><div class="fc-br frame-corner"></div>
-          <div class="loading" id="loader1"><div class="spinner"></div><div class="loading-text">後台載入中...</div></div>
-          <iframe id="adminIframe2" onload="document.getElementById('loader1').classList.add('done')" allowfullscreen></iframe>
-        </div>
+      <div class="field">
+        <label>月份 <span class="required">*</span></label>
+        <input type="month" id="month" value="">
       </div>
+      <div class="total-box">
+        <div class="label">💰 本月總獎金</div>
+        <div class="amount" id="total">0</div><span class="unit">元</span>
+      </div>
+    </div>
 
-    </div><!-- /panels -->
-  </div><!-- /main -->
+    <!-- 出勤資料 -->
+    <div class="card">
+      <div class="card-title">⏰ 出勤資料</div>
+      <div class="field">
+        <label>加班時數 <span class="rate">$170 / 小時</span></label>
+        <input type="number" id="overtime" min="0" value="0">
+      </div>
+      <div class="field">
+        <label>安親人數</label>
+        <input type="number" id="afterschool" min="0" value="0">
+        <div class="hint">15人以下：無津貼<br>16－20人：$500/人<br>21人以上：$1000/人</div>
+      </div>
+      <div class="field">
+        <label>混校人數</label>
+        <input type="number" id="mixed" min="0" value="0">
+      </div>
+    </div>
 
-  <div class="footer">© 吉的堡托育機構 ・ 員工薪資系統</div>
+    <!-- 請假資料 -->
+    <div class="card">
+      <div class="card-title">📅 請假資料</div>
+      <div class="field">
+        <label>事假時數 <span class="deduct">扣 $120 / 小時</span></label>
+        <input type="number" id="personal_leave" min="0" value="0">
+      </div>
+      <div class="field">
+        <label>病假時數 <span class="deduct">扣 $60 / 小時</span></label>
+        <input type="number" id="sick_leave" min="0" value="0">
+      </div>
+    </div>
+
+    <!-- 獎金資料 -->
+    <div class="card">
+      <div class="card-title">🎁 獎金資料</div>
+      <div class="field">
+        <label>預繳獎金</label>
+        <input type="number" id="prepaid" min="0" value="0">
+      </div>
+      <div class="field">
+        <label>考試獎金</label>
+        <input type="number" id="exam_bonus" min="0" value="0">
+      </div>
+      <div class="field">
+        <label>其他獎金</label>
+        <input type="number" id="other_bonus" min="0" value="0">
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-preview" onclick="openPreview()">預覽資料</button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2>📋 資料預覽</h2>
+    <div id="modal-content"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">返回修改</button>
+      <button class="btn-submit" onclick="submitForm()">確認提交</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-// ════════════════════════════════════════════════════════════════
-//  Google Sheets 帳密設定（莊敬校）
-//
-//  【設定步驟】
-//  1. Google Sheets 格式：
-//     A欄(username) | B欄(password) | C欄(role)   | D欄(name)
-//     alice         | pass123       | input       | 王小明
-//     bob           | secret        | both        | 李美華
-//     d8600010      | Shona550505   | superadmin  | 系統管理員
-//
-//     role: input / admin / both / superadmin
-//
-//  2. 「檔案」→「共用」→「發布到網路」→ CSV 格式 → 複製連結
-//  3. 貼到下方 SHEETS_CSV_URL
-//
-//  ※ 可與同安校共用同一張 Sheets（同一連結），
-//     也可各自建立獨立的 Sheets。
-// ════════════════════════════════════════════════════════════════
-// API URL defined inside loadCreds
+// Set default month
+const today = new Date();
+document.getElementById('month').value = today.toISOString().slice(0,7);
 
-// 莊敬校 Google Apps Script 連結
-const ZJ_INPUT_URL = 'https://script.google.com/macros/s/AKfycbwpAJAJhf_6HKNiTO3iz7GS2keCFkEPjb30CHQllV9iLl1amJbSbpYWUKoHnXC0luNe/exec';
-const ZJ_ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwpAJAJhf_6HKNiTO3iz7GS2keCFkEPjb30CHQllV9iLl1amJbSbpYWUKoHnXC0luNe/exec?page=admin';
+// Fetch names from Google Sheet (published CSV — supports CORS)
+// URL format: /pub?output=csv using the "e/..." published ID
+const PUBLISHED_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgL7mlWIHQD9Yu7oRyegwxndx-g1D4kJnY-wS0HAm1JpMK1BezydfW9xGjqZ8ksYE4i8NtqfPQPQcf/pub';
+const CSV_URL = `${PUBLISHED_BASE}?gid=0&single=true&output=csv`;
 
-// ════════════════════════════════════════════════════════════════
-
-const MAX_USERS = 10;
-let _creds = null;
-
-// ── 正確解析 CSV 一行（處理引號包覆、純數字欄位）──
-function parseCSVRow(row) {
-  const result = [];
-  let cur = '', inQ = false;
-  for (let i = 0; i < row.length; i++) {
-    const c = row[i];
-    if (c === '"') {
-      if (inQ && row[i+1] === '"') { cur += '"'; i++; }
-      else inQ = !inQ;
-    } else if (c === ',' && !inQ) {
-      result.push(cur.trim());
-      cur = '';
-    } else {
-      cur += c;
-    }
-  }
-  result.push(cur.trim());
-  return result;
-}
-
-// ── 偵錯訊息區 ──
-function showDebug(msg) {
-  let el = document.getElementById('zj-debug-box');
-  if (!el) {
-    el = document.createElement('pre');
-    el.id = 'zj-debug-box';
-    el.style.cssText = 'position:fixed;bottom:0;left:0;right:0;max-height:40vh;overflow:auto;background:#1a1a1a;color:#7fff7f;font-size:12px;padding:10px 14px;z-index:9999;white-space:pre-wrap;border-top:2px solid #3a3;font-family:monospace;';
-    el.innerHTML = '<span style="color:#aaa;cursor:pointer;float:right" onclick="this.parentElement.remove()">✕ 關閉偵錯</span>\n';
-    document.body.appendChild(el);
-  }
-  el.innerHTML += msg + '\n─────\n';
-  el.scrollTop = el.scrollHeight;
-}
-
-async function loadCreds() {
-  if (_creds) return _creds;
+async function loadNames() {
+  const sel = document.getElementById('name');
   try {
-    const res = await fetch('https://script.google.com/macros/s/AKfycbwpAJAJhf_6HKNiTO3iz7GS2keCFkEPjb30CHQllV9iLl1amJbSbpYWUKoHnXC0luNe/exec?action=getUsers');
-    if (!res.ok) { showDebug('❌ HTTP ' + res.status); return null; }
-    const json = await res.json();
-    if (!json.success) { showDebug('❌ API 錯誤：' + json.message); return null; }
-    _creds = json.users;
-    showDebug('✅ [莊敬] 帳號列表：' + _creds.map(x => '"'+x.u+'" '+x.role).join('、'));
-    return _creds;
+    const res = await fetch(CSV_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const text = await res.text();
+
+    // Parse CSV (handle quoted fields)
+    function parseCSVRow(row) {
+      const result = [];
+      let cur = '', inQ = false;
+      for (let i = 0; i < row.length; i++) {
+        const ch = row[i];
+        if (ch === '"') { inQ = !inQ; }
+        else if (ch === ',' && !inQ) { result.push(cur.trim()); cur = ''; }
+        else cur += ch;
+      }
+      result.push(cur.trim());
+      return result;
+    }
+
+    const lines = text.trim().split('\n');
+    const header = parseCSVRow(lines[0]);
+
+    // Find 姓名 column
+    let nameCol = header.findIndex(h => h.includes('姓名'));
+    if (nameCol < 0) nameCol = 0;
+
+    const names = [];
+    for (let i = 1; i < lines.length; i++) {
+      const cols = parseCSVRow(lines[i]);
+      const n = cols[nameCol];
+      if (n) names.push(n);
+    }
+
+    sel.innerHTML = '<option value="">請選擇姓名</option>';
+    names.forEach(n => {
+      const opt = document.createElement('option');
+      opt.value = n; opt.textContent = n;
+      sel.appendChild(opt);
+    });
   } catch(e) {
-    showDebug('❌ 讀取失敗：' + e.message);
-    return null;
+    sel.innerHTML = '<option value="">⚠ 無法載入，請確認試算表已發布</option>';
+    console.warn('載入姓名失敗：', e);
   }
 }
+loadNames();
 
-function getLocalUsers() {
-  try { return JSON.parse(localStorage.getItem('users_zj') || '[]'); } catch { return []; }
-}
-function saveLocalUsers(arr) {
-  localStorage.setItem('users_zj', JSON.stringify(arr));
-}
+// Calculation
+function calcTotal() {
+  const overtime = +document.getElementById('overtime').value || 0;
+  const afterschool = +document.getElementById('afterschool').value || 0;
+  const mixed = +document.getElementById('mixed').value || 0;
+  const personal = +document.getElementById('personal_leave').value || 0;
+  const sick = +document.getElementById('sick_leave').value || 0;
+  const prepaid = +document.getElementById('prepaid').value || 0;
+  const exam = +document.getElementById('exam_bonus').value || 0;
+  const other = +document.getElementById('other_bonus').value || 0;
 
-async function getAllUsers() {
-  const creds = await loadCreds();
-  if (creds && creds.length > 0) return creds;
-  return getLocalUsers(); // API 失敗時備援至 localStorage
-}
+  const overtimePay = overtime * 170;
+  let afterschoolPay = 0;
+  if (afterschool >= 21) afterschoolPay = afterschool * 1000;
+  else if (afterschool >= 16) afterschoolPay = afterschool * 500;
 
-function switchSTab(i) {
-  document.querySelectorAll('.stab').forEach((t,j) => t.classList.toggle('active', i===j));
-  document.querySelectorAll('.spanel').forEach((p,j) => p.classList.toggle('active', i===j));
-}
+  const total = overtimePay + afterschoolPay + prepaid + exam + other
+              - personal * 120 - sick * 60;
 
-function autoFullscreen(idx) {
-  const cb = document.getElementById('fscb'+idx);
-  if (cb && !cb.checked) { cb.checked = true; toggleFS(cb); }
-}
-function toggleFS(cb) {
-  document.body.classList.toggle('fs-mode', cb.checked);
-  document.querySelectorAll('.fs-label input[type=checkbox]').forEach(el => {
-    if (el !== cb) el.checked = false;
-  });
-}
-function exitFullscreen() {
-  document.body.classList.remove('fs-mode');
-  document.querySelectorAll('.fs-label input[type=checkbox]').forEach(el => el.checked = false);
-}
-function roleTag(role) {
-  if (role === 'superadmin') return ' 【超級管理員】';
-  if (role === 'admin') return ' 【後台】';
-  if (role === 'both')  return ' 【輸入+後台】';
-  return ' 【工作輸入】';
+  document.getElementById('total').textContent = total.toLocaleString();
+  return total;
 }
 
-// ── 莊敬校工作輸入 登入 ──
-async function doLoginZJ() {
-  const u = document.getElementById('zjUser').value.trim();
-  const p = document.getElementById('zjPass').value;
-  const err = document.getElementById('zjError');
-  err.textContent = '⏳ 驗證中…';
+document.querySelectorAll('input[type="number"]').forEach(el => el.addEventListener('input', calcTotal));
 
-  const users = await getAllUsers();
-  if (!users) { err.textContent = '❌ 無法連接帳密來源，請稍後再試'; return; }
+function openPreview() {
+  const name  = document.getElementById('name').value;
+  const month = document.getElementById('month').value;
+  if (!name)  { showToast('請選擇姓名'); return; }
+  if (!month) { showToast('請選擇月份'); return; }
 
-  const match = users.find(x => x.u === u && x.p === p);
-  if (match && ['input','both','superadmin'].includes(match.role)) {
-    document.getElementById('zjLogin').style.display = 'none';
-    const fd = document.getElementById('zjFrame');
-    fd.style.display = 'flex';
-    document.getElementById('zjWelcome').textContent = '👋 歡迎，' + (match.n || u) + roleTag(match.role);
-    const iframe = document.getElementById('zjIframe');
-    if (!iframe.src || iframe.src === 'about:blank') iframe.src = ZJ_INPUT_URL;
-    err.textContent = '';
-    autoFullscreen(0);
-  } else if (match && match.role === 'admin') {
-    err.textContent = '❌ 您的帳號無工作輸入權限，請切換到後台分頁';
-  } else {
-    err.textContent = '❌ 帳號或密碼錯誤，請再試一次';
-    document.getElementById('zjPass').value = '';
-  }
+  const overtime   = +document.getElementById('overtime').value||0;
+  const afterschool= +document.getElementById('afterschool').value||0;
+  const mixed      = +document.getElementById('mixed').value||0;
+  const personal   = +document.getElementById('personal_leave').value||0;
+  const sick       = +document.getElementById('sick_leave').value||0;
+  const prepaid    = +document.getElementById('prepaid').value||0;
+  const exam       = +document.getElementById('exam_bonus').value||0;
+  const other      = +document.getElementById('other_bonus').value||0;
+  const total      = calcTotal();
+
+  const rows = [
+    ['姓名', name], ['月份', month],
+    ['加班時數', `${overtime} 小時 (+${(overtime*170).toLocaleString()})`],
+    ['安親人數', `${afterschool} 人`],
+    ['混校人數', `${mixed} 人`],
+    ['事假時數', `${personal} 小時 (-${(personal*120).toLocaleString()})`],
+    ['病假時數',  `${sick} 小時 (-${(sick*60).toLocaleString()})`],
+    ['預繳獎金', `$${prepaid.toLocaleString()}`],
+    ['考試獎金', `$${exam.toLocaleString()}`],
+    ['其他獎金', `$${other.toLocaleString()}`],
+  ];
+
+  const html = rows.map(([k,v]) =>
+    `<div class="modal-row"><span class="k">${k}</span><span class="v">${v}</span></div>`
+  ).join('') +
+  `<div class="modal-total"><span class="k">💰 本月總獎金</span><span class="v">${total.toLocaleString()} 元</span></div>`;
+
+  document.getElementById('modal-content').innerHTML = html;
+  document.getElementById('modal').classList.add('show');
 }
 
-function doLogoutZJ() {
-  document.getElementById('zjFrame').style.display = 'none';
-  document.getElementById('zjLogin').style.display = 'flex';
-  document.getElementById('zjUser').value = '';
-  document.getElementById('zjPass').value = '';
-  document.getElementById('zjError').textContent = '';
-  document.getElementById('zjIframe').src = 'about:blank';
-  exitFullscreen();
+function closeModal() { document.getElementById('modal').classList.remove('show'); }
+
+function submitForm() {
+  closeModal();
+  showToast('✅ 資料已成功提交！');
 }
 
-// ── 莊敬校後台 登入 ──
-async function doLogin2() {
-  const u = document.getElementById('adminUser2').value.trim();
-  const p = document.getElementById('adminPass2').value;
-  const err = document.getElementById('loginError2');
-  err.textContent = '⏳ 驗證中…';
-
-  const users = await getAllUsers();
-  if (!users) { err.textContent = '❌ 無法連接帳密來源，請稍後再試'; return; }
-
-  const match = users.find(x => x.u === u && x.p === p);
-  if (match && match.role === 'superadmin') {
-    document.getElementById('adminLogin2').style.display = 'none';
-    showAdminPanel();
-    err.textContent = '';
-    return;
-  }
-  if (match && ['admin','both'].includes(match.role)) {
-    document.getElementById('adminLogin2').style.display = 'none';
-    const frame = document.getElementById('adminFrame2');
-    frame.style.display = 'flex';
-    const iframe = document.getElementById('adminIframe2');
-    if (!iframe.src || iframe.src === 'about:blank') iframe.src = ZJ_ADMIN_URL;
-    err.textContent = '';
-    autoFullscreen(1);
-  } else {
-    err.textContent = '❌ 帳號或密碼錯誤，或無後台權限';
-    document.getElementById('adminPass2').value = '';
-  }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
 }
-
-// ── 超級管理員帳密管理 ──
-function showAdminPanel() {
-  const container = document.getElementById('spanel1');
-  document.getElementById('adminFrame2').style.display = 'none';
-  let um = document.getElementById('um_zj');
-  if (!um) {
-    um = document.createElement('div');
-    um.id = 'um_zj';
-    um.className = 'user-manage';
-    um.style.flex = '1';
-    um.style.overflowY = 'auto';
-    um.innerHTML = buildUMHtml();
-    container.appendChild(um);
-  }
-  um.style.display = 'block';
-}
-
-function buildUMHtml() {
-  const users = getLocalUsers();
-  let rows = '';
-  for (let i = 0; i < MAX_USERS; i++) {
-    const usr = users[i] || {};
-    const u = usr.u||'', p = usr.p||'', n = usr.n||'';
-    const ri = usr.role==='input' || (!usr.role && !u);
-    const ra = usr.role==='admin';
-    const rb = usr.role==='both' || (!usr.role && !!u);
-    rows += `<div class="um-row">
-      <span class="um-num">${i+1}</span>
-      <input class="um-input" id="um_n_${i}" type="text" placeholder="姓名" value="${n}" style="max-width:90px;">
-      <input class="um-input" id="um_u_${i}" type="text" placeholder="帳號" value="${u}" style="max-width:110px;">
-      <input class="um-input" id="um_p_${i}" type="password" placeholder="密碼" value="${p}" style="max-width:110px;">
-      <div class="um-perm">
-        <label class="um-perm-label"><input type="radio" name="role_${i}" value="input" ${ri?'checked':''}> 輸入</label>
-        <label class="um-perm-label"><input type="radio" name="role_${i}" value="admin" ${ra?'checked':''}> 後台</label>
-        <label class="um-perm-label"><input type="radio" name="role_${i}" value="both"  ${rb?'checked':''}> 兩者</label>
-      </div>
-    </div>`;
-  }
-  return `<div class="um-title">⚙️ 🏮 莊敬校 使用者帳密管理（最多10組）</div>
-    <div style="font-size:13px;color:var(--text-light);margin-bottom:10px;padding-left:30px;">
-      輸入＝每月工作輸入　後台＝後台系統　兩者＝皆可
-    </div>
-    ${rows}
-    <hr class="um-divider">
-    <button class="um-save-btn" onclick="saveUM()">儲 存 並 進 入 後 台</button>
-    <div class="um-ok" id="um_ok"></div>`;
-}
-
-function saveUM() {
-  const arr = [];
-  for (let i = 0; i < MAX_USERS; i++) {
-    const n = (document.getElementById(`um_n_${i}`)?.value||'').trim();
-    const u = (document.getElementById(`um_u_${i}`)?.value||'').trim();
-    const p = (document.getElementById(`um_p_${i}`)?.value||'').trim();
-    const roleEl = document.querySelector(`input[name="role_${i}"]:checked`);
-    const role = roleEl ? roleEl.value : 'input';
-    if (u && p) arr.push({ n, u, p, role });
-  }
-  saveLocalUsers(arr);
-  const ok = document.getElementById('um_ok');
-  ok.textContent = '✅ 已儲存 ' + arr.length + ' 組帳密，正在進入後台…';
-  setTimeout(() => {
-    const um = document.getElementById('um_zj');
-    if (um) um.style.display = 'none';
-    const frame = document.getElementById('adminFrame2');
-    frame.style.display = 'flex';
-    const iframe = document.getElementById('adminIframe2');
-    if (!iframe.src || iframe.src === 'about:blank') iframe.src = ZJ_ADMIN_URL;
-    autoFullscreen(1);
-  }, 1200);
-}
-
-// ESC / Enter
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape' && document.body.classList.contains('fs-mode')) { exitFullscreen(); return; }
-  if (e.key !== 'Enter') return;
-  const active = document.querySelector('.spanel.active');
-  if (!active) return;
-  if (active.id === 'spanel0') doLoginZJ();
-  else if (active.id === 'spanel1') doLogin2();
-});
 </script>
 </body>
 </html>
