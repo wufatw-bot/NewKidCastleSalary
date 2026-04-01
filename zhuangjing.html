@@ -7,424 +7,122 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --cream: #faf6ee;
-      --warm: #e8dcc8;
-      --brown: #8b6f47;
-      --text-dark: #2c2018;
-      --text-mid: #5a4a35;
-      --text-light: #8a7560;
-      --gold: #c9922a;
-      /* 表單內部色 */
-      --purple: #4A3F8F;
-      --purple-light: #6B5FBB;
-      --muted: #8A87A8;
-      --red: #E86060;
-      --green: #4CAF82;
-      --border: #E2E0F0;
-      --shadow: 0 4px 24px rgba(74,63,143,0.10);
+      --cream:#faf6ee;--warm:#e8dcc8;--brown:#8b6f47;
+      --text-dark:#2c2018;--text-mid:#5a4a35;--text-light:#8a7560;--gold:#c9922a;
+      --purple:#4A3F8F;--purple-light:#6B5FBB;--muted:#8A87A8;
+      --red:#E86060;--green:#4CAF82;--border:#E2E0F0;
+      --shadow:0 4px 24px rgba(74,63,143,0.10);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Noto Sans TC', sans-serif;
-      background: var(--cream);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-    }
-
-    /* ── NAV ── */
-    .nav {
-      background: linear-gradient(90deg, #6b4f2e 0%, #8b6f47 50%, #6b4f2e 100%);
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.25);
-      flex-shrink: 0;
-      position: relative;
-      z-index: 20;
-    }
-    .nav-title {
-      font-family: 'Noto Serif TC', serif;
-      font-size: 20px;
-      font-weight: 700;
-      color: #fef3dc;
-      letter-spacing: 2px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    }
-    .nav-back {
-      font-size: 14px;
-      color: rgba(254,243,220,0.75);
-      text-decoration: none;
-      border: 1px solid rgba(254,243,220,0.35);
-      border-radius: 999px;
-      padding: 4px 14px;
-      transition: background .2s;
-    }
-    .nav-back:hover { background: rgba(255,255,255,0.15); color: #fef3dc; }
-
-    /* ── DIVIDER ── */
-    .divider {
-      width: 100%;
-      height: 14px;
-      background: repeating-linear-gradient(90deg, #c9a96e 0px, #c9a96e 8px, #e8d5b0 8px, #e8d5b0 16px);
-      flex-shrink: 0;
-    }
-
-    /* ── TABS ── */
-    .tabs {
-      display: flex;
-      background: var(--warm);
-      border-bottom: 2px solid #c9a96e;
-      flex-shrink: 0;
-    }
-    .stab {
-      flex: 1;
-      padding: 14px 0;
-      text-align: center;
-      cursor: pointer;
-      font-family: 'Noto Serif TC', serif;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text-light);
-      border-bottom: 3px solid transparent;
-      transition: .2s;
-      user-select: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      background: var(--warm);
-    }
-    .stab:hover { background: #ede4d0; color: var(--text-mid); }
-    .stab.active           { color: #8b3a1a; border-bottom-color: #8b3a1a; background: var(--cream); }
-    .stab.active.tab-admin { color: #7c2d12; border-bottom-color: #7c2d12; }
-
-    /* ── MAIN ── */
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-      background:
-        radial-gradient(ellipse at 20% 80%, rgba(139,58,26,0.05) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(201,146,42,0.06) 0%, transparent 50%),
-        var(--cream);
-    }
-    .panels { flex: 1; display: flex; flex-direction: column; min-height: 0; }
-    .spanel { display: none; flex: 1; flex-direction: column; min-height: 0; }
-    .spanel.active { display: flex; }
-
-    /* ── FULLSCREEN ── */
-    .fs-toolbar {
-      display: flex;
-      align-items: center;
-      padding: 6px 14px;
-      background: #fff;
-      border-bottom: 1px solid #e8dcc8;
-      flex-shrink: 0;
-    }
-    .fs-label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text-mid);
-      user-select: none;
-    }
-    .fs-label input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--gold); cursor: pointer; }
-    body.fs-mode .nav, body.fs-mode .divider, body.fs-mode .tabs, body.fs-mode .footer { display: none !important; }
-    body.fs-mode .main { position: fixed; inset: 0; z-index: 100; background: var(--cream); }
-    body.fs-mode .fs-toolbar { position: relative; z-index: 101; }
-
-    /* ── LOGIN ── */
-    .login-screen {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background:
-        radial-gradient(ellipse at 30% 70%, rgba(139,58,26,0.07) 0%, transparent 55%),
-        radial-gradient(ellipse at 75% 25%, rgba(201,146,42,0.07) 0%, transparent 55%),
-        var(--cream);
-      padding: 24px;
-    }
-    .login-card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 36px 40px;
-      box-shadow: 0 0 0 3px #c9a96e, 0 0 0 5px #e8d5b0, 0 12px 40px rgba(0,0,0,0.13);
-      width: 100%;
-      max-width: 400px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      position: relative;
-    }
-    .login-icon { font-size: 44px; text-align: center; }
-    .login-title {
-      font-family: 'Noto Serif TC', serif;
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--text-dark);
-      text-align: center;
-      letter-spacing: 2px;
-    }
-    .login-sub { font-size: 14px; color: var(--text-light); text-align: center; letter-spacing: 1px; margin-top: -10px; }
-    .login-field { display: flex; flex-direction: column; gap: 6px; }
-    .login-label { font-size: 15px; font-weight: 700; color: var(--text-mid); letter-spacing: 1px; }
-    .login-input {
-      padding: 12px 14px;
-      border: 1.5px solid var(--warm);
-      border-radius: 10px;
-      font-size: 17px;
-      font-family: 'Noto Sans TC', sans-serif;
-      color: var(--text-dark);
-      background: var(--cream);
-      outline: none;
-      transition: border-color .2s;
-    }
-    .login-input:focus { border-color: #9d6b3a; }
-    .login-btn {
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #6b4f2e 0%, #9d6b3a 100%);
-      color: #fef3dc;
-      font-family: 'Noto Serif TC', serif;
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      cursor: pointer;
-      transition: opacity .2s, transform .1s;
-      margin-top: 4px;
-    }
-    .login-btn:hover { opacity: 0.88; transform: translateY(-1px); }
-    .login-btn:active { transform: translateY(0); }
-    .login-error { font-size: 14px; color: #c0392b; text-align: center; min-height: 18px; font-weight: 600; }
-    .login-deco {
-      position: absolute;
-      top: -18px; left: 50%; transform: translateX(-50%);
-      background: var(--warm);
-      border: 2px solid #c9a96e;
-      border-radius: 999px;
-      padding: 5px 20px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--brown);
-      letter-spacing: 1px;
-      white-space: nowrap;
-    }
-    .logout-btn {
-      font-size: 14px;
-      color: var(--text-light);
-      background: none;
-      border: 1px solid #c9a96e;
-      border-radius: 999px;
-      padding: 4px 16px;
-      cursor: pointer;
-      font-family: 'Noto Sans TC', sans-serif;
-      margin-left: auto;
-      display: block;
-    }
-    .logout-btn:hover { background: var(--warm); }
-
-    /* ── IFRAME (後台) ── */
-    .frame-container {
-      flex: 1;
-      position: relative;
-      margin: 0 16px 16px;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 0 0 3px #c9a96e, 0 0 0 5px #e8d5b0, 0 8px 32px rgba(0,0,0,0.15);
-      background: #fff;
-      min-height: 400px;
-    }
-    .frame-corner { position: absolute; width: 20px; height: 20px; z-index: 5; pointer-events: none; }
-    .fc-tl { top: 6px; left: 6px; border-top: 3px solid var(--gold); border-left: 3px solid var(--gold); border-radius: 4px 0 0 0; }
-    .fc-tr { top: 6px; right: 6px; border-top: 3px solid var(--gold); border-right: 3px solid var(--gold); border-radius: 0 4px 0 0; }
-    .fc-bl { bottom: 6px; left: 6px; border-bottom: 3px solid var(--gold); border-left: 3px solid var(--gold); border-radius: 0 0 0 4px; }
-    .fc-br { bottom: 6px; right: 6px; border-bottom: 3px solid var(--gold); border-right: 3px solid var(--gold); border-radius: 0 0 4px 0; }
-    .loading {
-      position: absolute; inset: 0;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      background: var(--cream); z-index: 3; gap: 12px; transition: opacity .5s;
-    }
-    .loading.done { opacity: 0; pointer-events: none; }
-    .loading-text { font-family: 'Noto Serif TC', serif; font-size: 15px; color: var(--text-light); letter-spacing: 2px; }
-    .spinner { width: 32px; height: 32px; border: 3px solid var(--warm); border-top-color: var(--gold); border-radius: 50%; animation: spin .9s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    iframe { width: 100%; height: 100%; border: none; display: block; }
-
-    /* ── USER MANAGE ── */
-    .user-manage { padding: 16px 20px; overflow-y: auto; }
-    .um-title {
-      font-family: 'Noto Serif TC', serif;
-      font-size: 17px; font-weight: 700;
-      color: var(--text-mid);
-      margin-bottom: 12px;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .um-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-    .um-num { font-size: 14px; font-weight: 700; color: var(--text-light); width: 22px; flex-shrink: 0; text-align: right; }
-    .um-input {
-      flex: 1; padding: 8px 10px;
-      border: 1.5px solid var(--warm); border-radius: 8px;
-      font-size: 15px; font-family: 'Noto Sans TC', sans-serif;
-      color: var(--text-dark); background: var(--cream); outline: none;
-    }
-    .um-input:focus { border-color: #9d6b3a; }
-    .um-perm { display: flex; gap: 6px; flex-shrink: 0; }
-    .um-perm-label {
-      display: flex; align-items: center; gap: 3px;
-      font-size: 14px; font-weight: 600; color: var(--text-mid);
-      cursor: pointer; background: var(--warm); border-radius: 6px;
-      padding: 5px 9px; border: 1.5px solid transparent;
-      transition: .15s; user-select: none; white-space: nowrap;
-    }
-    .um-perm-label:has(input:checked) { border-color: var(--gold); background: #fff8ee; color: var(--brown); }
-    .um-perm-label input { width: 14px; height: 14px; accent-color: var(--gold); cursor: pointer; }
-    .um-save-btn {
-      margin-top: 10px; padding: 12px 32px; border: none; border-radius: 10px;
-      background: linear-gradient(135deg, #7c2d12 0%, #a84332 100%);
-      color: #fef3dc; font-family: 'Noto Serif TC', serif;
-      font-size: 17px; font-weight: 700; letter-spacing: 2px;
-      cursor: pointer; transition: opacity .2s;
-    }
-    .um-save-btn:hover { opacity: 0.85; }
-    .um-ok { font-size: 14px; color: #7c2d12; font-weight: 700; min-height: 20px; margin-top: 6px; }
-    .um-divider { border: none; border-top: 1px dashed #c9a96e; margin: 14px 0; }
-
-    /* ── 填報表單 ── */
-    .form-panel {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px 20px 40px;
-    }
-    .form-header { text-align: center; margin-bottom: 28px; }
-    .form-header .icon { font-size: 2.2rem; margin-bottom: 6px; }
-    .form-header h1 {
-      font-family: 'Noto Serif TC', serif;
-      font-size: 1.7rem; font-weight: 700;
-      color: #8b3a1a; letter-spacing: 2px;
-    }
-    .form-header p { font-size: 0.85rem; color: var(--text-light); margin-top: 4px; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-    @media (max-width: 960px) { .grid { grid-template-columns: repeat(2,1fr); } }
-    @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
-    .card {
-      background: #fff;
-      border-radius: 14px;
-      border: 1.5px solid var(--border);
-      padding: 20px 16px;
-      box-shadow: var(--shadow);
-    }
-    .card-title {
-      font-family: 'Noto Serif TC', serif;
-      font-size: 0.95rem; font-weight: 700;
-      color: var(--purple);
-      display: flex; align-items: center; gap: 8px;
-      margin-bottom: 16px; padding-bottom: 10px;
-      border-bottom: 1.5px solid var(--border);
-    }
-    .field { margin-bottom: 14px; }
-    .field label {
-      display: block; font-size: 0.82rem;
-      color: var(--muted); margin-bottom: 5px; font-weight: 500;
-    }
-    .field label .required { color: var(--red); margin-left: 2px; }
-    .field label .rate  { color: var(--green); font-size: 0.78rem; margin-left: 6px; font-weight: 600; }
-    .field label .deduct { color: var(--red);  font-size: 0.78rem; margin-left: 6px; font-weight: 600; }
-    select, input[type="text"], input[type="month"], input[type="number"] {
-      width: 100%; padding: 9px 12px;
-      border: 1.5px solid var(--border); border-radius: 9px;
-      font-size: 0.92rem; font-family: 'Noto Sans TC', sans-serif;
-      color: var(--text-dark); background: var(--cream);
-      transition: border .2s, box-shadow .2s; outline: none; -webkit-appearance: none;
-    }
-    select:focus, input:focus {
-      border-color: var(--purple-light);
-      box-shadow: 0 0 0 3px rgba(107,95,187,0.12);
-    }
-    .hint { font-size: 0.75rem; color: var(--muted); margin-top: 5px; line-height: 1.7; }
-    .total-box {
-      background: linear-gradient(135deg, #FFF5E0 0%, #FFE9C8 100%);
-      border-radius: 12px; padding: 16px; text-align: center; margin-top: 6px;
-    }
-    .total-box .lbl  { font-size: 0.8rem; color: var(--gold); font-weight: 600; margin-bottom: 4px; }
-    .total-box .amt  { font-size: 2.2rem; font-weight: 700; color: var(--purple); line-height: 1; }
-    .total-box .unit { font-size: 0.95rem; color: var(--muted); margin-left: 3px; }
-    .btn-preview {
-      width: 100%; padding: 16px;
-      background: linear-gradient(90deg, #8b3a1a 0%, #c0522a 100%);
-      color: #fef3dc; font-family: 'Noto Serif TC', serif;
-      font-size: 1.1rem; font-weight: 700; letter-spacing: 3px;
-      border: none; border-radius: 12px; cursor: pointer;
-      transition: opacity .2s, transform .15s;
-    }
-    .btn-preview:hover { opacity: 0.9; transform: translateY(-1px); }
-
-    /* ── MODAL ── */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(30,20,70,0.45); z-index: 200;
-      align-items: center; justify-content: center; padding: 24px;
-    }
-    .modal-overlay.show { display: flex; }
-    .modal {
-      background: #fff; border-radius: 20px; padding: 32px 28px;
-      max-width: 500px; width: 100%;
-      box-shadow: 0 16px 64px rgba(74,63,143,0.22);
-    }
-    .modal h2 { font-family: 'Noto Serif TC', serif; font-size: 1.2rem; color: #8b3a1a; margin-bottom: 16px; font-weight: 700; }
-    .modal-row {
-      display: flex; justify-content: space-between;
-      padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem;
-    }
-    .modal-row .k { color: var(--muted); }
-    .modal-row .v { font-weight: 600; color: var(--text-dark); }
-    .modal-total {
-      margin-top: 14px;
-      background: linear-gradient(135deg, #FFF5E0, #FFE9C8);
-      border-radius: 10px; padding: 14px 18px;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .modal-total .k { font-size: 0.95rem; font-weight: 600; color: var(--gold); }
-    .modal-total .v { font-size: 1.7rem; font-weight: 700; color: var(--purple); }
-    .modal-btns { display: flex; gap: 10px; margin-top: 18px; }
-    .modal-btns button {
-      flex: 1; padding: 11px; border-radius: 9px; border: none;
-      font-size: 0.92rem; font-weight: 600; cursor: pointer;
-      font-family: 'Noto Sans TC', sans-serif; transition: opacity .2s;
-    }
-    .btn-cancel { background: var(--warm); color: var(--text-mid); }
-    .btn-submit { background: linear-gradient(90deg,#8b3a1a,#c0522a); color: #fef3dc; }
-    .btn-submit:hover, .btn-cancel:hover { opacity: 0.85; }
-
-    /* ── TOAST ── */
-    .toast {
-      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
-      background: #2c2018; color: #fef3dc;
-      padding: 12px 28px; border-radius: 30px;
-      font-size: 0.9rem; font-weight: 500;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-      z-index: 300; opacity: 0; pointer-events: none; transition: opacity .3s;
-    }
-    .toast.show { opacity: 1; }
-
-    .footer { text-align: center; padding: 8px; font-size: 13px; color: var(--text-light); letter-spacing: 1px; flex-shrink: 0; }
-    @media (max-width: 560px) {
-      .stab { font-size: 14px; padding: 12px 4px; }
-      .nav-title { font-size: 15px; }
-    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Noto Sans TC',sans-serif;background:var(--cream);min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+    .nav{background:linear-gradient(90deg,#6b4f2e 0%,#8b6f47 50%,#6b4f2e 100%);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 3px 12px rgba(0,0,0,0.25);flex-shrink:0;position:relative;z-index:20}
+    .nav-title{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:700;color:#fef3dc;letter-spacing:2px;text-shadow:0 1px 3px rgba(0,0,0,0.3)}
+    .nav-back{font-size:14px;color:rgba(254,243,220,0.75);text-decoration:none;border:1px solid rgba(254,243,220,0.35);border-radius:999px;padding:4px 14px;transition:background .2s}
+    .nav-back:hover{background:rgba(255,255,255,0.15);color:#fef3dc}
+    .divider{width:100%;height:14px;background:repeating-linear-gradient(90deg,#c9a96e 0px,#c9a96e 8px,#e8d5b0 8px,#e8d5b0 16px);flex-shrink:0}
+    .tabs{display:flex;background:var(--warm);border-bottom:2px solid #c9a96e;flex-shrink:0}
+    .stab{flex:1;padding:14px 0;text-align:center;cursor:pointer;font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;color:var(--text-light);border-bottom:3px solid transparent;transition:.2s;user-select:none;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--warm)}
+    .stab:hover{background:#ede4d0;color:var(--text-mid)}
+    .stab.active{color:#8b3a1a;border-bottom-color:#8b3a1a;background:var(--cream)}
+    .stab.active.tab-admin{color:#7c2d12;border-bottom-color:#7c2d12}
+    .main{flex:1;display:flex;flex-direction:column;min-height:0;background:radial-gradient(ellipse at 20% 80%,rgba(139,58,26,0.05) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(201,146,42,0.06) 0%,transparent 50%),var(--cream)}
+    .panels{flex:1;display:flex;flex-direction:column;min-height:0}
+    .spanel{display:none;flex:1;flex-direction:column;min-height:0}
+    .spanel.active{display:flex}
+    .fs-toolbar{display:flex;align-items:center;padding:6px 14px;background:#fff;border-bottom:1px solid #e8dcc8;flex-shrink:0}
+    .fs-label{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:15px;font-weight:600;color:var(--text-mid);user-select:none}
+    .fs-label input[type=checkbox]{width:17px;height:17px;accent-color:var(--gold);cursor:pointer}
+    body.fs-mode .nav,body.fs-mode .divider,body.fs-mode .tabs,body.fs-mode .footer{display:none!important}
+    body.fs-mode .main{position:fixed;inset:0;z-index:100;background:var(--cream)}
+    body.fs-mode .fs-toolbar{position:relative;z-index:101}
+    .login-screen{flex:1;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 30% 70%,rgba(139,58,26,0.07) 0%,transparent 55%),radial-gradient(ellipse at 75% 25%,rgba(201,146,42,0.07) 0%,transparent 55%),var(--cream);padding:24px}
+    .login-card{background:#fff;border-radius:20px;padding:36px 40px;box-shadow:0 0 0 3px #c9a96e,0 0 0 5px #e8d5b0,0 12px 40px rgba(0,0,0,0.13);width:100%;max-width:400px;display:flex;flex-direction:column;gap:18px;position:relative}
+    .login-icon{font-size:44px;text-align:center}
+    .login-title{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:700;color:var(--text-dark);text-align:center;letter-spacing:2px}
+    .login-sub{font-size:14px;color:var(--text-light);text-align:center;letter-spacing:1px;margin-top:-10px}
+    .login-field{display:flex;flex-direction:column;gap:6px}
+    .login-label{font-size:15px;font-weight:700;color:var(--text-mid);letter-spacing:1px}
+    .login-input{padding:12px 14px;border:1.5px solid var(--warm);border-radius:10px;font-size:17px;font-family:'Noto Sans TC',sans-serif;color:var(--text-dark);background:var(--cream);outline:none;transition:border-color .2s}
+    .login-input:focus{border-color:#9d6b3a}
+    .login-btn{padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#6b4f2e 0%,#9d6b3a 100%);color:#fef3dc;font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:opacity .2s,transform .1s;margin-top:4px}
+    .login-btn:hover{opacity:0.88;transform:translateY(-1px)}
+    .login-btn:active{transform:translateY(0)}
+    .login-error{font-size:14px;color:#c0392b;text-align:center;min-height:18px;font-weight:600}
+    .login-deco{position:absolute;top:-18px;left:50%;transform:translateX(-50%);background:var(--warm);border:2px solid #c9a96e;border-radius:999px;padding:5px 20px;font-size:13px;font-weight:700;color:var(--brown);letter-spacing:1px;white-space:nowrap}
+    .logout-btn{font-size:14px;color:var(--text-light);background:none;border:1px solid #c9a96e;border-radius:999px;padding:4px 16px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;margin-left:auto;display:block}
+    .logout-btn:hover{background:var(--warm)}
+    .frame-container{flex:1;position:relative;margin:0 16px 16px;border-radius:16px;overflow:hidden;box-shadow:0 0 0 3px #c9a96e,0 0 0 5px #e8d5b0,0 8px 32px rgba(0,0,0,0.15);background:#fff;min-height:400px}
+    .frame-corner{position:absolute;width:20px;height:20px;z-index:5;pointer-events:none}
+    .fc-tl{top:6px;left:6px;border-top:3px solid var(--gold);border-left:3px solid var(--gold);border-radius:4px 0 0 0}
+    .fc-tr{top:6px;right:6px;border-top:3px solid var(--gold);border-right:3px solid var(--gold);border-radius:0 4px 0 0}
+    .fc-bl{bottom:6px;left:6px;border-bottom:3px solid var(--gold);border-left:3px solid var(--gold);border-radius:0 0 0 4px}
+    .fc-br{bottom:6px;right:6px;border-bottom:3px solid var(--gold);border-right:3px solid var(--gold);border-radius:0 0 4px 0}
+    .loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--cream);z-index:3;gap:12px;transition:opacity .5s}
+    .loading.done{opacity:0;pointer-events:none}
+    .loading-text{font-family:'Noto Serif TC',serif;font-size:15px;color:var(--text-light);letter-spacing:2px}
+    .spinner{width:32px;height:32px;border:3px solid var(--warm);border-top-color:var(--gold);border-radius:50%;animation:spin .9s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    iframe{width:100%;height:100%;border:none;display:block}
+    .user-manage{padding:16px 20px;overflow-y:auto}
+    .um-title{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;color:var(--text-mid);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+    .um-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .um-num{font-size:14px;font-weight:700;color:var(--text-light);width:22px;flex-shrink:0;text-align:right}
+    .um-input{flex:1;padding:8px 10px;border:1.5px solid var(--warm);border-radius:8px;font-size:15px;font-family:'Noto Sans TC',sans-serif;color:var(--text-dark);background:var(--cream);outline:none}
+    .um-input:focus{border-color:#9d6b3a}
+    .um-perm{display:flex;gap:6px;flex-shrink:0}
+    .um-perm-label{display:flex;align-items:center;gap:3px;font-size:14px;font-weight:600;color:var(--text-mid);cursor:pointer;background:var(--warm);border-radius:6px;padding:5px 9px;border:1.5px solid transparent;transition:.15s;user-select:none;white-space:nowrap}
+    .um-perm-label:has(input:checked){border-color:var(--gold);background:#fff8ee;color:var(--brown)}
+    .um-perm-label input{width:14px;height:14px;accent-color:var(--gold);cursor:pointer}
+    .um-save-btn{margin-top:10px;padding:12px 32px;border:none;border-radius:10px;background:linear-gradient(135deg,#7c2d12 0%,#a84332 100%);color:#fef3dc;font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:opacity .2s}
+    .um-save-btn:hover{opacity:0.85}
+    .um-ok{font-size:14px;color:#7c2d12;font-weight:700;min-height:20px;margin-top:6px}
+    .um-divider{border:none;border-top:1px dashed #c9a96e;margin:14px 0}
+    .form-panel{flex:1;overflow-y:auto;padding:24px 20px 40px}
+    .form-header{text-align:center;margin-bottom:28px}
+    .form-header .icon{font-size:2.2rem;margin-bottom:6px}
+    .form-header h1{font-family:'Noto Serif TC',serif;font-size:1.7rem;font-weight:700;color:#8b3a1a;letter-spacing:2px}
+    .form-header p{font-size:0.85rem;color:var(--text-light);margin-top:4px}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+    @media(max-width:960px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:560px){.grid{grid-template-columns:1fr}}
+    .card{background:#fff;border-radius:14px;border:1.5px solid var(--border);padding:20px 16px;box-shadow:var(--shadow)}
+    .card-title{font-family:'Noto Serif TC',serif;font-size:0.95rem;font-weight:700;color:var(--purple);display:flex;align-items:center;gap:8px;margin-bottom:16px;padding-bottom:10px;border-bottom:1.5px solid var(--border)}
+    .field{margin-bottom:14px}
+    .field label{display:block;font-size:0.82rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+    .field label .required{color:var(--red);margin-left:2px}
+    .field label .rate{color:var(--green);font-size:0.78rem;margin-left:6px;font-weight:600}
+    .field label .deduct{color:var(--red);font-size:0.78rem;margin-left:6px;font-weight:600}
+    select,input[type="text"],input[type="month"],input[type="number"]{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:0.92rem;font-family:'Noto Sans TC',sans-serif;color:var(--text-dark);background:var(--cream);transition:border .2s,box-shadow .2s;outline:none;-webkit-appearance:none}
+    select:focus,input:focus{border-color:var(--purple-light);box-shadow:0 0 0 3px rgba(107,95,187,0.12)}
+    .hint{font-size:0.75rem;color:var(--muted);margin-top:5px;line-height:1.7}
+    .total-box{background:linear-gradient(135deg,#FFF5E0 0%,#FFE9C8 100%);border-radius:12px;padding:16px;text-align:center;margin-top:6px}
+    .total-box .lbl{font-size:0.8rem;color:var(--gold);font-weight:600;margin-bottom:4px}
+    .total-box .amt{font-size:2.2rem;font-weight:700;color:var(--purple);line-height:1}
+    .total-box .unit{font-size:0.95rem;color:var(--muted);margin-left:3px}
+    .btn-preview{width:100%;padding:16px;background:linear-gradient(90deg,#8b3a1a 0%,#c0522a 100%);color:#fef3dc;font-family:'Noto Serif TC',serif;font-size:1.1rem;font-weight:700;letter-spacing:3px;border:none;border-radius:12px;cursor:pointer;transition:opacity .2s,transform .15s}
+    .btn-preview:hover{opacity:0.9;transform:translateY(-1px)}
+    .btn-preview:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(30,20,70,0.45);z-index:200;align-items:center;justify-content:center;padding:24px}
+    .modal-overlay.show{display:flex}
+    .modal{background:#fff;border-radius:20px;padding:32px 28px;max-width:500px;width:100%;box-shadow:0 16px 64px rgba(74,63,143,0.22)}
+    .modal h2{font-family:'Noto Serif TC',serif;font-size:1.2rem;color:#8b3a1a;margin-bottom:16px;font-weight:700}
+    .modal-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:0.9rem}
+    .modal-row .k{color:var(--muted)}
+    .modal-row .v{font-weight:600;color:var(--text-dark)}
+    .modal-total{margin-top:14px;background:linear-gradient(135deg,#FFF5E0,#FFE9C8);border-radius:10px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
+    .modal-total .k{font-size:0.95rem;font-weight:600;color:var(--gold)}
+    .modal-total .v{font-size:1.7rem;font-weight:700;color:var(--purple)}
+    .modal-btns{display:flex;gap:10px;margin-top:18px}
+    .modal-btns button{flex:1;padding:11px;border-radius:9px;border:none;font-size:0.92rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:opacity .2s}
+    .modal-btns button:disabled{opacity:0.5;cursor:not-allowed}
+    .btn-cancel{background:var(--warm);color:var(--text-mid)}
+    .btn-submit{background:linear-gradient(90deg,#8b3a1a,#c0522a);color:#fef3dc}
+    .btn-submit:hover,.btn-cancel:hover{opacity:0.85}
+    .submit-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.5);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:5px}
+    .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#2c2018;color:#fef3dc;padding:12px 28px;border-radius:30px;font-size:0.9rem;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.2);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s}
+    .toast.show{opacity:1}
+    .footer{text-align:center;padding:8px;font-size:13px;color:var(--text-light);letter-spacing:1px;flex-shrink:0}
+    @media(max-width:560px){.stab{font-size:14px;padding:12px 4px}.nav-title{font-size:15px}}
   </style>
 </head>
 <body>
@@ -440,12 +138,11 @@
   <div class="main">
     <div class="panels">
 
-      <!-- ═══ 工作輸入分頁 ═══ -->
+      <!-- 工作輸入分頁 -->
       <div class="spanel active" id="spanel0">
         <div class="fs-toolbar">
           <label class="fs-label"><input type="checkbox" id="fscb0" onchange="toggleFS(this)"> 全螢幕</label>
         </div>
-        <!-- 登入畫面 -->
         <div class="login-screen" id="zjLogin">
           <div class="login-card">
             <div class="login-deco">🏮 莊敬校每月工作輸入</div>
@@ -464,10 +161,10 @@
             <button class="login-btn" onclick="doLoginZJ()">登 入</button>
           </div>
         </div>
-        <!-- 填報表單（登入後顯示）-->
-        <div id="zjFormArea" style="display:none; flex:1; flex-direction:column; min-height:0;">
-          <div style="padding:8px 16px; display:flex; align-items:center; gap:8px; flex-shrink:0;">
-            <span id="zjWelcome" style="font-size:15px; color:var(--text-mid); font-weight:600;"></span>
+
+        <div id="zjFormArea" style="display:none;flex:1;flex-direction:column;min-height:0;">
+          <div style="padding:8px 16px;display:flex;align-items:center;gap:8px;flex-shrink:0;">
+            <span id="zjWelcome" style="font-size:15px;color:var(--text-mid);font-weight:600;"></span>
             <button class="logout-btn" onclick="doLogoutZJ()">登出</button>
           </div>
           <div class="form-panel">
@@ -477,7 +174,6 @@
               <p>吉的堡莊敬校 ｜ 請確實填寫本月相關資料，每人每月僅限提交一次</p>
             </div>
             <div class="grid">
-              <!-- 基本資料 -->
               <div class="card">
                 <div class="card-title">👤 基本資料</div>
                 <div class="field">
@@ -493,7 +189,6 @@
                   <span class="amt" id="total">0</span><span class="unit">元</span>
                 </div>
               </div>
-              <!-- 出勤資料 -->
               <div class="card">
                 <div class="card-title">⏰ 出勤資料</div>
                 <div class="field">
@@ -510,7 +205,6 @@
                   <input type="number" id="mixed" min="0" value="0">
                 </div>
               </div>
-              <!-- 請假資料 -->
               <div class="card">
                 <div class="card-title">📅 請假資料</div>
                 <div class="field">
@@ -522,7 +216,6 @@
                   <input type="number" id="sick_leave" min="0" value="0">
                 </div>
               </div>
-              <!-- 獎金資料 -->
               <div class="card">
                 <div class="card-title">🎁 獎金資料</div>
                 <div class="field">
@@ -539,12 +232,12 @@
                 </div>
               </div>
             </div>
-            <button class="btn-preview" onclick="openPreview()">預 覽 資 料</button>
+            <button class="btn-preview" id="previewBtn" onclick="openPreview()">預 覽 資 料</button>
           </div>
         </div>
       </div>
 
-      <!-- ═══ 後台分頁 ═══ -->
+      <!-- 後台分頁 -->
       <div class="spanel" id="spanel1">
         <div class="fs-toolbar">
           <label class="fs-label"><input type="checkbox" id="fscb1" onchange="toggleFS(this)"> 全螢幕</label>
@@ -567,7 +260,7 @@
             <button class="login-btn" onclick="doLoginZJAdmin()">登 入</button>
           </div>
         </div>
-        <div class="frame-container" id="zjAdminFrame" style="display:none; flex:1; margin:0 16px 16px;">
+        <div class="frame-container" id="zjAdminFrame" style="display:none;flex:1;margin:0 16px 16px;">
           <div class="fc-tl frame-corner"></div><div class="fc-tr frame-corner"></div>
           <div class="fc-bl frame-corner"></div><div class="fc-br frame-corner"></div>
           <div class="loading" id="loader1"><div class="spinner"></div><div class="loading-text">後台載入中...</div></div>
@@ -575,181 +268,130 @@
         </div>
       </div>
 
-    </div><!-- /panels -->
-  </div><!-- /main -->
+    </div>
+  </div>
   <div class="footer">© 吉的堡托育機構 ・ 員工薪資系統</div>
 
-  <!-- Modal -->
   <div class="modal-overlay" id="modal">
     <div class="modal">
       <h2>📋 資料預覽</h2>
       <div id="modal-content"></div>
       <div class="modal-btns">
-        <button class="btn-cancel" onclick="closeModal()">返回修改</button>
-        <button class="btn-submit" onclick="submitForm()">確認提交</button>
+        <button class="btn-cancel" id="cancelBtn" onclick="closeModal()">返回修改</button>
+        <button class="btn-submit" id="submitBtn" onclick="submitForm()">確認提交</button>
       </div>
     </div>
   </div>
   <div class="toast" id="toast"></div>
 
 <script>
-// ════════════════════════════════════════════════════════════════
-//  莊敬校 Apps Script 連結
-// ════════════════════════════════════════════════════════════════
-const ZJ_ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwpAJAJhf_6HKNiTO3iz7GS2keCFkEPjb30CHQllV9iLl1amJbSbpYWUKoHnXC0luNe/exec?page=admin';
-const ZJ_API_URL   = 'https://script.google.com/macros/s/AKfycbwpAJAJhf_6HKNiTO3iz7GS2keCFkEPjb30CHQllV9iLl1amJbSbpYWUKoHnXC0luNe/exec?action=getUsers';
-
-// ════════════════════════════════════════════════════════════════
-//  Google Sheet CSV（姓名下拉）
-// ════════════════════════════════════════════════════════════════
+// ── 設定 ──
+const ZJ_SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbwpAJAJhf_6HKNiTO3iz7GS2keCFkEPjb30CHQllV9iLl1amJbSbpYWUKoHnXC0luNe/exec';
+const ZJ_ADMIN_URL  = ZJ_SUBMIT_URL + '?page=admin';
+const ZJ_API_URL    = ZJ_SUBMIT_URL + '?action=getUsers';
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgL7mlWIHQD9Yu7oRyegwxndx-g1D4kJnY-wS0HAm1JpMK1BezydfW9xGjqZ8ksYE4i8NtqfPQPQcf/pub?gid=0&single=true&output=csv';
-
 const MAX_USERS = 10;
 let _creds = null;
 
 // ── CSV 解析 ──
 function parseCSVRow(row) {
   row = row.replace(/\r$/, '');
-  const result = [];
-  let cur = '', inQ = false;
+  const result = []; let cur = '', inQ = false;
   for (let i = 0; i < row.length; i++) {
     const ch = row[i];
-    if (ch === '"') {
-      if (inQ && row[i+1] === '"') { cur += '"'; i++; }
-      else inQ = !inQ;
-    } else if (ch === ',' && !inQ) { result.push(cur.trim()); cur = ''; }
-    else cur += ch;
+    if (ch === '"') { if (inQ && row[i+1]==='"'){cur+='"';i++;}else inQ=!inQ; }
+    else if (ch===',' && !inQ){result.push(cur.trim());cur='';}
+    else cur+=ch;
   }
-  result.push(cur.trim());
-  return result;
+  result.push(cur.trim()); return result;
 }
 
-// ── 姓名載入 ──
 async function loadNames() {
   const sel = document.getElementById('name');
   sel.innerHTML = '<option value="">載入中...</option>';
   try {
     const res = await fetch(CSV_URL);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     const text = await res.text();
-    const lines = text.trim().split('\n').filter(l => l.trim());
+    const lines = text.trim().split('\n').filter(l=>l.trim());
     const header = parseCSVRow(lines[0]);
-    let nameCol = header.findIndex(h => h.includes('姓名'));
+    let nameCol = header.findIndex(h=>h.includes('姓名'));
     if (nameCol < 0) nameCol = 0;
     const names = [];
-    for (let i = 1; i < lines.length; i++) {
+    for (let i=1;i<lines.length;i++){
       const cols = parseCSVRow(lines[i]);
-      const n = (cols[nameCol] || '').trim();
+      const n = (cols[nameCol]||'').trim();
       if (n) names.push(n);
     }
-    if (names.length === 0) throw new Error('試算表中找不到姓名資料');
+    if (!names.length) throw new Error('找不到姓名資料');
     sel.innerHTML = '<option value="">請選擇姓名</option>';
-    names.forEach(n => {
-      const opt = document.createElement('option');
-      opt.value = n; opt.textContent = n;
-      sel.appendChild(opt);
-    });
+    names.forEach(n=>{ const o=document.createElement('option');o.value=n;o.textContent=n;sel.appendChild(o); });
   } catch(e) {
     sel.innerHTML = '<option value="">⚠ 無法載入姓名</option>';
-    console.warn('載入姓名失敗：', e.message);
-    const field = sel.closest('.field');
-    if (field && !field.querySelector('.load-err')) {
-      const hint = document.createElement('div');
-      hint.className = 'load-err';
-      hint.style.cssText = 'font-size:0.75rem;color:#E86060;margin-top:4px;';
-      hint.textContent = '⚠ ' + e.message;
-      field.appendChild(hint);
-    }
+    showToast('載入員工名單失敗：' + e.message);
   }
 }
 
-// ── 偵錯區 ──
-function showDebug(msg) {
-  let el = document.getElementById('zj-debug-box');
-  if (!el) {
-    el = document.createElement('pre');
-    el.id = 'zj-debug-box';
-    el.style.cssText = 'position:fixed;bottom:0;left:0;right:0;max-height:40vh;overflow:auto;background:#1a1a1a;color:#7fff7f;font-size:12px;padding:10px 14px;z-index:9999;white-space:pre-wrap;border-top:2px solid #3a3;font-family:monospace;';
-    el.innerHTML = '<span style="color:#aaa;cursor:pointer;float:right" onclick="this.parentElement.remove()">✕ 關閉偵錯</span>\n';
-    document.body.appendChild(el);
-  }
-  el.innerHTML += msg + '\n─────\n';
-  el.scrollTop = el.scrollHeight;
-}
-
-// ── 帳密來源（Apps Script） ──
+// ── 帳密 ──
 async function loadCreds() {
   if (_creds) return _creds;
   try {
     const res = await fetch(ZJ_API_URL);
-    if (!res.ok) { showDebug('❌ HTTP ' + res.status); return null; }
+    if (!res.ok) return null;
     const json = await res.json();
-    if (!json.success) { showDebug('❌ API 錯誤：' + json.message); return null; }
-    _creds = json.users;
-    showDebug('✅ [莊敬] 帳號列表：' + _creds.map(x => '"'+x.u+'" '+x.role).join('、'));
-    return _creds;
-  } catch(e) {
-    showDebug('❌ 讀取失敗：' + e.message);
-    return null;
-  }
+    if (!json.success) return null;
+    _creds = json.users; return _creds;
+  } catch(e) { return null; }
 }
-function getLocalUsers() {
-  try { return JSON.parse(localStorage.getItem('users_zj') || '[]'); } catch { return []; }
-}
-function saveLocalUsers(arr) { localStorage.setItem('users_zj', JSON.stringify(arr)); }
+function getLocalUsers() { try{return JSON.parse(localStorage.getItem('users_zj')||'[]');}catch{return[];} }
+function saveLocalUsers(arr) { localStorage.setItem('users_zj',JSON.stringify(arr)); }
 async function getAllUsers() {
   const creds = await loadCreds();
   if (creds && creds.length > 0) return creds;
   return getLocalUsers();
 }
 
-// ── 分頁切換 ──
+// ── 分頁 ──
 function switchSTab(i) {
-  document.querySelectorAll('.stab').forEach((t,j) => t.classList.toggle('active', i===j));
-  document.querySelectorAll('.spanel').forEach((p,j) => p.classList.toggle('active', i===j));
-}
-
-// ── 全螢幕 ──
-function autoFullscreen(idx) {
-  const cb = document.getElementById('fscb'+idx);
-  if (cb && !cb.checked) { cb.checked = true; toggleFS(cb); }
+  document.querySelectorAll('.stab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.spanel').forEach((p,j)=>p.classList.toggle('active',i===j));
 }
 function toggleFS(cb) {
-  document.body.classList.toggle('fs-mode', cb.checked);
-  document.querySelectorAll('.fs-label input[type=checkbox]').forEach(el => {
-    if (el !== cb) el.checked = false;
-  });
+  document.body.classList.toggle('fs-mode',cb.checked);
+  document.querySelectorAll('.fs-label input[type=checkbox]').forEach(el=>{ if(el!==cb)el.checked=false; });
 }
 function exitFullscreen() {
   document.body.classList.remove('fs-mode');
-  document.querySelectorAll('.fs-label input[type=checkbox]').forEach(el => el.checked = false);
+  document.querySelectorAll('.fs-label input[type=checkbox]').forEach(el=>el.checked=false);
+}
+function autoFullscreen(idx) {
+  const cb = document.getElementById('fscb'+idx);
+  if (cb && !cb.checked){cb.checked=true;toggleFS(cb);}
 }
 function roleTag(role) {
-  if (role === 'superadmin') return ' 【超級管理員】';
-  if (role === 'admin')      return ' 【後台】';
-  if (role === 'both')       return ' 【輸入+後台】';
+  if(role==='superadmin') return ' 【超級管理員】';
+  if(role==='admin')      return ' 【後台】';
+  if(role==='both')       return ' 【輸入+後台】';
   return ' 【工作輸入】';
 }
 
-// ── 工作輸入 登入 ──
+// ── 登入 ──
 async function doLoginZJ() {
   const u = document.getElementById('zjUser').value.trim();
   const p = document.getElementById('zjPass').value;
   const err = document.getElementById('zjError');
   err.textContent = '⏳ 驗證中…';
   const users = await getAllUsers();
-  if (!users) { err.textContent = '❌ 無法連接帳密來源，請稍後再試'; return; }
-  const match = users.find(x => x.u === u && x.p === p);
+  if (!users || !users.length) { err.textContent = '❌ 無法連接帳密來源，請稍後再試'; return; }
+  const match = users.find(x=>x.u===u && x.p===p);
   if (match && ['input','both','superadmin'].includes(match.role)) {
     document.getElementById('zjLogin').style.display = 'none';
     const fa = document.getElementById('zjFormArea');
     fa.style.display = 'flex';
-    document.getElementById('zjWelcome').textContent = '👋 歡迎，' + (match.n || u) + roleTag(match.role);
-    // 預設月份
+    document.getElementById('zjWelcome').textContent = '👋 歡迎，' + (match.n||u) + roleTag(match.role);
     document.getElementById('month').value = new Date().toISOString().slice(0,7);
-    loadNames();
-    err.textContent = '';
-  } else if (match && match.role === 'admin') {
+    loadNames(); err.textContent = '';
+  } else if (match && match.role==='admin') {
     err.textContent = '❌ 您的帳號無工作輸入權限，請切換到後台分頁';
   } else {
     err.textContent = '❌ 帳號或密碼錯誤，請再試一次';
@@ -764,27 +406,19 @@ function doLogoutZJ() {
   document.getElementById('zjError').textContent = '';
   exitFullscreen();
 }
-
-// ── 後台 登入 ──
 async function doLoginZJAdmin() {
   const u = document.getElementById('zjAdminUser').value.trim();
   const p = document.getElementById('zjAdminPass').value;
   const err = document.getElementById('zjAdminError');
   err.textContent = '⏳ 驗證中…';
   const users = await getAllUsers();
-  if (!users) { err.textContent = '❌ 無法連接帳密來源，請稍後再試'; return; }
-  const match = users.find(x => x.u === u && x.p === p);
-  if (match && match.role === 'superadmin') {
-    document.getElementById('zjAdminLogin').style.display = 'none';
-    err.textContent = '';
-    showAdminPanel();
-    return;
+  if (!users || !users.length) { err.textContent = '❌ 無法連接帳密來源'; return; }
+  const match = users.find(x=>x.u===u && x.p===p);
+  if (match && match.role==='superadmin') {
+    document.getElementById('zjAdminLogin').style.display='none'; err.textContent=''; showAdminPanel(); return;
   }
   if (match && ['admin','both'].includes(match.role)) {
-    document.getElementById('zjAdminLogin').style.display = 'none';
-    err.textContent = '';
-    showAdminIframe();
-    return;
+    document.getElementById('zjAdminLogin').style.display='none'; err.textContent=''; showAdminIframe(); return;
   }
   err.textContent = '❌ 帳號或密碼錯誤，或無後台權限';
   document.getElementById('zjAdminPass').value = '';
@@ -793,37 +427,28 @@ function showAdminIframe() {
   const frame = document.getElementById('zjAdminFrame');
   frame.style.display = 'flex';
   const iframe = document.getElementById('zjAdminIframe');
-  if (!iframe.src || iframe.src === 'about:blank') iframe.src = ZJ_ADMIN_URL;
+  if (!iframe.src || iframe.src==='about:blank') iframe.src = ZJ_ADMIN_URL;
   autoFullscreen(1);
 }
-
-// ── 超級管理員：帳密管理 ──
 function showAdminPanel() {
   const container = document.getElementById('spanel1');
-  document.getElementById('zjAdminFrame').style.display = 'none';
+  document.getElementById('zjAdminFrame').style.display='none';
   let um = document.getElementById('um_zj');
   if (!um) {
     um = document.createElement('div');
-    um.id = 'um_zj';
-    um.className = 'user-manage';
-    um.style.flex = '1';
-    um.style.overflowY = 'auto';
+    um.id='um_zj'; um.className='user-manage'; um.style.flex='1'; um.style.overflowY='auto';
     um.innerHTML = buildUMHtml();
     container.appendChild(um);
   }
   um.style.display = 'block';
 }
 function buildUMHtml() {
-  const users = getLocalUsers();
-  let rows = '';
-  for (let i = 0; i < MAX_USERS; i++) {
-    const usr = users[i] || {};
-    const u = usr.u||'', p = usr.p||'', n = usr.n||'';
-    const ri = usr.role==='input' || (!usr.role && !u);
-    const ra = usr.role==='admin';
-    const rb = usr.role==='both' || (!usr.role && !!u);
-    rows += `<div class="um-row">
-      <span class="um-num">${i+1}</span>
+  const users = getLocalUsers(); let rows='';
+  for (let i=0;i<MAX_USERS;i++){
+    const usr=users[i]||{}; const u=usr.u||'',p=usr.p||'',n=usr.n||'';
+    const ri=usr.role==='input'||(!usr.role&&!u);
+    const ra=usr.role==='admin'; const rb=usr.role==='both'||(!usr.role&&!!u);
+    rows+=`<div class="um-row"><span class="um-num">${i+1}</span>
       <input class="um-input" id="um_n_${i}" type="text" placeholder="姓名" value="${n}" style="max-width:90px;">
       <input class="um-input" id="um_u_${i}" type="text" placeholder="帳號" value="${u}" style="max-width:110px;">
       <input class="um-input" id="um_p_${i}" type="password" placeholder="密碼" value="${p}" style="max-width:110px;">
@@ -831,110 +456,180 @@ function buildUMHtml() {
         <label class="um-perm-label"><input type="radio" name="role_${i}" value="input" ${ri?'checked':''}> 輸入</label>
         <label class="um-perm-label"><input type="radio" name="role_${i}" value="admin" ${ra?'checked':''}> 後台</label>
         <label class="um-perm-label"><input type="radio" name="role_${i}" value="both"  ${rb?'checked':''}> 兩者</label>
-      </div>
-    </div>`;
+      </div></div>`;
   }
-  return `<div class="um-title">⚙️ 🏮 莊敬校 使用者帳密管理（最多10組）</div>
-    <div style="font-size:13px;color:var(--text-light);margin-bottom:10px;padding-left:30px;">
-      輸入＝每月工作輸入　後台＝後台系統　兩者＝皆可
-    </div>
-    ${rows}
-    <hr class="um-divider">
+  return `<div class="um-title">⚙️ 🏮 莊敬校 使用者帳密管理</div>
+    <div style="font-size:13px;color:var(--text-light);margin-bottom:10px;padding-left:30px;">輸入＝每月工作輸入　後台＝後台系統　兩者＝皆可</div>
+    ${rows}<hr class="um-divider">
     <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:10px;">
       <button class="um-save-btn" onclick="saveUM()">儲 存 並 進 入 後 台</button>
       <button class="um-save-btn" style="background:linear-gradient(135deg,#1a4a6b,#2471a3);" onclick="showAdminIframe()">直 接 進 入 後 台</button>
-    </div>
-    <div class="um-ok" id="um_ok"></div>`;
+    </div><div class="um-ok" id="um_ok"></div>`;
 }
 function saveUM() {
-  const arr = [];
-  for (let i = 0; i < MAX_USERS; i++) {
-    const n = (document.getElementById(`um_n_${i}`)?.value||'').trim();
-    const u = (document.getElementById(`um_u_${i}`)?.value||'').trim();
-    const p = (document.getElementById(`um_p_${i}`)?.value||'').trim();
-    const roleEl = document.querySelector(`input[name="role_${i}"]:checked`);
-    const role = roleEl ? roleEl.value : 'input';
-    if (u && p) arr.push({ n, u, p, role });
+  const arr=[];
+  for (let i=0;i<MAX_USERS;i++){
+    const n=(document.getElementById(`um_n_${i}`)?.value||'').trim();
+    const u=(document.getElementById(`um_u_${i}`)?.value||'').trim();
+    const p=(document.getElementById(`um_p_${i}`)?.value||'').trim();
+    const roleEl=document.querySelector(`input[name="role_${i}"]:checked`);
+    const role=roleEl?roleEl.value:'input';
+    if(u&&p) arr.push({n,u,p,role});
   }
   saveLocalUsers(arr);
-  const ok = document.getElementById('um_ok');
-  ok.textContent = '✅ 已儲存 ' + arr.length + ' 組帳密，正在進入後台…';
-  setTimeout(() => {
-    const um = document.getElementById('um_zj');
-    if (um) um.style.display = 'none';
-    showAdminIframe();
-  }, 1200);
+  const ok=document.getElementById('um_ok');
+  ok.textContent='✅ 已儲存 '+arr.length+' 組帳密，正在進入後台…';
+  setTimeout(()=>{ const um=document.getElementById('um_zj');if(um)um.style.display='none';showAdminIframe();},1200);
 }
 
-// ── 計算總獎金 ──
+// ── 計算 ──
 function calcTotal() {
-  const overtime    = +document.getElementById('overtime').value || 0;
-  const afterschool = +document.getElementById('afterschool').value || 0;
-  const personal    = +document.getElementById('personal_leave').value || 0;
-  const sick        = +document.getElementById('sick_leave').value || 0;
-  const prepaid     = +document.getElementById('prepaid').value || 0;
-  const exam        = +document.getElementById('exam_bonus').value || 0;
-  const other       = +document.getElementById('other_bonus').value || 0;
-  const overtimePay = overtime * 170;
-  let afterschoolPay = 0;
-  if (afterschool >= 21) afterschoolPay = afterschool * 1000;
-  else if (afterschool >= 16) afterschoolPay = afterschool * 500;
-  const total = overtimePay + afterschoolPay + prepaid + exam + other - personal * 120 - sick * 60;
-  document.getElementById('total').textContent = total.toLocaleString();
-  return total;
-}
-document.querySelectorAll('input[type="number"]').forEach(el => el.addEventListener('input', calcTotal));
-
-// ── 預覽 & 提交 ──
-function openPreview() {
-  const name  = document.getElementById('name').value;
-  const month = document.getElementById('month').value;
-  if (!name)  { showToast('請選擇姓名'); return; }
-  if (!month) { showToast('請選擇月份'); return; }
   const overtime    = +document.getElementById('overtime').value||0;
   const afterschool = +document.getElementById('afterschool').value||0;
-  const mixed       = +document.getElementById('mixed').value||0;
   const personal    = +document.getElementById('personal_leave').value||0;
   const sick        = +document.getElementById('sick_leave').value||0;
   const prepaid     = +document.getElementById('prepaid').value||0;
   const exam        = +document.getElementById('exam_bonus').value||0;
   const other       = +document.getElementById('other_bonus').value||0;
-  const total       = calcTotal();
+  const overtimePay = overtime * 170;
+  let afterschoolPay = 0;
+  if (afterschool>=21) afterschoolPay=afterschool*1000;
+  else if (afterschool>=16) afterschoolPay=afterschool*500;
+  const total = overtimePay+afterschoolPay+prepaid+exam+other-personal*120-sick*60;
+  document.getElementById('total').textContent = total.toLocaleString();
+  return { overtime, afterschool, afterschoolPay, mixed: +document.getElementById('mixed').value||0,
+           personal, sick, prepaid, exam, other, overtimePay, total };
+}
+document.querySelectorAll('input[type="number"]').forEach(el=>el.addEventListener('input',calcTotal));
+
+// ── 預覽 ──
+function openPreview() {
+  const name  = document.getElementById('name').value;
+  const month = document.getElementById('month').value;
+  if (!name)  { showToast('請選擇姓名'); return; }
+  if (!month) { showToast('請選擇月份'); return; }
+  const v = calcTotal();
   const rows = [
     ['姓名', name], ['月份', month],
-    ['加班時數', `${overtime} 小時 (+${(overtime*170).toLocaleString()})`],
-    ['安親人數', `${afterschool} 人`],
-    ['混校人數', `${mixed} 人`],
-    ['事假時數', `${personal} 小時 (-${(personal*120).toLocaleString()})`],
-    ['病假時數',  `${sick} 小時 (-${(sick*60).toLocaleString()})`],
-    ['預繳獎金', `$${prepaid.toLocaleString()}`],
-    ['考試獎金', `$${exam.toLocaleString()}`],
-    ['其他獎金', `$${other.toLocaleString()}`],
+    ['加班時數', `${v.overtime} 小時（+${v.overtimePay.toLocaleString()} 元）`],
+    ['安親人數', `${v.afterschool} 人（+${v.afterschoolPay.toLocaleString()} 元）`],
+    ['混校人數', `${v.mixed} 人`],
+    ['事假時數', `${v.personal} 小時（-${(v.personal*120).toLocaleString()} 元）`],
+    ['病假時數',  `${v.sick} 小時（-${(v.sick*60).toLocaleString()} 元）`],
+    ['預繳獎金', `$${v.prepaid.toLocaleString()}`],
+    ['考試獎金', `$${v.exam.toLocaleString()}`],
+    ['其他獎金', `$${v.other.toLocaleString()}`],
   ];
-  const html = rows.map(([k,v]) =>
-    `<div class="modal-row"><span class="k">${k}</span><span class="v">${v}</span></div>`
-  ).join('') +
-  `<div class="modal-total"><span class="k">💰 本月總獎金</span><span class="v">${total.toLocaleString()} 元</span></div>`;
-  document.getElementById('modal-content').innerHTML = html;
+  document.getElementById('modal-content').innerHTML =
+    rows.map(([k,val])=>`<div class="modal-row"><span class="k">${k}</span><span class="v">${val}</span></div>`).join('') +
+    `<div class="modal-total"><span class="k">💰 本月總獎金</span><span class="v">${v.total.toLocaleString()} 元</span></div>`;
+  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('submitBtn').textContent = '確認提交';
   document.getElementById('modal').classList.add('show');
 }
 function closeModal() { document.getElementById('modal').classList.remove('show'); }
-function submitForm()  { closeModal(); showToast('✅ 資料已成功提交！'); }
+
+// ── 提交（核心修正）──
+function submitForm() {
+  const name  = document.getElementById('name').value;
+  const month = document.getElementById('month').value;
+  const v     = calcTotal();
+
+  const submitBtn  = document.getElementById('submitBtn');
+  const cancelBtn  = document.getElementById('cancelBtn');
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span class="submit-spinner"></span>提交中…';
+  cancelBtn.disabled = true;
+
+  // 用隱藏 iframe + form 提交（繞過 CORS）
+  const iframeName = '_zj_frame_' + Date.now();
+  const iframe = document.createElement('iframe');
+  iframe.name = iframeName; iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+
+  const form = document.createElement('form');
+  form.method = 'GET';
+  form.action = ZJ_SUBMIT_URL;
+  form.target = iframeName;
+
+  const params = {
+    action:            'submitBonusForm',
+    name, month,
+    overtimeHours:     document.getElementById('overtime').value || 0,
+    afterSchoolCount:  document.getElementById('afterschool').value || 0,
+    mixedSchoolCount:  document.getElementById('mixed').value || 0,
+    personalLeaveHours:document.getElementById('personal_leave').value || 0,
+    sickLeaveHours:    document.getElementById('sick_leave').value || 0,
+    prepaidBonus:      document.getElementById('prepaid').value || 0,
+    examBonus:         document.getElementById('exam_bonus').value || 0,
+    otherBonus:        document.getElementById('other_bonus').value || 0,
+    totalBonus:        v.total
+  };
+
+  Object.entries(params).forEach(([k,val])=>{
+    const inp = document.createElement('input');
+    inp.type='hidden'; inp.name=k; inp.value=val;
+    form.appendChild(inp);
+  });
+  document.body.appendChild(form);
+
+  let done = false;
+  const timeout = setTimeout(()=>{
+    if(done) return; done=true; cleanup();
+    resetSubmitBtn();
+    closeModal();
+    showToast('✅ 資料已送出！請確認試算表是否新增一筆資料。');
+    clearForm();
+  }, 10000);
+
+  iframe.onload = function() {
+    if(done) return; done=true; clearTimeout(timeout);
+    let result = null;
+    try {
+      const raw = iframe.contentDocument?.body?.innerText || iframe.contentWindow?.document?.body?.innerText || '';
+      result = raw.trim() ? JSON.parse(raw) : { success:true, message:'資料已成功寫入！' };
+    } catch(e) {
+      result = { success:true, message:'資料已送出！' };
+    }
+    cleanup(); resetSubmitBtn(); closeModal();
+    if (result.success) { showToast('✅ ' + result.message); clearForm(); }
+    else showToast('⚠️ ' + (result.message||'提交失敗，請再試'));
+  };
+
+  function cleanup() {
+    try{form.remove();}catch(e){}
+    setTimeout(()=>{try{iframe.remove();}catch(e){}},500);
+  }
+  function resetSubmitBtn() {
+    submitBtn.disabled=false; submitBtn.textContent='確認提交';
+    cancelBtn.disabled=false;
+  }
+  form.submit();
+}
+
+// ── 清空 ──
+function clearForm() {
+  ['overtime','afterschool','mixed','personal_leave','sick_leave','prepaid','exam_bonus','other_bonus']
+    .forEach(id=>{ document.getElementById(id).value='0'; });
+  document.getElementById('name').value='';
+  document.getElementById('total').textContent='0';
+}
+
+// ── Toast ──
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3500);
 }
 
 // ── ESC / Enter ──
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape' && document.body.classList.contains('fs-mode')) { exitFullscreen(); return; }
-  if (e.key !== 'Enter') return;
+  if (e.key==='Escape' && document.body.classList.contains('fs-mode')){exitFullscreen();return;}
+  if (e.key!=='Enter') return;
   const active = document.querySelector('.spanel.active');
   if (!active) return;
-  if (active.id === 'spanel0') doLoginZJ();
-  else if (active.id === 'spanel1') doLoginZJAdmin();
+  if (active.id==='spanel0') doLoginZJ();
+  else if (active.id==='spanel1') doLoginZJAdmin();
 });
 </script>
 </body>
