@@ -1,170 +1,467 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>吉的堡同安莊敬校員工薪資系統</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --cream: #faf6ee;
-      --warm: #e8dcc8;
-      --brown: #8b6f47;
-      --text-dark: #2c2018;
-      --text-mid: #5a4a35;
-      --text-light: #8a7560;
-      --gold: #c9922a;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Noto Sans TC', sans-serif;
-      background: var(--cream);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-    }
-    .nav {
-      background: linear-gradient(90deg, #6b4f2e 0%, #8b6f47 50%, #6b4f2e 100%);
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.25);
-      flex-shrink: 0;
-    }
-    .nav-title {
-      font-family: 'Noto Serif TC', serif;
-      font-size: 22px;
-      font-weight: 700;
-      color: #fef3dc;
-      letter-spacing: 2px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    }
-    .divider {
-      width: 100%;
-      height: 14px;
-      background: repeating-linear-gradient(90deg, #c9a96e 0px, #c9a96e 8px, #e8d5b0 8px, #e8d5b0 16px);
-      flex-shrink: 0;
-    }
-    .main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 24px;
-      background:
-        radial-gradient(ellipse at 20% 80%, rgba(90,158,111,0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(201,146,42,0.08) 0%, transparent 50%),
-        var(--cream);
-    }
-    .cards {
-      display: flex;
-      gap: 28px;
-      flex-wrap: wrap;
-      justify-content: center;
-      max-width: 900px;
-      width: 100%;
-    }
-    .card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 40px 36px 32px;
-      box-shadow: 0 0 0 3px #c9a96e, 0 0 0 5px #e8d5b0, 0 12px 40px rgba(0,0,0,0.13);
-      flex: 1;
-      min-width: 240px;
-      max-width: 340px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-      text-decoration: none;
-      transition: transform .2s, box-shadow .2s;
-      position: relative;
-    }
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 0 3px #c9922a, 0 0 0 5px #e8d5b0, 0 20px 50px rgba(0,0,0,0.18);
-    }
-    .card-deco {
-      position: absolute;
-      top: -16px; left: 50%; transform: translateX(-50%);
-      background: var(--warm);
-      border: 2px solid #c9a96e;
-      border-radius: 999px;
-      padding: 5px 20px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--brown);
-      letter-spacing: 1px;
-      white-space: nowrap;
-    }
-    .card-icon { font-size: 56px; }
-    .card-title {
-      font-family: 'Noto Serif TC', serif;
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--text-dark);
-      letter-spacing: 2px;
-    }
-    .card-desc {
-      font-size: 14px;
-      color: var(--text-light);
-      text-align: center;
-      line-height: 1.9;
-    }
-    .card-btn {
-      margin-top: 8px;
-      padding: 12px 32px;
-      border: none;
-      border-radius: 10px;
-      font-family: 'Noto Serif TC', serif;
-      font-size: 17px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      cursor: pointer;
-      color: #fef3dc;
-      transition: opacity .2s;
-    }
-    .card-btn:hover { opacity: 0.85; }
-    .btn-ta { background: linear-gradient(135deg, #2a6040 0%, #3d8258 100%); }
-    .btn-zj { background: linear-gradient(135deg, #7c2d12 0%, #a84332 100%); }
-    .footer {
-      text-align: center;
-      padding: 12px;
-      font-size: 13px;
-      color: var(--text-light);
-      letter-spacing: 1px;
-    }
-    @media (max-width: 560px) {
-      .cards { flex-direction: column; align-items: center; }
-      .card { max-width: 100%; }
-      .nav-title { font-size: 17px; }
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>獎金與加班資料填報 — 吉的堡莊敬校</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI','PingFang TC','Microsoft JhengHei',sans-serif;background:linear-gradient(135deg,#f5f0ff 0%,#fdf6ec 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;border-radius:20px;box-shadow:0 4px 24px rgba(160,130,200,.13);padding:30px 36px;width:100%;max-width:1400px}
+.card-header{text-align:center;margin-bottom:24px}
+.card-header .icon{font-size:2rem}
+.card-header h1{font-size:1.5rem;color:#5a3e8a;margin-top:6px;font-weight:700}
+.card-header p{font-size:.88rem;color:#999;margin-top:4px}
+.main-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-bottom:20px}
+.column{background:#fafafa;border-radius:14px;padding:20px;border:2px solid #f0e8ff}
+.column-title{font-size:.95rem;font-weight:700;color:#5a3e8a;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #e0d4f5;display:flex;align-items:center;gap:8px}
+.form-group{display:flex;flex-direction:column;margin-bottom:14px}
+label{font-size:.82rem;color:#666;margin-bottom:6px;font-weight:600}
+label .required{color:#e07b7b;margin-left:2px}
+label .rate{font-size:.72rem;color:#c87070;font-weight:400;margin-left:4px}
+select,input[type="number"],input[type="month"]{padding:10px 12px;border:1.5px solid #e0d4f5;border-radius:10px;font-size:.92rem;color:#333;outline:none;transition:border .2s,box-shadow .2s;background:#fff;width:100%}
+select:focus,input:focus{border-color:#a07cc5;box-shadow:0 0 0 3px rgba(160,124,197,.12)}
+.deduction-display{font-size:.78rem;color:#c87070;margin-top:4px;min-height:1em;font-weight:600}
+.summary-box{background:linear-gradient(135deg,#f0e8ff,#fdebd0);border-radius:12px;padding:16px 20px;text-align:center;margin-top:20px}
+.summary-label{font-size:.85rem;color:#7a5ba8;font-weight:600;margin-bottom:8px}
+.summary-amount{font-size:2rem;font-weight:800;color:#5a3e8a}
+.summary-amount span{font-size:1rem;font-weight:500;color:#9b7cc8;margin-left:4px}
+.deduction-summary{background:#fff5f5;border:1.5px dashed #f0b8b8;border-radius:10px;padding:12px;margin-top:10px;display:none}
+.deduction-summary.visible{display:block}
+.deduction-title{font-size:.8rem;font-weight:700;color:#b04040;margin-bottom:6px}
+.deduction-detail{font-size:.76rem;color:#a04040;line-height:1.6}
+.deduction-total{font-size:.82rem;font-weight:700;color:#c0392b;margin-top:6px;padding-top:6px;border-top:1px dashed #f0b8b8}
+.bottom-section{display:grid;grid-template-columns:3fr 1fr;gap:20px;margin-top:20px}
+.msg{padding:12px 16px;border-radius:10px;font-size:.88rem;display:none;white-space:pre-line;margin-top:12px}
+.msg.success{background:#eafaf1;color:#2e7d52;border:1px solid #b2dfcd}
+.msg.error{background:#fff0f0;color:#c0392b;border:1px solid #f5c6c6}
+.btn-submit{width:100%;padding:16px;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;font-size:1.1rem;font-weight:700;border:none;border-radius:12px;cursor:pointer;letter-spacing:.05em;transition:opacity .2s,transform .1s}
+.btn-submit:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 8px 20px rgba(59,130,246,.4)}
+.btn-submit:active{transform:scale(.98)}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed}
+.loading-spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.5);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Preview Modal */
+.preview-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.preview-modal.show{display:flex}
+.preview-content{background:#fff;border-radius:20px;max-width:800px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.preview-header{background:linear-gradient(135deg,#a07cc5,#c9a8f0);color:#fff;padding:24px 30px;border-radius:20px 20px 0 0;text-align:center}
+.preview-header h2{font-size:1.5rem;margin-bottom:6px}
+.preview-header p{font-size:.9rem;opacity:.95}
+.preview-body{padding:30px}
+.preview-section{margin-bottom:24px;padding:20px;background:#fafafa;border-radius:12px;border:2px solid #f0e8ff}
+.preview-section-title{font-size:1.1rem;font-weight:700;color:#5a3e8a;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.preview-row{display:grid;grid-template-columns:140px 1fr;padding:10px 0;border-bottom:1px solid #e5e7eb}
+.preview-row:last-child{border-bottom:none}
+.preview-label{font-size:.88rem;color:#666;font-weight:600}
+.preview-value{font-size:.9rem;color:#333;font-weight:500}
+.preview-value.highlight{color:#5a3e8a;font-weight:700;font-size:1rem}
+.preview-value.deduction{color:#c0392b;font-weight:700}
+.preview-summary{background:linear-gradient(135deg,#f0e8ff,#fdebd0);border-radius:12px;padding:20px;text-align:center;margin:20px 0}
+.preview-summary-label{font-size:.95rem;color:#7a5ba8;font-weight:600;margin-bottom:10px}
+.preview-summary-amount{font-size:2.5rem;font-weight:800;color:#5a3e8a}
+.preview-summary-amount span{font-size:1.2rem;font-weight:500;color:#9b7cc8;margin-left:6px}
+.preview-buttons{display:flex;gap:12px;margin-top:24px}
+.btn{flex:1;padding:14px;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-back{background:#e5e7eb;color:#4b5563}
+.btn-back:hover{background:#d1d5db}
+.btn-confirm{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
+.btn-confirm:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 8px 20px rgba(16,185,129,.4)}
+.btn-confirm:disabled{opacity:.6;cursor:not-allowed}
+
+@media(max-width:1200px){.main-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.main-grid{grid-template-columns:1fr}.bottom-section{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-  <nav class="nav">
-    <span class="nav-title">🏯 吉的堡同安莊敬校員工薪資系統</span>
-  </nav>
-  <div class="divider"></div>
-  <div class="main">
-    <div class="cards">
-      <a class="card" href="tongan.html">
-        <div class="card-deco">🌿 同安校</div>
-        <div class="card-icon">🌿</div>
-        <div class="card-title">同安校</div>
-        <div class="card-desc">員工每月工作輸入<br>管理員後台系統</div>
-        <button class="card-btn btn-ta">進 入 同 安 校</button>
-      </a>
-      <a class="card" href="zhuangjing.html">
-        <div class="card-deco">🏮 莊敬校</div>
-        <div class="card-icon">🏮</div>
-        <div class="card-title">莊敬校</div>
-        <div class="card-desc">員工每月工作輸入<br>管理員後台系統</div>
-        <button class="card-btn btn-zj">進 入 莊 敬 校</button>
-      </a>
+<div class="card">
+  <div class="card-header">
+    <div class="icon">📋</div>
+    <h1>獎金與加班資料填報</h1>
+    <p>吉的堡莊敬校｜請確實填寫本月相關資料，每人每月僅限提交一次</p>
+  </div>
+
+  <div class="main-grid">
+    <!-- 基本資料 -->
+    <div class="column">
+      <div class="column-title">👤 基本資料</div>
+      <div class="form-group">
+        <label>姓名 <span class="required">*</span></label>
+        <select id="name">
+          <option value="">— 請選擇 —</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>月份 <span class="required">*</span></label>
+        <input type="month" id="month"/>
+      </div>
+      <div class="summary-box">
+        <div class="summary-label">💰 本月總獎金</div>
+        <div class="summary-amount" id="totalDisplay">0<span>元</span></div>
+      </div>
+    </div>
+
+    <!-- 出勤資料 -->
+    <div class="column">
+      <div class="column-title">⏰ 出勤資料</div>
+      <div class="form-group">
+        <label>加班時數 <span class="rate">$170／小時</span></label>
+        <input type="number" id="overtimeHours" min="0" step="0.5" placeholder="0" oninput="updateTotal()"/>
+      </div>
+      <div class="form-group">
+        <label>安親人數</label>
+        <input type="number" id="afterSchoolCount" min="0" placeholder="0" oninput="updateTotal()"/>
+        <small style="font-size:.75rem;color:#999;margin-top:4px">15人以下：無津貼<br>16–20人：$500/人<br>21人以上：$1000/人</small>
+      </div>
+      <div class="form-group">
+        <label>混校人數</label>
+        <input type="number" id="mixedSchoolCount" min="0" placeholder="0"/>
+      </div>
+    </div>
+
+    <!-- 請假資料 -->
+    <div class="column">
+      <div class="column-title">🗓 請假資料</div>
+      <div class="form-group">
+        <label>事假時數 <span class="rate">扣 $120／小時</span></label>
+        <input type="number" id="personalLeaveHours" min="0" step="0.5" placeholder="0" oninput="updateLeave()"/>
+        <div class="deduction-display" id="personalDed"></div>
+      </div>
+      <div class="form-group">
+        <label>病假時數 <span class="rate">扣 $60／小時</span></label>
+        <input type="number" id="sickLeaveHours" min="0" step="0.5" placeholder="0" oninput="updateLeave()"/>
+        <div class="deduction-display" id="sickDed"></div>
+      </div>
+      <div class="deduction-summary" id="deductionBox">
+        <div class="deduction-title">📉 請假扣薪預覽</div>
+        <div class="deduction-detail" id="deductionDetail"></div>
+        <div class="deduction-total" id="deductionTotal"></div>
+      </div>
+    </div>
+
+    <!-- 獎金資料 -->
+    <div class="column">
+      <div class="column-title">🎁 獎金資料</div>
+      <div class="form-group">
+        <label>預繳獎金</label>
+        <input type="number" id="prepaidBonus" min="0" placeholder="0" oninput="updateTotal()"/>
+      </div>
+      <div class="form-group">
+        <label>考試獎金</label>
+        <input type="number" id="examBonus" min="0" placeholder="0" oninput="updateTotal()"/>
+      </div>
+      <div class="form-group">
+        <label>其他獎金</label>
+        <input type="number" id="otherBonus" min="0" placeholder="0" oninput="updateTotal()"/>
+      </div>
     </div>
   </div>
-  <div class="footer">© 吉的堡托育機構 ・ 員工薪資系統</div>
+
+  <div class="bottom-section">
+    <div class="msg" id="msgBox"></div>
+    <button class="btn-submit" id="submitBtn" onclick="showPreview()">預覽資料</button>
+  </div>
+</div>
+
+<!-- 預覽視窗 -->
+<div class="preview-modal" id="previewModal">
+  <div class="preview-content">
+    <div class="preview-header">
+      <h2>📋 資料預覽確認</h2>
+      <p>請仔細核對以下資料，確認無誤後再送出</p>
+    </div>
+    <div class="preview-body">
+      <div class="preview-section">
+        <div class="preview-section-title">👤 基本資料</div>
+        <div class="preview-row">
+          <div class="preview-label">姓名</div>
+          <div class="preview-value highlight" id="prev_name"></div>
+        </div>
+        <div class="preview-row">
+          <div class="preview-label">月份</div>
+          <div class="preview-value highlight" id="prev_month"></div>
+        </div>
+      </div>
+
+      <div class="preview-section">
+        <div class="preview-section-title">⏰ 出勤資料</div>
+        <div class="preview-row">
+          <div class="preview-label">加班時數</div>
+          <div class="preview-value" id="prev_overtime"></div>
+        </div>
+        <div class="preview-row">
+          <div class="preview-label">加班費</div>
+          <div class="preview-value" id="prev_overtime_pay"></div>
+        </div>
+        <div class="preview-row">
+          <div class="preview-label">安親人數</div>
+          <div class="preview-value" id="prev_afterschool"></div>
+        </div>
+        <div class="preview-row">
+          <div class="preview-label">安親津貼</div>
+          <div class="preview-value" id="prev_afterschool_bonus"></div>
+        </div>
+        <div class="preview-row">
+          <div class="preview-label">混校人數</div>
+          <div class="preview-value" id="prev_mixed"></div>
+        </div>
+      </div>
+
+      <div class="preview-section" id="leaveSection">
+        <div class="preview-section-title">🗓 請假資料</div>
+        <div class="preview-row" id="personalLeaveRow">
+          <div class="preview-label">事假時數</div>
+          <div class="preview-value" id="prev_personal"></div>
+        </div>
+        <div class="preview-row" id="personalDeductionRow">
+          <div class="preview-label">事假扣薪</div>
+          <div class="preview-value deduction" id="prev_personal_ded"></div>
+        </div>
+        <div class="preview-row" id="sickLeaveRow">
+          <div class="preview-label">病假時數</div>
+          <div class="preview-value" id="prev_sick"></div>
+        </div>
+        <div class="preview-row" id="sickDeductionRow">
+          <div class="preview-label">病假扣薪</div>
+          <div class="preview-value deduction" id="prev_sick_ded"></div>
+        </div>
+        <div class="preview-row" id="totalDeductionRow">
+          <div class="preview-label">請假扣薪合計</div>
+          <div class="preview-value deduction" id="prev_total_ded"></div>
+        </div>
+      </div>
+
+      <div class="preview-section" id="bonusSection">
+        <div class="preview-section-title">🎁 獎金資料</div>
+        <div class="preview-row" id="prepaidRow">
+          <div class="preview-label">預繳獎金</div>
+          <div class="preview-value" id="prev_prepaid"></div>
+        </div>
+        <div class="preview-row" id="examRow">
+          <div class="preview-label">考試獎金</div>
+          <div class="preview-value" id="prev_exam"></div>
+        </div>
+        <div class="preview-row" id="otherRow">
+          <div class="preview-label">其他獎金</div>
+          <div class="preview-value" id="prev_other"></div>
+        </div>
+      </div>
+
+      <div class="preview-summary">
+        <div class="preview-summary-label">💰 本月總獎金（含加班費＋安親津貼）</div>
+        <div class="preview-summary-amount" id="prev_total">0<span>元</span></div>
+      </div>
+
+      <div class="preview-buttons">
+        <button class="btn btn-back" onclick="hidePreview()">⬅️ 返回修改</button>
+        <button class="btn btn-confirm" id="confirmBtn" onclick="confirmSubmit()">✅ 確認送出</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var OVERTIME_RATE = 170;
+var PERSONAL_RATE = 120;
+var SICK_RATE     = 60;
+
+function calcAfterSchoolBonus(n) {
+  n = Number(n) || 0;
+  if (n <= 15) return 0;
+  if (n <= 20) return n * 500;
+  return n * 1000;
+}
+
+window.onload = function() {
+  var now = new Date();
+  document.getElementById('month').value =
+    now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+
+  var employees = ['王小明','李小華','張小美','陳小強','林小芳'];
+  var sel = document.getElementById('name');
+  employees.forEach(function(n) {
+    var opt = document.createElement('option');
+    opt.value = n; opt.textContent = n;
+    sel.appendChild(opt);
+  });
+};
+
+function updateLeave() {
+  var pHrs = Number(document.getElementById('personalLeaveHours').value) || 0;
+  var sHrs = Number(document.getElementById('sickLeaveHours').value) || 0;
+  var pDed = pHrs * PERSONAL_RATE;
+  var sDed = sHrs * SICK_RATE;
+  var total = pDed + sDed;
+
+  document.getElementById('personalDed').textContent = pHrs > 0 ? '扣薪 -' + pDed.toLocaleString() + ' 元' : '';
+  document.getElementById('sickDed').textContent     = sHrs > 0 ? '扣薪 -' + sDed.toLocaleString() + ' 元' : '';
+
+  var box = document.getElementById('deductionBox');
+  if (total > 0) {
+    var lines = [];
+    if (pHrs > 0) lines.push('事假 ' + pHrs + ' 小時 × $' + PERSONAL_RATE + ' = -' + pDed.toLocaleString() + ' 元');
+    if (sHrs > 0) lines.push('病假 ' + sHrs + ' 小時 × $' + SICK_RATE     + ' = -' + sDed.toLocaleString() + ' 元');
+    document.getElementById('deductionDetail').innerHTML = lines.join('<br>');
+    document.getElementById('deductionTotal').textContent = '合計扣薪：-' + total.toLocaleString() + ' 元';
+    box.classList.add('visible');
+  } else {
+    box.classList.remove('visible');
+  }
+}
+
+function updateTotal() {
+  var ot    = (Number(document.getElementById('overtimeHours').value)  || 0) * OVERTIME_RATE;
+  var ab    = calcAfterSchoolBonus(document.getElementById('afterSchoolCount').value);
+  var pre   = Number(document.getElementById('prepaidBonus').value)  || 0;
+  var exam  = Number(document.getElementById('examBonus').value)     || 0;
+  var other = Number(document.getElementById('otherBonus').value)    || 0;
+  document.getElementById('totalDisplay').innerHTML = (ot+ab+pre+exam+other).toLocaleString() + '<span>元</span>';
+}
+
+function showPreview() {
+  var name  = document.getElementById('name').value.trim();
+  var month = document.getElementById('month').value.trim();
+  if (!name)  { showMsg('請選擇姓名。','error'); return; }
+  if (!month) { showMsg('請選擇月份。','error'); return; }
+
+  var overtimeHours      = Number(document.getElementById('overtimeHours').value)      || 0;
+  var afterSchoolCount   = Number(document.getElementById('afterSchoolCount').value)   || 0;
+  var mixedSchoolCount   = Number(document.getElementById('mixedSchoolCount').value)   || 0;
+  var prepaidBonus       = Number(document.getElementById('prepaidBonus').value)       || 0;
+  var examBonus          = Number(document.getElementById('examBonus').value)          || 0;
+  var otherBonus         = Number(document.getElementById('otherBonus').value)         || 0;
+  var personalLeaveHours = Number(document.getElementById('personalLeaveHours').value) || 0;
+  var sickLeaveHours     = Number(document.getElementById('sickLeaveHours').value)     || 0;
+
+  var overtimePay        = overtimeHours * OVERTIME_RATE;
+  var afterSchoolBonus   = calcAfterSchoolBonus(afterSchoolCount);
+  var personalDeduction  = personalLeaveHours * PERSONAL_RATE;
+  var sickDeduction      = sickLeaveHours * SICK_RATE;
+  var totalDeduction     = personalDeduction + sickDeduction;
+  var totalAmount        = overtimePay + afterSchoolBonus + prepaidBonus + examBonus + otherBonus;
+
+  // 基本資料
+  document.getElementById('prev_name').textContent  = name;
+  document.getElementById('prev_month').textContent = month;
+
+  // 出勤
+  document.getElementById('prev_overtime').textContent        = overtimeHours > 0 ? overtimeHours + ' 小時' : '無';
+  document.getElementById('prev_overtime_pay').textContent    = '$' + overtimePay.toLocaleString();
+  document.getElementById('prev_afterschool').textContent     = afterSchoolCount > 0 ? afterSchoolCount + ' 人' : '無';
+  document.getElementById('prev_afterschool_bonus').textContent = '$' + afterSchoolBonus.toLocaleString();
+  document.getElementById('prev_mixed').textContent           = mixedSchoolCount > 0 ? mixedSchoolCount + ' 人' : '無';
+
+  // 請假
+  var leaveSection = document.getElementById('leaveSection');
+  if (totalDeduction > 0) {
+    leaveSection.style.display = 'block';
+    showRow('personalLeaveRow',    personalLeaveHours > 0);
+    showRow('personalDeductionRow',personalLeaveHours > 0);
+    if (personalLeaveHours > 0) {
+      document.getElementById('prev_personal').textContent     = personalLeaveHours + ' 小時';
+      document.getElementById('prev_personal_ded').textContent = '-$' + personalDeduction.toLocaleString();
+    }
+    showRow('sickLeaveRow',    sickLeaveHours > 0);
+    showRow('sickDeductionRow',sickLeaveHours > 0);
+    if (sickLeaveHours > 0) {
+      document.getElementById('prev_sick').textContent     = sickLeaveHours + ' 小時';
+      document.getElementById('prev_sick_ded').textContent = '-$' + sickDeduction.toLocaleString();
+    }
+    showRow('totalDeductionRow', true);
+    document.getElementById('prev_total_ded').textContent = '-$' + totalDeduction.toLocaleString();
+  } else {
+    leaveSection.style.display = 'none';
+  }
+
+  // 獎金
+  var bonusSection = document.getElementById('bonusSection');
+  var hasBonus = prepaidBonus > 0 || examBonus > 0 || otherBonus > 0;
+  if (hasBonus) {
+    bonusSection.style.display = 'block';
+    showRow('prepaidRow', prepaidBonus > 0);
+    if (prepaidBonus > 0) document.getElementById('prev_prepaid').textContent = '$' + prepaidBonus.toLocaleString();
+    showRow('examRow', examBonus > 0);
+    if (examBonus > 0) document.getElementById('prev_exam').textContent = '$' + examBonus.toLocaleString();
+    showRow('otherRow', otherBonus > 0);
+    if (otherBonus > 0) document.getElementById('prev_other').textContent = '$' + otherBonus.toLocaleString();
+  } else {
+    bonusSection.style.display = 'none';
+  }
+
+  document.getElementById('prev_total').innerHTML = totalAmount.toLocaleString() + '<span>元</span>';
+  document.getElementById('previewModal').classList.add('show');
+}
+
+function showRow(id, visible) {
+  document.getElementById(id).style.display = visible ? 'grid' : 'none';
+}
+
+function hidePreview() {
+  document.getElementById('previewModal').classList.remove('show');
+}
+
+function confirmSubmit() {
+  hidePreview();
+  submitForm();
+}
+
+function submitForm() {
+  var name  = document.getElementById('name').value.trim();
+  var month = document.getElementById('month').value.trim();
+  if (!name)  { showMsg('請選擇姓名。','error'); return; }
+  if (!month) { showMsg('請選擇月份。','error'); return; }
+
+  var formData = {
+    name:               name,
+    month:              month,
+    overtimeHours:      Number(document.getElementById('overtimeHours').value)      || 0,
+    afterSchoolCount:   Number(document.getElementById('afterSchoolCount').value)   || 0,
+    mixedSchoolCount:   Number(document.getElementById('mixedSchoolCount').value)   || 0,
+    prepaidBonus:       Number(document.getElementById('prepaidBonus').value)       || 0,
+    examBonus:          Number(document.getElementById('examBonus').value)          || 0,
+    otherBonus:         Number(document.getElementById('otherBonus').value)         || 0,
+    personalLeaveHours: Number(document.getElementById('personalLeaveHours').value) || 0,
+    sickLeaveHours:     Number(document.getElementById('sickLeaveHours').value)     || 0
+  };
+
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading-spinner"></span>提交中…';
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      btn.disabled = false; btn.textContent = '預覽資料';
+      if (res && res.success) { showMsg('✅ ' + res.message, 'success'); clearForm(); }
+      else { showMsg('⚠️ ' + (res ? res.message : '未知錯誤'), 'error'); }
+    })
+    .withFailureHandler(function(err) {
+      btn.disabled = false; btn.textContent = '預覽資料';
+      showMsg('系統錯誤：' + (err && err.message ? err.message : JSON.stringify(err)), 'error');
+    })
+    .submitBonusForm(formData);
+}
+
+function clearForm() {
+  ['overtimeHours','afterSchoolCount','mixedSchoolCount',
+   'prepaidBonus','examBonus','otherBonus',
+   'personalLeaveHours','sickLeaveHours'].forEach(function(id) {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('name').value = '';
+  document.getElementById('totalDisplay').innerHTML = '0<span>元</span>';
+  document.getElementById('personalDed').textContent = '';
+  document.getElementById('sickDed').textContent = '';
+  document.getElementById('deductionBox').classList.remove('visible');
+}
+
+function showMsg(text, type) {
+  var box = document.getElementById('msgBox');
+  box.textContent = text;
+  box.className = 'msg ' + type;
+  box.style.display = 'block';
+  setTimeout(function() { box.style.display = 'none'; }, 8000);
+}
+</script>
 </body>
 </html>
