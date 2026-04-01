@@ -422,57 +422,72 @@
   const SICK_RATE     = 60;
   const OVERTIME_RATE = 170;
 
-  // ── CSV 姓名抓取 ──
-  const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgL7mlWIHQD9Yu7oRyegwxndx-g1D4kJnY-wS0HAm1JpMK1BezydfW9xGjqZ8ksYE4i8NtqfPQPQcf/pub?gid=0&single=true&output=csv';
 
-  function parseCSVRow(row) {
-    row = row.replace(/\r$/, '');
-    const result = [];
-    let cur = '', inQ = false;
-    for (let i = 0; i < row.length; i++) {
-      const ch = row[i];
-      if (ch === '"') {
-        if (inQ && row[i+1] === '"') { cur += '"'; i++; }
-        else inQ = !inQ;
-      } else if (ch === ',' && !inQ) { result.push(cur.trim()); cur = ''; }
-      else cur += ch;
-    }
-    result.push(cur.trim());
-    return result;
-  }
+  // ── Apps Script URL（工作輸入 & 員工名單來源）──
+  // 試算表: 1gWQOJTEvMAtlxE3rCNBT8MYRcUXVbg2f3K4ABDEkj_U
+  const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbzBHEndqfatexVF5ZgDQDwH8yWJorcxclbtvCSxvXyxZCFDjrNbAHmIPTWzUX322uNr/exec';
 
-  async function loadNames() {
+  // ── 姓名載入：透過 Apps Script API（getEmployeeList）──
+  // 試算表 ID: 1gWQOJTEvMAtlxE3rCNBT8MYRcUXVbg2f3K4ABDEkj_U（已設定於 Apps Script CONFIG）
+  function loadNames() {
     const sel = document.getElementById('name');
     sel.innerHTML = '<option value="">載入中...</option>';
-    try {
-      const res = await fetch(CSV_URL);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const text = await res.text();
-      const lines = text.trim().split('\n').filter(l => l.trim());
-      const header = parseCSVRow(lines[0]);
-      let nameCol = header.findIndex(h => h.includes('姓名'));
-      if (nameCol < 0) nameCol = 0;
-      const names = [];
-      for (let i = 1; i < lines.length; i++) {
-        const cols = parseCSVRow(lines[i]);
-        const n = (cols[nameCol] || '').trim();
-        if (n) names.push(n);
-      }
-      if (names.length === 0) throw new Error('找不到姓名資料');
-      sel.innerHTML = '<option value="">— 請選擇 —</option>';
-      names.forEach(n => {
-        const opt = document.createElement('option');
-        opt.value = n; opt.textContent = n;
-        sel.appendChild(opt);
-      });
-    } catch(e) {
-      sel.innerHTML = '<option value="">⚠ 無法載入姓名</option>';
-      showMsg('載入員工名單失敗：' + e.message, 'error');
-    }
-  }
 
-  // ── Apps Script 送出 URL ──
-  const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbzBHEndqfatexVF5ZgDQDwH8yWJorcxclbtvCSxvXyxZCFDjrNbAHmIPTWzUX322uNr/exec';
+    const iframeName = '_names_frame_' + Date.now();
+    const iframe = document.createElement('iframe');
+    iframe.name = iframeName;
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    const form = document.createElement('form');
+    form.method = 'GET';
+    form.action = SUBMIT_URL;
+    form.target = iframeName;
+    const inp = document.createElement('input');
+    inp.type = 'hidden'; inp.name = 'action'; inp.value = 'getEmployeeList';
+    form.appendChild(inp);
+    document.body.appendChild(form);
+
+    let done = false;
+    const timeout = setTimeout(() => {
+      if (done) return; done = true;
+      cleanup();
+      sel.innerHTML = '<option value="">⚠ 載入逾時</option>';
+      showMsg('載入員工名單逾時，請重新整理頁面', 'error');
+    }, 12000);
+
+    iframe.onload = function() {
+      if (done) return; done = true;
+      clearTimeout(timeout);
+      try {
+        const raw = iframe.contentDocument?.body?.innerText
+                 || iframe.contentWindow?.document?.body?.innerText || '';
+        let names = [];
+        const json = JSON.parse(raw);
+        if (Array.isArray(json)) names = json;
+        else if (Array.isArray(json.list))  names = json.list;
+        else if (Array.isArray(json.names)) names = json.names;
+        else if (Array.isArray(json.data))  names = json.data;
+        if (!names.length) throw new Error('名單為空');
+        sel.innerHTML = '<option value="">— 請選擇 —</option>';
+        names.forEach(n => {
+          const opt = document.createElement('option');
+          opt.value = String(n).trim(); opt.textContent = String(n).trim();
+          sel.appendChild(opt);
+        });
+      } catch(e) {
+        sel.innerHTML = '<option value="">⚠ 無法載入姓名</option>';
+        showMsg('載入員工名單失敗：' + e.message, 'error');
+      }
+      cleanup();
+    };
+
+    function cleanup() {
+      try { form.remove(); } catch(e) {}
+      setTimeout(() => { try { iframe.remove(); } catch(e) {} }, 500);
+    }
+    form.submit();
+  }
 
   // ── 初始化 ──
   window.onload = function () {
