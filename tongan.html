@@ -3,55 +3,287 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>同安校吉的堡獎金與加班資料填報</title>
+  <title>獎金與加班資料填報系統</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple-deep: #3d1f7a;
+      --purple-mid:  #6b3fa0;
+      --purple-soft: #a07cc5;
+      --purple-pale: #e8d9ff;
+      --purple-bg:   #f5f0ff;
+      --amber:       #f0a500;
+      --amber-soft:  #fdebd0;
+      --red-soft:    #ffe0e0;
+      --red:         #c0392b;
+      --green:       #2e7d52;
+      --green-soft:  #eafaf1;
+      --white:       #ffffff;
+      --gray-100:    #f8f7fc;
+      --gray-200:    #ede8f8;
+      --gray-400:    #b0a0cc;
+      --gray-600:    #7a6a90;
+      --gray-800:    #3a2a50;
+      --shadow-sm:   0 2px 8px rgba(61,31,122,0.08);
+      --shadow-md:   0 4px 24px rgba(61,31,122,0.14);
+      --shadow-lg:   0 12px 48px rgba(61,31,122,0.20);
+      --radius-sm:   8px;
+      --radius-md:   14px;
+      --radius-lg:   22px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-      background: linear-gradient(135deg, #f5f0ff 0%, #fdf6ec 100%);
+      font-family: 'Noto Sans TC', sans-serif;
+      background: var(--purple-bg);
       min-height: 100vh;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 16px;
+      overflow-x: hidden;
     }
 
-    /* ── 主卡片 ── */
-    .card {
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 4px 24px rgba(160,130,200,0.13);
-      padding: 22px 26px 28px;
-      width: 100%;
-      max-width: 980px;
-    }
+    /* ════════════════════════════════
+       PAGE SYSTEM
+    ════════════════════════════════ */
+    .page { display: none; min-height: 100vh; }
+    .page.active { display: flex; flex-direction: column; }
 
-    /* ── Header ── */
-    .card-header {
+    /* ════════════════════════════════
+       TOP NAV BAR
+    ════════════════════════════════ */
+    .topbar {
       display: flex;
       align-items: center;
       gap: 12px;
+      padding: 14px 20px;
+      background: var(--white);
+      border-bottom: 2px solid var(--purple-pale);
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+    .topbar .back-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 14px;
+      background: var(--gray-200);
+      border: none; border-radius: 50px;
+      color: var(--purple-mid);
+      font-size: 0.82rem; font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s, transform 0.1s;
+      font-family: inherit;
+    }
+    .topbar .back-btn:hover { background: var(--purple-pale); }
+    .topbar .back-btn:active { transform: scale(0.97); }
+    .topbar .page-title {
+      font-size: 0.95rem; font-weight: 700;
+      color: var(--purple-deep);
+      flex: 1; text-align: center;
+    }
+    .topbar .spacer { width: 80px; }
+
+    /* ════════════════════════════════
+       LOGIN PAGE
+    ════════════════════════════════ */
+    #page-login {
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #2a0d60 0%, #5c2a9a 50%, #8a5cc0 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    #page-login::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 20%, rgba(255,200,100,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 80%, rgba(160,100,220,0.18) 0%, transparent 55%);
+    }
+    /* floating dots */
+    .dot {
+      position: absolute; border-radius: 50%;
+      opacity: 0.08;
+      animation: floatDot 8s ease-in-out infinite;
+    }
+    @keyframes floatDot {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-20px); }
+    }
+    .login-card {
+      position: relative; z-index: 1;
+      background: rgba(255,255,255,0.96);
+      border-radius: var(--radius-lg);
+      padding: 40px 36px 36px;
+      width: 100%; max-width: 400px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+      margin: 20px;
+    }
+    .login-logo {
+      text-align: center; margin-bottom: 28px;
+    }
+    .login-logo .emoji { font-size: 3rem; display: block; margin-bottom: 8px; }
+    .login-logo h1 {
+      font-size: 1.3rem; font-weight: 900; color: var(--purple-deep);
+      letter-spacing: -0.02em;
+    }
+    .login-logo p { font-size: 0.78rem; color: var(--gray-400); margin-top: 4px; }
+    .login-field { margin-bottom: 16px; }
+    .login-field label {
+      display: block; font-size: 0.78rem; font-weight: 700;
+      color: var(--gray-600); margin-bottom: 6px;
+    }
+    .login-field input {
+      width: 100%; padding: 12px 14px;
+      border: 2px solid var(--purple-pale);
+      border-radius: var(--radius-sm);
+      font-size: 0.96rem; font-family: inherit;
+      outline: none; background: var(--gray-100);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .login-field input:focus {
+      border-color: var(--purple-soft);
+      box-shadow: 0 0 0 3px rgba(160,124,197,0.15);
+    }
+    .login-error {
+      font-size: 0.8rem; color: var(--red);
+      min-height: 1.2em; margin-bottom: 10px;
+      text-align: center;
+    }
+    .login-btn {
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, var(--purple-mid), var(--purple-soft));
+      color: #fff; font-size: 1rem; font-weight: 800;
+      border: none; border-radius: var(--radius-sm);
+      cursor: pointer; font-family: inherit;
+      letter-spacing: 0.06em;
+      transition: opacity 0.18s, transform 0.1s;
+      box-shadow: 0 4px 16px rgba(107,63,160,0.35);
+    }
+    .login-btn:hover  { opacity: 0.92; }
+    .login-btn:active { transform: scale(0.98); }
+
+    /* ════════════════════════════════
+       HOME PAGE (選擇校別)
+    ════════════════════════════════ */
+    #page-home {
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, var(--purple-bg) 0%, var(--amber-soft) 100%);
+    }
+    .home-inner {
+      width: 100%; max-width: 500px;
+      padding: 32px 20px;
+      text-align: center;
+    }
+    .home-inner h2 {
+      font-size: 1.4rem; font-weight: 900;
+      color: var(--purple-deep); margin-bottom: 6px;
+    }
+    .home-inner .sub {
+      font-size: 0.82rem; color: var(--gray-600); margin-bottom: 32px;
+    }
+    .school-cards {
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .school-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      display: flex; align-items: center; gap: 18px;
+      box-shadow: var(--shadow-md);
+      cursor: pointer; border: 2.5px solid transparent;
+      transition: border-color 0.2s, transform 0.18s, box-shadow 0.18s;
+      text-align: left;
+    }
+    .school-card:hover {
+      border-color: var(--purple-soft);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+    .school-card .s-icon {
+      font-size: 2.4rem; flex-shrink: 0;
+      width: 56px; height: 56px;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .school-card.tongan  .s-icon { background: #f0e8ff; }
+    .school-card.zhuangjing .s-icon { background: var(--amber-soft); }
+    .school-card .s-info h3 {
+      font-size: 1.05rem; font-weight: 800; color: var(--purple-deep);
+    }
+    .school-card .s-info p {
+      font-size: 0.76rem; color: var(--gray-400); margin-top: 3px;
+    }
+    .school-card .s-arrow {
+      margin-left: auto; font-size: 1.2rem; color: var(--gray-400);
+      transition: color 0.2s, transform 0.2s;
+    }
+    .school-card:hover .s-arrow { color: var(--purple-soft); transform: translateX(4px); }
+    .home-logout {
+      margin-top: 24px;
+      font-size: 0.8rem; color: var(--gray-400);
+      cursor: pointer; background: none; border: none;
+      font-family: inherit; text-decoration: underline;
+    }
+    .home-logout:hover { color: var(--purple-mid); }
+
+    /* ════════════════════════════════
+       TABS (莊埤 / 莊敬後台)
+    ════════════════════════════════ */
+    .tab-bar {
+      display: flex;
+      background: var(--white);
+      border-bottom: 2px solid var(--purple-pale);
+      padding: 0 16px;
+    }
+    .tab-btn {
+      flex: 1; padding: 12px 8px;
+      background: none; border: none;
+      font-size: 0.87rem; font-weight: 700;
+      color: var(--gray-400); cursor: pointer;
+      font-family: inherit;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .tab-btn.active {
+      color: var(--purple-mid);
+      border-bottom-color: var(--purple-mid);
+    }
+
+    /* ════════════════════════════════
+       TAB CONTENT
+    ════════════════════════════════ */
+    .tab-content { display: none; flex: 1; overflow-y: auto; }
+    .tab-content.active { display: block; }
+    .content-wrap {
+      max-width: 980px; margin: 0 auto;
+      padding: 16px 16px 32px;
+    }
+
+    /* ════════════════════════════════
+       FORM CARD
+    ════════════════════════════════ */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 22px 24px 28px;
+    }
+    .card-header {
+      display: flex; align-items: center; gap: 12px;
       margin-bottom: 16px;
-      border-bottom: 2px solid #f0e8ff;
+      border-bottom: 2px solid var(--purple-pale);
       padding-bottom: 13px;
     }
-    .card-header .icon { font-size: 1.9rem; flex-shrink: 0; }
-    .card-header h1 { font-size: 1.1rem; color: #5a3e8a; font-weight: 700; line-height: 1.3; }
-    .card-header p  { font-size: 0.76rem; color: #999; margin-top: 2px; }
+    .card-header .icon { font-size: 1.8rem; flex-shrink: 0; }
+    .card-header h1 { font-size: 1.05rem; color: var(--purple-deep); font-weight: 800; }
+    .card-header p  { font-size: 0.74rem; color: var(--gray-400); margin-top: 2px; }
 
-    /* ── Section title ── */
     .section-title {
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: #a07cc5;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin: 14px 0 7px;
-      border-left: 3px solid #c9a8f0;
-      padding-left: 7px;
+      font-size: 0.69rem; font-weight: 800;
+      color: var(--purple-soft);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin: 14px 0 8px;
+      border-left: 3px solid var(--purple-soft);
+      padding-left: 8px;
     }
-
-    /* ── 四欄 grid ── */
     .form-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -60,160 +292,111 @@
     .form-group { display: flex; flex-direction: column; }
     .span2 { grid-column: span 2; }
     .span4 { grid-column: span 4; }
-
     label {
-      font-size: 0.74rem;
-      color: #666;
-      margin-bottom: 4px;
-      font-weight: 500;
-      white-space: nowrap;
+      font-size: 0.73rem; color: var(--gray-600);
+      margin-bottom: 4px; font-weight: 600;
     }
     label .required { color: #e07b7b; margin-left: 2px; }
-    label .hint     { font-size: 0.68rem; color: #c87070; font-weight: 400; margin-left: 3px; }
-
-    select,
-    input[type="text"],
-    input[type="number"],
-    input[type="month"] {
-      padding: 7px 10px;
-      border: 1.5px solid #e0d4f5;
-      border-radius: 9px;
-      font-size: 0.87rem;
-      color: #333;
+    label .hint     { font-size: 0.67rem; color: #c87070; font-weight: 400; margin-left: 3px; }
+    select, input[type="text"], input[type="number"], input[type="month"] {
+      padding: 8px 10px;
+      border: 1.5px solid var(--purple-pale);
+      border-radius: var(--radius-sm);
+      font-size: 0.86rem; color: #333;
       outline: none;
       transition: border 0.2s, box-shadow 0.2s;
-      background: #fafafa;
-      width: 100%;
+      background: var(--gray-100);
+      width: 100%; font-family: inherit;
     }
     select:focus, input:focus {
-      border-color: #a07cc5;
+      border-color: var(--purple-soft);
       box-shadow: 0 0 0 3px rgba(160,124,197,0.12);
-      background: #fff;
+      background: var(--white);
     }
-
-    /* ── 請假區塊 ── */
     .leave-group {
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
       background: #fdf8ff;
       border: 1.5px solid #ecdff8;
-      border-radius: 10px;
+      border-radius: var(--radius-sm);
       padding: 8px 10px 9px;
     }
-    .leave-group label { color: #7a5ba8; font-weight: 600; }
-    .leave-group input  { border-color: #ddd0f0; }
-    .leave-deduction {
-      font-size: 0.7rem;
-      color: #c87070;
-      margin-top: 4px;
-      min-height: 1em;
-    }
-
-    /* ── 扣薪預覽條 ── */
+    .leave-group label { color: var(--purple-mid); font-weight: 700; }
+    .leave-deduction { font-size: 0.7rem; color: var(--red); margin-top: 4px; min-height: 1em; }
     .deduction-box {
-      background: #fff5f5;
+      background: var(--red-soft);
       border: 1.5px dashed #f0b8b8;
-      border-radius: 9px;
+      border-radius: var(--radius-sm);
       padding: 8px 12px;
       display: none;
-      font-size: 0.77rem;
-      color: #a04040;
-      line-height: 1.7;
+      font-size: 0.77rem; color: #a04040; line-height: 1.7;
     }
     .deduction-box.visible { display: block; }
-    .deduction-box .ded-title  { font-weight: 700; color: #b04040; margin-bottom: 1px; }
-    .deduction-box .ded-total  { font-weight: 700; color: #c0392b; margin-top: 3px; }
+    .deduction-box .ded-title { font-weight: 700; color: #b04040; margin-bottom: 1px; }
+    .deduction-box .ded-total { font-weight: 700; color: var(--red); margin-top: 3px; }
 
-    /* ── 底部列 ── */
     .bottom-bar {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 13px;
-      align-items: center;
-      margin-top: 16px;
-      padding-top: 13px;
-      border-top: 2px solid #f0e8ff;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 13px; align-items: center;
+      margin-top: 16px; padding-top: 13px;
+      border-top: 2px solid var(--purple-pale);
     }
     .total-box {
-      background: linear-gradient(135deg, #f0e8ff, #fdebd0);
-      border-radius: 12px;
+      background: linear-gradient(135deg, var(--purple-pale), var(--amber-soft));
+      border-radius: var(--radius-md);
       padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 12px;
     }
-    .total-box .label  { font-size: 0.85rem; color: #7a5ba8; font-weight: 600; white-space: nowrap; }
-    .total-box .amount { font-size: 1.45rem; font-weight: 800; color: #5a3e8a; white-space: nowrap; }
-    .total-box .amount span { font-size: 0.8rem; font-weight: 500; color: #9b7cc8; margin-left: 2px; }
-
+    .total-box .label  { font-size: 0.84rem; color: var(--purple-mid); font-weight: 700; }
+    .total-box .amount { font-size: 1.4rem; font-weight: 900; color: var(--purple-deep); }
+    .total-box .amount span { font-size: 0.78rem; font-weight: 500; color: var(--purple-soft); margin-left: 2px; }
     .btn-preview {
-      padding: 11px 30px;
-      background: linear-gradient(135deg, #a07cc5, #c9a8f0);
-      color: #fff;
-      font-size: 0.96rem;
-      font-weight: 700;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      letter-spacing: 0.05em;
-      white-space: nowrap;
-      transition: opacity 0.2s, transform 0.1s;
+      padding: 11px 28px;
+      background: linear-gradient(135deg, var(--purple-mid), var(--purple-soft));
+      color: #fff; font-size: 0.94rem; font-weight: 800;
+      border: none; border-radius: var(--radius-md);
+      cursor: pointer; letter-spacing: 0.06em;
+      font-family: inherit; white-space: nowrap;
+      transition: opacity 0.18s, transform 0.1s;
+      box-shadow: 0 4px 14px rgba(107,63,160,0.3);
     }
     .btn-preview:hover  { opacity: 0.9; }
     .btn-preview:active { transform: scale(0.98); }
 
-    /* ── Modal 遮罩 ── */
+    /* ════════════════════════════════
+       MODAL
+    ════════════════════════════════ */
     .modal-overlay {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(40,20,70,0.48);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      display: none; position: fixed; inset: 0;
+      background: rgba(40,20,70,0.5);
+      z-index: 300; align-items: center;
+      justify-content: center; padding: 20px;
     }
     .modal-overlay.show { display: flex; }
-
-    /* ── Modal 卡片 ── */
     .modal {
-      background: #fff;
-      border-radius: 20px;
+      background: var(--white);
+      border-radius: var(--radius-lg);
       padding: 28px 26px;
-      width: 100%;
-      max-width: 560px;
-      box-shadow: 0 16px 56px rgba(90,62,138,0.22);
-      max-height: 90vh;
-      overflow-y: auto;
+      width: 100%; max-width: 560px;
+      box-shadow: 0 20px 60px rgba(61,31,122,0.25);
+      max-height: 90vh; overflow-y: auto;
     }
     .modal-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #5a3e8a;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      font-size: 1.05rem; font-weight: 800;
+      color: var(--purple-deep); margin-bottom: 16px;
     }
-
-    /* ── Modal 四欄預覽表格 ── */
     .preview-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-      border: 1.5px solid #e0d4f5;
-      border-radius: 12px;
-      overflow: hidden;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border: 1.5px solid var(--purple-pale);
+      border-radius: var(--radius-md); overflow: hidden;
     }
     .preview-section-header {
       grid-column: span 4;
       background: #f3ecff;
       padding: 6px 12px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: #7a5ba8;
-      letter-spacing: 0.06em;
-      border-bottom: 1px solid #e0d4f5;
+      font-size: 0.71rem; font-weight: 800; color: var(--purple-mid);
+      letter-spacing: 0.07em;
+      border-bottom: 1px solid var(--purple-pale);
     }
     .preview-cell {
       padding: 8px 12px;
@@ -221,79 +404,90 @@
       border-right: 1px solid #f0eafa;
     }
     .preview-cell:nth-child(4n) { border-right: none; }
-    .preview-cell:last-child,
-    .preview-cell.last-row      { border-bottom: none; }
-    .preview-cell .pk { font-size: 0.7rem; color: #a07cc5; font-weight: 600; margin-bottom: 2px; }
-    .preview-cell .pv { font-size: 0.88rem; color: #333; font-weight: 600; }
-    .preview-cell .pv.deduct { color: #c0392b; }
-    .preview-cell .pv.plus   { color: #2e7d52; }
-
-    /* ── Modal 總計列 ── */
+    .preview-cell.last-row { border-bottom: none; }
+    .preview-cell .pk { font-size: 0.7rem; color: var(--purple-soft); font-weight: 700; margin-bottom: 2px; }
+    .preview-cell .pv { font-size: 0.87rem; color: #333; font-weight: 700; }
+    .preview-cell .pv.deduct { color: var(--red); }
+    .preview-cell .pv.plus   { color: var(--green); }
     .preview-total {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: linear-gradient(135deg, #f0e8ff, #fdebd0);
-      border-radius: 10px;
-      padding: 12px 16px;
-      margin-top: 14px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: linear-gradient(135deg, var(--purple-pale), var(--amber-soft));
+      border-radius: var(--radius-md);
+      padding: 12px 16px; margin-top: 14px;
     }
-    .preview-total .pt-label  { font-size: 0.9rem; font-weight: 700; color: #7a5ba8; }
-    .preview-total .pt-amount { font-size: 1.6rem; font-weight: 800; color: #5a3e8a; }
-    .preview-total .pt-amount span { font-size: 0.82rem; font-weight: 500; color: #9b7cc8; margin-left: 3px; }
-
-    /* ── Modal 按鈕列 ── */
-    .modal-btns {
-      display: flex;
-      gap: 10px;
-      margin-top: 16px;
-    }
+    .preview-total .pt-label  { font-size: 0.9rem; font-weight: 700; color: var(--purple-mid); }
+    .preview-total .pt-amount { font-size: 1.55rem; font-weight: 900; color: var(--purple-deep); }
+    .preview-total .pt-amount span { font-size: 0.8rem; font-weight: 500; color: var(--purple-soft); margin-left: 3px; }
+    .modal-btns { display: flex; gap: 10px; margin-top: 16px; }
     .modal-btns button {
       flex: 1; padding: 11px;
-      border-radius: 10px; border: none;
-      font-size: 0.93rem; font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
-      transition: opacity 0.2s, transform 0.1s;
+      border-radius: var(--radius-sm); border: none;
+      font-size: 0.92rem; font-weight: 800;
+      cursor: pointer; font-family: inherit;
+      transition: opacity 0.18s, transform 0.1s;
     }
-    .btn-back {
-      background: #f3ecff;
-      color: #7a5ba8;
-    }
-    .btn-back:hover { opacity: 0.85; }
-    .btn-confirm {
-      background: linear-gradient(135deg, #a07cc5, #c9a8f0);
-      color: #fff;
-    }
-    .btn-confirm:hover   { opacity: 0.9; }
-    .btn-confirm:active  { transform: scale(0.98); }
-    .btn-confirm:disabled{ opacity: 0.6; cursor: not-allowed; }
-
-    /* ── Loading spinner ── */
+    .btn-back    { background: var(--gray-200); color: var(--purple-mid); }
+    .btn-back:hover { background: var(--purple-pale); }
+    .btn-confirm { background: linear-gradient(135deg, var(--purple-mid), var(--purple-soft)); color: #fff; }
+    .btn-confirm:hover    { opacity: 0.9; }
+    .btn-confirm:active   { transform: scale(0.98); }
+    .btn-confirm:disabled { opacity: 0.55; cursor: not-allowed; }
     .loading-spinner {
-      display: inline-block;
-      width: 14px; height: 14px;
-      border: 2px solid rgba(255,255,255,0.5);
-      border-top-color: #fff;
-      border-radius: 50%;
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.45);
+      border-top-color: #fff; border-radius: 50%;
       animation: spin 0.7s linear infinite;
-      vertical-align: middle;
-      margin-right: 5px;
+      vertical-align: middle; margin-right: 5px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── 訊息列 ── */
-    .msg {
-      margin-top: 10px;
-      padding: 9px 12px;
-      border-radius: 9px;
-      font-size: 0.84rem;
-      display: none;
-      white-space: pre-line;
+    /* ════════════════════════════════
+       BACKEND TABLE (莊敬後台)
+    ════════════════════════════════ */
+    .backend-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 20px 24px;
+      overflow-x: auto;
     }
-    .msg.success { background: #eafaf1; color: #2e7d52; border: 1px solid #b2dfcd; }
-    .msg.error   { background: #fff0f0; color: #c0392b; border: 1px solid #f5c6c6; }
+    .backend-title {
+      font-size: 1rem; font-weight: 800; color: var(--purple-deep);
+      margin-bottom: 4px;
+    }
+    .backend-sub { font-size: 0.76rem; color: var(--gray-400); margin-bottom: 16px; }
+    .backend-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.83rem;
+    }
+    .backend-table th {
+      background: #f3ecff; color: var(--purple-mid);
+      padding: 8px 12px; font-weight: 800;
+      text-align: left; border-bottom: 2px solid var(--purple-pale);
+      white-space: nowrap;
+    }
+    .backend-table td {
+      padding: 8px 12px; border-bottom: 1px solid var(--gray-200);
+      color: #333; white-space: nowrap;
+    }
+    .backend-table tr:hover td { background: var(--purple-bg); }
+    .backend-table .plus  { color: var(--green); font-weight: 700; }
+    .backend-table .deduct { color: var(--red); font-weight: 700; }
 
+    /* ════════════════════════════════
+       MSG BOX
+    ════════════════════════════════ */
+    .msg {
+      margin-top: 10px; padding: 9px 12px;
+      border-radius: var(--radius-sm); font-size: 0.84rem;
+      display: none; white-space: pre-line;
+    }
+    .msg.success { background: var(--green-soft); color: var(--green); border: 1px solid #b2dfcd; }
+    .msg.error   { background: var(--red-soft);   color: var(--red);   border: 1px solid #f5c6c6; }
+
+    /* ════════════════════════════════
+       RESPONSIVE
+    ════════════════════════════════ */
     @media (max-width: 640px) {
       .form-grid { grid-template-columns: 1fr 1fr; }
       .span4 { grid-column: span 2; }
@@ -301,115 +495,233 @@
       .btn-preview { width: 100%; }
       .preview-grid { grid-template-columns: 1fr 1fr; }
       .preview-section-header { grid-column: span 2; }
+      .login-card { padding: 30px 22px 26px; }
     }
   </style>
 </head>
 <body>
 
-<div class="card">
-  <!-- Header -->
-  <div class="card-header">
-    <div class="icon">📋</div>
-    <div>
-      <h1>同安校吉的堡獎金與加班資料填報</h1>
-      <p>請確實填寫本月相關資料，每人每月僅限提交一次</p>
-    </div>
-  </div>
+<!-- ══════════════════════════════════════
+     PAGE 1 : LOGIN
+══════════════════════════════════════ -->
+<div class="page active" id="page-login">
+  <span class="dot" style="width:200px;height:200px;background:#fff;top:-60px;left:-60px;animation-delay:0s;"></span>
+  <span class="dot" style="width:120px;height:120px;background:#f0c060;bottom:80px;right:40px;animation-delay:3s;"></span>
+  <span class="dot" style="width:80px;height:80px;background:#b080e0;top:40%;left:10%;animation-delay:1.5s;"></span>
 
-  <!-- 基本資料 -->
-  <div class="section-title">基本資料</div>
-  <div class="form-grid">
-    <div class="form-group span2">
-      <label>姓名 <span class="required">*</span></label>
-      <select id="name"><option value="">載入中...</option></select>
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="emoji">🏫</span>
+      <h1>獎金與加班填報系統</h1>
+      <p>同安校 ／ 吉的堡</p>
     </div>
-    <div class="form-group span2">
-      <label>月份 <span class="required">*</span></label>
-      <input type="month" id="month" />
+    <div class="login-field">
+      <label>帳號</label>
+      <input type="text" id="login-user" placeholder="請輸入帳號" autocomplete="username" />
     </div>
+    <div class="login-field">
+      <label>密碼</label>
+      <input type="password" id="login-pass" placeholder="請輸入密碼" autocomplete="current-password"
+             onkeydown="if(event.key==='Enter')doLogin()" />
+    </div>
+    <div class="login-error" id="login-error"></div>
+    <button class="login-btn" onclick="doLogin()">登 入</button>
   </div>
-
-  <!-- 出勤資料 -->
-  <div class="section-title">出勤資料</div>
-  <div class="form-grid">
-    <div class="form-group">
-      <label>加班時數 <span class="hint">$170／小時</span></label>
-      <input type="number" id="overtimeHours" min="0" step="0.5" placeholder="0" oninput="updateTotal()" />
-    </div>
-    <div class="form-group">
-      <label>安親人數</label>
-      <input type="number" id="afterSchoolCount" min="0" placeholder="0" oninput="updateTotal()" />
-    </div>
-    <div class="form-group">
-      <label>混校人數</label>
-      <input type="number" id="mixedSchoolCount" min="0" placeholder="0" />
-    </div>
-    <div class="form-group"><!-- 佔位 --></div>
-  </div>
-
-  <!-- 請假資料 -->
-  <div class="section-title">請假資料</div>
-  <div class="form-grid">
-    <div class="leave-group span2">
-      <label>🗓 事假時數 <span class="hint">扣 $120／小時</span></label>
-      <input type="number" id="personalLeaveHours" min="0" step="0.5" placeholder="0" oninput="updateLeave()" />
-      <div class="leave-deduction" id="personalDed"></div>
-    </div>
-    <div class="leave-group span2">
-      <label>🏥 病假時數 <span class="hint">扣 $60／小時</span></label>
-      <input type="number" id="sickLeaveHours" min="0" step="0.5" placeholder="0" oninput="updateLeave()" />
-      <div class="leave-deduction" id="sickDed"></div>
-    </div>
-    <div class="deduction-box span4" id="deductionBox">
-      <div class="ded-title">📉 本月請假扣薪預覽</div>
-      <div id="deductionDetail"></div>
-      <div class="ded-total" id="deductionTotal"></div>
-    </div>
-  </div>
-
-  <!-- 獎金資料 -->
-  <div class="section-title">獎金資料</div>
-  <div class="form-grid">
-    <div class="form-group">
-      <label>預繳獎金</label>
-      <input type="number" id="prepaidBonus" min="0" placeholder="0" oninput="updateTotal()" />
-    </div>
-    <div class="form-group">
-      <label>考試獎金</label>
-      <input type="number" id="examBonus" min="0" placeholder="0" oninput="updateTotal()" />
-    </div>
-    <div class="form-group">
-      <label>其他獎金</label>
-      <input type="number" id="otherBonus" min="0" placeholder="0" oninput="updateTotal()" />
-    </div>
-    <div class="form-group"><!-- 佔位 --></div>
-  </div>
-
-  <!-- 底部 -->
-  <div class="bottom-bar">
-    <div class="total-box">
-      <div class="label">💰 本月總獎金預估</div>
-      <div class="amount" id="totalDisplay">0<span>元</span></div>
-    </div>
-    <button class="btn-preview" onclick="openPreview()">預 覽 資 料</button>
-  </div>
-  <div class="msg" id="msgBox"></div>
 </div>
 
-<!-- ── 預覽 Modal ── -->
+<!-- ══════════════════════════════════════
+     PAGE 2 : HOME (選擇校別)
+══════════════════════════════════════ -->
+<div class="page" id="page-home">
+  <div class="home-inner">
+    <h2>請選擇您的校別</h2>
+    <p class="sub" id="home-greeting">歡迎回來</p>
+    <div class="school-cards">
+      <div class="school-card tongan" onclick="goSchool('tongan')">
+        <div class="s-icon">🏠</div>
+        <div class="s-info">
+          <h3>同安校 ／ 吉的堡</h3>
+          <p>填寫本月獎金與加班資料</p>
+        </div>
+        <div class="s-arrow">›</div>
+      </div>
+      <div class="school-card zhuangjing" onclick="goSchool('zhuangjing')">
+        <div class="s-icon">🏢</div>
+        <div class="s-info">
+          <h3>莊敬校 後台</h3>
+          <p>查看已提交紀錄與統計</p>
+        </div>
+        <div class="s-arrow">›</div>
+      </div>
+    </div>
+    <button class="home-logout" onclick="doLogout()">登出</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE 3 : 同安校 / 吉的堡  (2 tabs)
+══════════════════════════════════════ -->
+<div class="page" id="page-school">
+  <div class="topbar">
+    <button class="back-btn" onclick="goBack('page-home')">← 返回</button>
+    <div class="page-title" id="school-page-title">填報</div>
+    <div class="spacer"></div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-btn-tongan"   onclick="switchTab('tongan')">🏠 莊埤（同安校／吉的堡）</button>
+    <button class="tab-btn"        id="tab-btn-zhuangjing" onclick="switchTab('zhuangjing')">🏢 莊敬後台</button>
+  </div>
+
+  <!-- ── Tab 1: 莊埤 填報 ── -->
+  <div class="tab-content active" id="tab-tongan">
+    <div class="content-wrap">
+      <div class="card">
+        <div class="card-header">
+          <div class="icon">📋</div>
+          <div>
+            <h1>同安校／吉的堡　獎金與加班資料填報</h1>
+            <p>請確實填寫本月相關資料，每人每月僅限提交一次</p>
+          </div>
+        </div>
+        <div class="section-title">基本資料</div>
+        <div class="form-grid">
+          <div class="form-group span2">
+            <label>姓名 <span class="required">*</span></label>
+            <select id="name"><option value="">載入中…</option></select>
+          </div>
+          <div class="form-group span2">
+            <label>月份 <span class="required">*</span></label>
+            <input type="month" id="month" />
+          </div>
+        </div>
+        <div class="section-title">出勤資料</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>加班時數 <span class="hint">$170／小時</span></label>
+            <input type="number" id="overtimeHours" min="0" step="0.5" placeholder="0" oninput="updateTotal()" />
+          </div>
+          <div class="form-group">
+            <label>安親人數</label>
+            <input type="number" id="afterSchoolCount" min="0" placeholder="0" oninput="updateTotal()" />
+          </div>
+          <div class="form-group">
+            <label>混校人數</label>
+            <input type="number" id="mixedSchoolCount" min="0" placeholder="0" />
+          </div>
+          <div class="form-group"></div>
+        </div>
+        <div class="section-title">請假資料</div>
+        <div class="form-grid">
+          <div class="leave-group span2">
+            <label>🗓 事假時數 <span class="hint">扣 $120／小時</span></label>
+            <input type="number" id="personalLeaveHours" min="0" step="0.5" placeholder="0" oninput="updateLeave()" />
+            <div class="leave-deduction" id="personalDed"></div>
+          </div>
+          <div class="leave-group span2">
+            <label>🏥 病假時數 <span class="hint">扣 $60／小時</span></label>
+            <input type="number" id="sickLeaveHours" min="0" step="0.5" placeholder="0" oninput="updateLeave()" />
+            <div class="leave-deduction" id="sickDed"></div>
+          </div>
+          <div class="deduction-box span4" id="deductionBox">
+            <div class="ded-title">📉 本月請假扣薪預覽</div>
+            <div id="deductionDetail"></div>
+            <div class="ded-total" id="deductionTotal"></div>
+          </div>
+        </div>
+        <div class="section-title">獎金資料</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>預繳獎金</label>
+            <input type="number" id="prepaidBonus" min="0" placeholder="0" oninput="updateTotal()" />
+          </div>
+          <div class="form-group">
+            <label>考試獎金</label>
+            <input type="number" id="examBonus" min="0" placeholder="0" oninput="updateTotal()" />
+          </div>
+          <div class="form-group">
+            <label>其他獎金</label>
+            <input type="number" id="otherBonus" min="0" placeholder="0" oninput="updateTotal()" />
+          </div>
+          <div class="form-group"></div>
+        </div>
+        <div class="bottom-bar">
+          <div class="total-box">
+            <div class="label">💰 本月總獎金預估</div>
+            <div class="amount" id="totalDisplay">0<span>元</span></div>
+          </div>
+          <button class="btn-preview" onclick="openPreview()">預 覽 資 料</button>
+        </div>
+        <div class="msg" id="msgBox"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tab 2: 莊敬 後台 ── -->
+  <div class="tab-content" id="tab-zhuangjing">
+    <div class="content-wrap">
+      <div class="backend-card">
+        <div class="backend-title">莊敬校 後台管理</div>
+        <div class="backend-sub">顯示最近已提交之填報紀錄（示意資料）</div>
+        <div style="overflow-x:auto;">
+          <table class="backend-table">
+            <thead>
+              <tr>
+                <th>姓名</th><th>月份</th><th>加班時數</th><th>安親人數</th><th>混校人數</th>
+                <th>事假</th><th>病假</th><th>預繳獎金</th><th>考試獎金</th><th>其他獎金</th><th>總計</th>
+              </tr>
+            </thead>
+            <tbody id="backend-tbody">
+              <tr><td colspan="11" style="text-align:center;color:var(--gray-400);padding:20px;">載入中…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE 4 : 莊敬 後台 (獨立頁)
+══════════════════════════════════════ -->
+<div class="page" id="page-zhuangjing">
+  <div class="topbar">
+    <button class="back-btn" onclick="goBack('page-home')">← 返回</button>
+    <div class="page-title">莊敬校 後台</div>
+    <div class="spacer"></div>
+  </div>
+  <div class="content-wrap" style="max-width:980px;margin:0 auto;padding:16px 16px 32px;">
+    <div class="backend-card">
+      <div class="backend-title">莊敬校 後台管理</div>
+      <div class="backend-sub">顯示最近已提交之填報紀錄</div>
+      <div style="overflow-x:auto;">
+        <table class="backend-table">
+          <thead>
+            <tr>
+              <th>姓名</th><th>月份</th><th>加班時數</th><th>安親人數</th><th>混校人數</th>
+              <th>事假</th><th>病假</th><th>預繳獎金</th><th>考試獎金</th><th>其他獎金</th><th>總計</th>
+            </tr>
+          </thead>
+          <tbody id="zj-tbody">
+            <tr><td colspan="11" style="text-align:center;color:var(--gray-400);padding:20px;">載入中…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PREVIEW MODAL
+══════════════════════════════════════ -->
 <div class="modal-overlay" id="previewModal">
   <div class="modal">
     <div class="modal-title">📋 資料預覽確認</div>
-
-    <div class="preview-grid" id="previewGrid">
-      <!-- 由 JS 填入 -->
-    </div>
-
+    <div class="preview-grid" id="previewGrid"></div>
     <div class="preview-total">
       <div class="pt-label">💰 本月總獎金</div>
       <div class="pt-amount" id="previewTotal">0<span>元</span></div>
     </div>
-
     <div class="modal-btns">
       <button class="btn-back" onclick="closePreview()">← 返回修改</button>
       <button class="btn-confirm" id="confirmBtn" onclick="submitForm()">✔ 確認送出</button>
@@ -418,233 +730,235 @@
 </div>
 
 <script>
-  const PERSONAL_RATE = 120;
-  const SICK_RATE     = 60;
-  const OVERTIME_RATE = 170;
-
-
-  // ── Apps Script URL（工作輸入 & 員工名單來源）──
-  // 試算表: 1gWQOJTEvMAtlxE3rCNBT8MYRcUXVbg2f3K4ABDEkj_U
-  const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbzBHEndqfatexVF5ZgDQDwH8yWJorcxclbtvCSxvXyxZCFDjrNbAHmIPTWzUX322uNr/exec';
-
-  // ── 姓名載入：透過 Apps Script API（getEmployeeList）──
-  // 試算表 ID: 1gWQOJTEvMAtlxE3rCNBT8MYRcUXVbg2f3K4ABDEkj_U（已設定於 Apps Script CONFIG）
-  function loadNames() {
-    const sel = document.getElementById('name');
-    sel.innerHTML = '<option value="">載入中...</option>';
-
-    const iframeName = '_names_frame_' + Date.now();
-    const iframe = document.createElement('iframe');
-    iframe.name = iframeName;
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-
-    const form = document.createElement('form');
-    form.method = 'GET';
-    form.action = SUBMIT_URL;
-    form.target = iframeName;
-    const inp = document.createElement('input');
-    inp.type = 'hidden'; inp.name = 'action'; inp.value = 'getEmployeeList';
-    form.appendChild(inp);
-    document.body.appendChild(form);
-
-    let done = false;
-    const timeout = setTimeout(() => {
-      if (done) return; done = true;
-      cleanup();
-      sel.innerHTML = '<option value="">⚠ 載入逾時</option>';
-      showMsg('載入員工名單逾時，請重新整理頁面', 'error');
-    }, 12000);
-
-    iframe.onload = function() {
-      if (done) return; done = true;
-      clearTimeout(timeout);
-      try {
-        const raw = iframe.contentDocument?.body?.innerText
-                 || iframe.contentWindow?.document?.body?.innerText || '';
-        let names = [];
-        const json = JSON.parse(raw);
-        if (Array.isArray(json)) names = json;
-        else if (Array.isArray(json.list))  names = json.list;
-        else if (Array.isArray(json.names)) names = json.names;
-        else if (Array.isArray(json.data))  names = json.data;
-        if (!names.length) throw new Error('名單為空');
-        sel.innerHTML = '<option value="">— 請選擇 —</option>';
-        names.forEach(n => {
-          const opt = document.createElement('option');
-          opt.value = String(n).trim(); opt.textContent = String(n).trim();
-          sel.appendChild(opt);
-        });
-      } catch(e) {
-        sel.innerHTML = '<option value="">⚠ 無法載入姓名</option>';
-        showMsg('載入員工名單失敗：' + e.message, 'error');
-      }
-      cleanup();
-    };
-
-    function cleanup() {
-      try { form.remove(); } catch(e) {}
-      setTimeout(() => { try { iframe.remove(); } catch(e) {} }, 500);
-    }
-    form.submit();
-  }
-
-  // ── 初始化 ──
-  window.onload = function () {
-    const now = new Date();
-    document.getElementById('month').value =
-      now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
-    loadNames();
+  /* ════════ ACCOUNTS ════════ */
+  const ACCOUNTS = {
+    'admin':  { pass: '1234',   role: 'admin',  name: '管理員' },
+    'tongan': { pass: 'tongan', role: 'staff',  name: '同安老師' },
+    'zj':     { pass: 'zj2024', role: 'admin',  name: '莊敬管理員' },
   };
 
-  // ── 請假計算 ──
-  function updateLeave() {
-    const pHrs = Number(document.getElementById('personalLeaveHours').value) || 0;
-    const sHrs = Number(document.getElementById('sickLeaveHours').value)     || 0;
-    const pDed = pHrs * PERSONAL_RATE;
-    const sDed = sHrs * SICK_RATE;
-    const total = pDed + sDed;
-    document.getElementById('personalDed').textContent =
-      pHrs > 0 ? `扣薪 -${pDed.toLocaleString()} 元` : '';
-    document.getElementById('sickDed').textContent =
-      sHrs > 0 ? `扣薪 -${sDed.toLocaleString()} 元` : '';
-    const box = document.getElementById('deductionBox');
-    if (total > 0) {
-      const lines = [];
-      if (pHrs > 0) lines.push(`事假 ${pHrs} 小時 × $${PERSONAL_RATE} = -${pDed.toLocaleString()} 元`);
-      if (sHrs > 0) lines.push(`病假 ${sHrs} 小時 × $${SICK_RATE} = -${sDed.toLocaleString()} 元`);
-      document.getElementById('deductionDetail').textContent = lines.join('\n');
-      document.getElementById('deductionTotal').textContent  = `合計扣薪：-${total.toLocaleString()} 元`;
-      box.classList.add('visible');
+  /* ════════ CONSTANTS ════════ */
+  const PERSONAL_RATE = 120, SICK_RATE = 60, OVERTIME_RATE = 170;
+  const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbzBHEndqfatexVF5ZgDQDwH8yWJorcxclbtvCSxvXyxZCFDjrNbAHmIPTWzUX322uNr/exec';
+  // Google Sheets published HTML (name list)
+  const SHEETS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQsJvhdokMZsltLadwONPrDe4vr3EQp1ayqkauCO34cF6F4jgZzBpktSK5z_5R6IIEy9dHh97FkCNKG/pubhtml?gid=0&single=true';
+
+  let currentUser = null;
+
+  /* ════════ PAGE NAVIGATION ════════ */
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  function goBack(targetPage) { showPage(targetPage); }
+
+  /* ════════ LOGIN ════════ */
+  function doLogin() {
+    const u = document.getElementById('login-user').value.trim();
+    const p = document.getElementById('login-pass').value;
+    const acc = ACCOUNTS[u];
+    if (acc && acc.pass === p) {
+      currentUser = { username: u, ...acc };
+      document.getElementById('login-error').textContent = '';
+      document.getElementById('home-greeting').textContent = `歡迎回來，${acc.name} 👋`;
+      showPage('page-home');
     } else {
-      box.classList.remove('visible');
+      document.getElementById('login-error').textContent = '⚠ 帳號或密碼錯誤，請重試';
     }
+  }
+  function doLogout() {
+    currentUser = null;
+    document.getElementById('login-user').value = '';
+    document.getElementById('login-pass').value = '';
+    showPage('page-login');
+  }
+
+  /* ════════ SCHOOL ROUTING ════════ */
+  function goSchool(school) {
+    if (school === 'tongan') {
+      document.getElementById('school-page-title').textContent = '同安校／吉的堡　填報';
+      switchTab('tongan');
+      showPage('page-school');
+      loadNamesFromSheets();
+    } else {
+      showPage('page-school');
+      switchTab('zhuangjing');
+      loadBackendData('backend-tbody');
+    }
+  }
+
+  /* ════════ TABS ════════ */
+  function switchTab(tab) {
+    ['tongan','zhuangjing'].forEach(t => {
+      document.getElementById('tab-btn-' + t).classList.toggle('active', t === tab);
+      document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+    });
+    if (tab === 'zhuangjing') loadBackendData('backend-tbody');
+  }
+
+  /* ════════ LOAD NAMES from published Google Sheets HTML ════════ */
+  function loadNamesFromSheets() {
+    const sel = document.getElementById('name');
+    sel.innerHTML = '<option value="">載入中…</option>';
+
+    fetch(SHEETS_URL)
+      .then(r => r.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc    = parser.parseFromString(html, 'text/html');
+        // Grab all <td> content from the first column
+        const rows  = doc.querySelectorAll('table tr');
+        const names = [];
+        rows.forEach(row => {
+          const cells = row.querySelectorAll('td');
+          if (cells.length > 0) {
+            const name = cells[0].textContent.trim();
+            if (name) names.push(name);
+          }
+        });
+        if (names.length === 0) throw new Error('姓名欄位為空');
+        sel.innerHTML = '<option value="">— 請選擇 —</option>';
+        names.forEach(n => {
+          const o = document.createElement('option');
+          o.value = n; o.textContent = n;
+          sel.appendChild(o);
+        });
+      })
+      .catch(e => {
+        sel.innerHTML = '<option value="">⚠ 無法載入姓名</option>';
+        showMsg('載入姓名失敗：' + e.message + '\n（CORS 限制可能影響直接讀取，請確認試算表已公開）', 'error');
+      });
+  }
+
+  /* ════════ BACKEND DATA (placeholder) ════════ */
+  const SAMPLE_ROWS = [
+    { name:'王小明', month:'2025-03', ot:2, after:18, mixed:3, personal:0, sick:1, prepaid:500, exam:300, other:0, total:3200 },
+    { name:'陳美華', month:'2025-03', ot:0, after:22, mixed:0, personal:4, sick:0, prepaid:0,   exam:0,   other:200, total:21200 },
+    { name:'林志遠', month:'2025-03', ot:3, after:16, mixed:1, personal:0, sick:2, prepaid:1000,exam:500, other:0,   total:10390 },
+  ];
+  function loadBackendData(tbodyId) {
+    const tbody = document.getElementById(tbodyId);
+    if (!tbody) return;
+    tbody.innerHTML = SAMPLE_ROWS.map(r => `
+      <tr>
+        <td>${r.name}</td><td>${r.month}</td>
+        <td class="plus">${r.ot}</td>
+        <td>${r.after}</td><td>${r.mixed}</td>
+        <td class="deduct">${r.personal}</td>
+        <td class="deduct">${r.sick}</td>
+        <td class="plus">${r.prepaid.toLocaleString()}</td>
+        <td class="plus">${r.exam.toLocaleString()}</td>
+        <td class="plus">${r.other.toLocaleString()}</td>
+        <td class="plus" style="font-weight:800;">${r.total.toLocaleString()}</td>
+      </tr>`).join('');
+  }
+
+  /* ════════ FORM CALCULATIONS ════════ */
+  function updateLeave() {
+    const pH = Number(document.getElementById('personalLeaveHours').value) || 0;
+    const sH = Number(document.getElementById('sickLeaveHours').value)     || 0;
+    const pD = pH * PERSONAL_RATE, sD = sH * SICK_RATE, tot = pD + sD;
+    document.getElementById('personalDed').textContent = pH > 0 ? `扣薪 -${pD.toLocaleString()} 元` : '';
+    document.getElementById('sickDed').textContent     = sH > 0 ? `扣薪 -${sD.toLocaleString()} 元` : '';
+    const box = document.getElementById('deductionBox');
+    if (tot > 0) {
+      const lines = [];
+      if (pH > 0) lines.push(`事假 ${pH} 小時 × $${PERSONAL_RATE} = -${pD.toLocaleString()} 元`);
+      if (sH > 0) lines.push(`病假 ${sH} 小時 × $${SICK_RATE} = -${sD.toLocaleString()} 元`);
+      document.getElementById('deductionDetail').textContent = lines.join('\n');
+      document.getElementById('deductionTotal').textContent  = `合計扣薪：-${tot.toLocaleString()} 元`;
+      box.classList.add('visible');
+    } else { box.classList.remove('visible'); }
     updateTotal();
   }
 
-  // ── 總獎金計算 ──
   function calcValues() {
-    const overtime    = Number(document.getElementById('overtimeHours').value)      || 0;
-    const afterSchool = Number(document.getElementById('afterSchoolCount').value)   || 0;
-    const prepaid     = Number(document.getElementById('prepaidBonus').value)       || 0;
-    const exam        = Number(document.getElementById('examBonus').value)          || 0;
-    const other       = Number(document.getElementById('otherBonus').value)         || 0;
-    const pHrs        = Number(document.getElementById('personalLeaveHours').value) || 0;
-    const sHrs        = Number(document.getElementById('sickLeaveHours').value)     || 0;
-
-    let afterSchoolPay = 0;
-    if (afterSchool >= 21)      afterSchoolPay = afterSchool * 1000;
-    else if (afterSchool >= 16) afterSchoolPay = afterSchool * 500;
-
-    const overtimePay = overtime * OVERTIME_RATE;
-    const personalDed = pHrs * PERSONAL_RATE;
-    const sickDed     = sHrs * SICK_RATE;
-    const total = overtimePay + afterSchoolPay + prepaid + exam + other - personalDed - sickDed;
-
-    return { overtime, afterSchool, afterSchoolPay, prepaid, exam, other,
-             pHrs, sHrs, overtimePay, personalDed, sickDed, total };
+    const ot   = Number(document.getElementById('overtimeHours').value)      || 0;
+    const afsc = Number(document.getElementById('afterSchoolCount').value)   || 0;
+    const pre  = Number(document.getElementById('prepaidBonus').value)       || 0;
+    const ex   = Number(document.getElementById('examBonus').value)          || 0;
+    const oth  = Number(document.getElementById('otherBonus').value)         || 0;
+    const pH   = Number(document.getElementById('personalLeaveHours').value) || 0;
+    const sH   = Number(document.getElementById('sickLeaveHours').value)     || 0;
+    let afsP = 0;
+    if (afsc >= 21)      afsP = afsc * 1000;
+    else if (afsc >= 16) afsP = afsc * 500;
+    const otP = ot * OVERTIME_RATE;
+    const pD  = pH * PERSONAL_RATE;
+    const sD  = sH * SICK_RATE;
+    const total = otP + afsP + pre + ex + oth - pD - sD;
+    return { ot, afsc, afsP, pre, ex, oth, pH, sH, otP, pD, sD, total };
   }
 
   function updateTotal() {
     const v = calcValues();
-    document.getElementById('totalDisplay').innerHTML =
-      v.total.toLocaleString() + '<span>元</span>';
+    document.getElementById('totalDisplay').innerHTML = v.total.toLocaleString() + '<span>元</span>';
   }
 
-  // ── 開啟預覽 Modal ──
+  /* ════════ PREVIEW MODAL ════════ */
   function openPreview() {
     const name  = document.getElementById('name').value.trim();
     const month = document.getElementById('month').value.trim();
     if (!name)  { showMsg('請選擇姓名。', 'error'); return; }
     if (!month) { showMsg('請選擇月份。', 'error'); return; }
-
     const v = calcValues();
     const mixed = document.getElementById('mixedSchoolCount').value || '0';
+    let afsLabel = v.afsc + ' 人';
+    if (v.afsc >= 21)      afsLabel += '（$1000/人）';
+    else if (v.afsc >= 16) afsLabel += '（$500/人）';
+    else if (v.afsc > 0)   afsLabel += '（無津貼）';
 
-    // 安親津貼說明
-    let afterSchoolLabel = v.afterSchool + ' 人';
-    if (v.afterSchool >= 21)      afterSchoolLabel += '（$1000/人）';
-    else if (v.afterSchool >= 16) afterSchoolLabel += '（$500/人）';
-    else if (v.afterSchool > 0)   afterSchoolLabel += '（無津貼）';
-
-    // 建立預覽四欄格
     const grid = document.getElementById('previewGrid');
     grid.innerHTML = '';
-
-    function addSection(title) {
+    function sec(t) {
       const h = document.createElement('div');
-      h.className = 'preview-section-header';
-      h.textContent = title;
-      grid.appendChild(h);
+      h.className = 'preview-section-header'; h.textContent = t; grid.appendChild(h);
     }
-    function addCell(label, value, cls) {
+    function cell(lbl, val, cls) {
       const c = document.createElement('div');
       c.className = 'preview-cell';
-      c.innerHTML = `<div class="pk">${label}</div><div class="pv${cls?' '+cls:''}">${value}</div>`;
+      c.innerHTML = `<div class="pk">${lbl}</div><div class="pv${cls?' '+cls:''}">${val}</div>`;
       grid.appendChild(c);
     }
-    function addEmpty(n) {
-      for(let i=0;i<n;i++){
-        const c = document.createElement('div');
-        c.className = 'preview-cell';
-        grid.appendChild(c);
-      }
-    }
+    function empty(n) { for(let i=0;i<n;i++){const c=document.createElement('div');c.className='preview-cell';grid.appendChild(c);} }
 
-    // 基本資料（佔2格 + 2格）
-    addSection('基本資料');
-    addCell('姓名', name);
-    addCell('月份', month);
-    addEmpty(2);
+    sec('基本資料');  cell('姓名',name); cell('月份',month); empty(2);
+    sec('出勤資料');
+    cell('加班時數', v.ot+' 小時', v.ot>0?'plus':'');
+    cell('加班費',   v.ot>0?'+'+v.otP.toLocaleString()+' 元':'—', v.ot>0?'plus':'');
+    cell('安親人數', afsLabel, v.afsP>0?'plus':'');
+    cell('混校人數', mixed+' 人');
+    sec('請假資料');
+    cell('事假時數', v.pH>0?v.pH+' 小時':'—', v.pH>0?'deduct':'');
+    cell('事假扣薪', v.pD>0?'-'+v.pD.toLocaleString()+' 元':'—', v.pD>0?'deduct':'');
+    cell('病假時數', v.sH>0?v.sH+' 小時':'—', v.sH>0?'deduct':'');
+    cell('病假扣薪', v.sD>0?'-'+v.sD.toLocaleString()+' 元':'—', v.sD>0?'deduct':'');
+    sec('獎金資料');
+    cell('預繳獎金', v.pre>0?'+'+v.pre.toLocaleString()+' 元':'—', v.pre>0?'plus':'');
+    cell('考試獎金', v.ex>0?'+'+v.ex.toLocaleString()+' 元':'—',  v.ex>0?'plus':'');
+    cell('其他獎金', v.oth>0?'+'+v.oth.toLocaleString()+' 元':'—',v.oth>0?'plus':'');
+    empty(1);
 
-    // 出勤資料（4格）
-    addSection('出勤資料');
-    addCell('加班時數', v.overtime + ' 小時', v.overtime > 0 ? 'plus' : '');
-    addCell('加班費', v.overtime > 0 ? '+' + v.overtimePay.toLocaleString() + ' 元' : '—', v.overtime > 0 ? 'plus' : '');
-    addCell('安親人數', afterSchoolLabel, v.afterSchoolPay > 0 ? 'plus' : '');
-    addCell('混校人數', mixed + ' 人');
-
-    // 請假資料（4格）
-    addSection('請假資料');
-    addCell('事假時數', v.pHrs > 0 ? v.pHrs + ' 小時' : '—', v.pHrs > 0 ? 'deduct' : '');
-    addCell('事假扣薪', v.personalDed > 0 ? '-' + v.personalDed.toLocaleString() + ' 元' : '—', v.personalDed > 0 ? 'deduct' : '');
-    addCell('病假時數', v.sHrs > 0 ? v.sHrs + ' 小時' : '—', v.sHrs > 0 ? 'deduct' : '');
-    addCell('病假扣薪', v.sickDed > 0 ? '-' + v.sickDed.toLocaleString() + ' 元' : '—', v.sickDed > 0 ? 'deduct' : '');
-
-    // 獎金資料（4格）
-    addSection('獎金資料');
-    addCell('預繳獎金', v.prepaid > 0 ? '+' + v.prepaid.toLocaleString() + ' 元' : '—', v.prepaid > 0 ? 'plus' : '');
-    addCell('考試獎金', v.exam > 0 ? '+' + v.exam.toLocaleString() + ' 元' : '—', v.exam > 0 ? 'plus' : '');
-    addCell('其他獎金', v.other > 0 ? '+' + v.other.toLocaleString() + ' 元' : '—', v.other > 0 ? 'plus' : '');
-    addEmpty(1);
-
-    // 標記最後一行
     const cells = grid.querySelectorAll('.preview-cell');
-    const total4 = cells.length;
-    for(let i = Math.max(0, total4-4); i < total4; i++) {
-      cells[i].classList.add('last-row');
-    }
+    const tot4  = cells.length;
+    for(let i=Math.max(0,tot4-4);i<tot4;i++) cells[i].classList.add('last-row');
 
-    document.getElementById('previewTotal').innerHTML =
-      v.total.toLocaleString() + '<span>元</span>';
+    document.getElementById('previewTotal').innerHTML = v.total.toLocaleString() + '<span>元</span>';
     document.getElementById('confirmBtn').disabled = false;
     document.getElementById('confirmBtn').textContent = '✔ 確認送出';
     document.getElementById('previewModal').classList.add('show');
   }
 
-  function closePreview() {
-    document.getElementById('previewModal').classList.remove('show');
-  }
+  function closePreview() { document.getElementById('previewModal').classList.remove('show'); }
 
-  // ── 送出（隱藏 iframe + form，繞過 CORS & redirect）──
+  /* ════════ SUBMIT ════════ */
   function submitForm() {
     const name  = document.getElementById('name').value.trim();
     const month = document.getElementById('month').value.trim();
     const v     = calcValues();
-
     const params = {
-      action:             'submitBonusForm',
-      name, month,
+      action:'submitBonusForm', name, month,
       overtimeHours:      document.getElementById('overtimeHours').value      || 0,
       afterSchoolCount:   document.getElementById('afterSchoolCount').value   || 0,
       mixedSchoolCount:   document.getElementById('mixedSchoolCount').value   || 0,
@@ -655,91 +969,50 @@
       sickLeaveHours:     document.getElementById('sickLeaveHours').value     || 0,
       totalBonus:         v.total,
     };
-
     const btn = document.getElementById('confirmBtn');
     btn.disabled = true;
     btn.innerHTML = '<span class="loading-spinner"></span>提交中…';
 
-    // 建立隱藏 iframe（接收 form 回應，避免頁面跳轉）
-    const iframeName = '_submit_frame_' + Date.now();
+    const iframeName = '_submit_' + Date.now();
     const iframe = document.createElement('iframe');
-    iframe.name = iframeName;
-    iframe.style.display = 'none';
+    iframe.name = iframeName; iframe.style.display = 'none';
     document.body.appendChild(iframe);
-
-    // 建立隱藏 form
     const form = document.createElement('form');
-    form.method = 'GET';
-    form.action = SUBMIT_URL;
-    form.target = iframeName;
-
-    Object.entries(params).forEach(([k, val]) => {
-      const input = document.createElement('input');
-      input.type  = 'hidden';
-      input.name  = k;
-      input.value = val;
-      form.appendChild(input);
+    form.method = 'GET'; form.action = SUBMIT_URL; form.target = iframeName;
+    Object.entries(params).forEach(([k,vv]) => {
+      const inp = document.createElement('input');
+      inp.type='hidden'; inp.name=k; inp.value=vv; form.appendChild(inp);
     });
     document.body.appendChild(form);
 
-    // 等 iframe 載入完成後讀取結果
     let done = false;
     const timeout = setTimeout(() => {
-      if (done) return;
-      done = true;
-      cleanup();
-      btn.disabled = false;
-      btn.textContent = '✔ 確認送出';
-      closePreview();
-      // 逾時仍視為可能送出成功（Apps Script 有時不回應 iframe）
-      showMsg('✅ 資料已送出！（如有疑問請確認試算表是否有新資料）', 'success');
-      clearForm();
+      if (done) return; done = true; cleanup();
+      btn.disabled=false; btn.textContent='✔ 確認送出';
+      closePreview(); showMsg('✅ 資料已送出！（如有疑問請確認試算表是否有新資料）','success'); clearForm();
     }, 12000);
 
     iframe.onload = function() {
-      if (done) return;
-      done = true;
-      clearTimeout(timeout);
+      if (done) return; done = true; clearTimeout(timeout);
       let result = null;
       try {
-        const raw = iframe.contentDocument?.body?.innerText
-                 || iframe.contentWindow?.document?.body?.innerText || '';
-        // Apps Script 重導向後 body 可能是空的，直接視為成功
-        if (!raw || raw.trim() === '') {
-          result = { success: true, message: '資料已成功提交！' };
-        } else {
-          result = JSON.parse(raw);
-        }
-      } catch(e) {
-        result = { success: true, message: '資料已送出！' };
-      }
+        const raw = iframe.contentDocument?.body?.innerText || iframe.contentWindow?.document?.body?.innerText || '';
+        result = (!raw || !raw.trim()) ? { success:true, message:'資料已成功提交！' } : JSON.parse(raw);
+      } catch(e) { result = { success:true, message:'資料已送出！' }; }
       cleanup();
-      btn.disabled = false;
-      btn.textContent = '✔ 確認送出';
+      btn.disabled=false; btn.textContent='✔ 確認送出';
       closePreview();
-      if (result && result.success) {
-        showMsg('✅ ' + (result.message || '資料已成功提交！'), 'success');
-        clearForm();
-      } else {
-        showMsg('⚠️ ' + (result?.message || '提交失敗，請稍後再試'), 'error');
-      }
+      if (result && result.success) { showMsg('✅ ' + (result.message||'資料已成功提交！'), 'success'); clearForm(); }
+      else showMsg('⚠️ ' + (result?.message||'提交失敗，請稍後再試'), 'error');
     };
-
-    function cleanup() {
-      try { form.remove(); } catch(e) {}
-      setTimeout(() => { try { iframe.remove(); } catch(e) {} }, 500);
-    }
-
+    function cleanup() { try{form.remove();}catch(e){} setTimeout(()=>{try{iframe.remove();}catch(e){}},500); }
     form.submit();
   }
 
-  // ── 清空表單 ──
+  /* ════════ HELPERS ════════ */
   function clearForm() {
-    ['overtimeHours','afterSchoolCount','mixedSchoolCount',
-     'prepaidBonus','examBonus','otherBonus',
-     'personalLeaveHours','sickLeaveHours'].forEach(id => {
-      document.getElementById(id).value = '';
-    });
+    ['overtimeHours','afterSchoolCount','mixedSchoolCount','prepaidBonus','examBonus','otherBonus','personalLeaveHours','sickLeaveHours']
+      .forEach(id => document.getElementById(id).value = '');
     document.getElementById('name').value = '';
     document.getElementById('totalDisplay').innerHTML = '0<span>元</span>';
     document.getElementById('personalDed').textContent = '';
@@ -747,13 +1020,20 @@
     document.getElementById('deductionBox').classList.remove('visible');
   }
 
-  // ── 訊息 ──
   function showMsg(text, type) {
     const box = document.getElementById('msgBox');
+    if (!box) return;
     box.textContent = text; box.className = 'msg ' + type;
     box.style.display = 'block';
-    setTimeout(() => { box.style.display = 'none'; }, 8000);
+    setTimeout(() => { box.style.display = 'none'; }, 9000);
   }
+
+  /* ════════ INIT ════════ */
+  window.onload = function() {
+    const now = new Date();
+    const m = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+    document.getElementById('month').value = m;
+  };
 </script>
 </body>
 </html>
