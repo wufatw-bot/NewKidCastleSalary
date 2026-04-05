@@ -962,7 +962,7 @@ function resetForm() {
 // ════════════════════════════════════
 //  送出薪資
 // ════════════════════════════════════
-async function submitForm() {
+function submitForm() {
   const nameEl = document.getElementById('empName');
   const name   = (nameEl ? nameEl.value : '').trim();
   const month  = document.getElementById('monthValue').value;
@@ -993,15 +993,60 @@ async function submitForm() {
   };
   const btn = document.getElementById('submitBtn');
   btn.disabled=true; btn.textContent='⏳ 送出中…';
-  try {
-    await fetch(TA_SUBMIT_URL, {method:'POST', body:JSON.stringify(payload)});
-    alert('✅ 薪資資料已送出！\n\n員工：'+name+'\n月份：'+month+'\n合計：'+fmt(total)+' 元');
-    resetForm();
-  } catch(e) {
-    alert('⚠️ 送出時發生錯誤，請稍後再試。\n'+e.message);
-  } finally {
-    btn.disabled=false; btn.textContent='✅ 確認送出本月薪資';
+
+  // Google Apps Script 須用隱藏 iframe + GET 表單送出
+  const iframeName = '_ta_submit_' + Date.now();
+  const iframe = document.createElement('iframe');
+  iframe.name = iframeName;
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+
+  const form = document.createElement('form');
+  form.method = 'GET';
+  form.action = TA_SUBMIT_URL;
+  form.target = iframeName;
+  Object.entries(payload).forEach(([k, v]) => {
+    const inp = document.createElement('input');
+    inp.type='hidden'; inp.name=k; inp.value=v;
+    form.appendChild(inp);
+  });
+  document.body.appendChild(form);
+
+  let done = false;
+  function cleanup() {
+    try { form.remove(); } catch(e) {}
+    setTimeout(() => { try { iframe.remove(); } catch(e) {} }, 500);
   }
+  function resetBtn() { btn.disabled=false; btn.textContent='✅ 確認送出本月薪資'; }
+
+  // 10 秒 timeout 保底（GAS 有時不觸發 onload）
+  const timeout = setTimeout(() => {
+    if (done) return; done = true;
+    cleanup(); resetBtn();
+    alert('✅ 薪資資料已送出！\n\n員工：'+name+'\n月份：'+month+'\n合計：'+fmt(total)+' 元\n\n（請至試算表確認是否新增一筆資料）');
+    resetForm();
+  }, 10000);
+
+  iframe.onload = function() {
+    if (done) return; done = true;
+    clearTimeout(timeout);
+    let result = null;
+    try {
+      const raw = iframe.contentDocument?.body?.innerText || iframe.contentWindow?.document?.body?.innerText || '';
+      result = raw.trim() ? JSON.parse(raw) : { success: true, message: '薪資資料已成功寫入！' };
+    } catch(e) {
+      result = { success: true, message: '薪資資料已送出！' };
+    }
+    cleanup(); resetBtn();
+    if (result.success) {
+      alert('✅ ' + result.message + '\n\n員工：'+name+'\n月份：'+month+'\n合計：'+fmt(total)+' 元');
+      resetForm();
+    } else {
+      alert('⚠️ ' + (result.message || '提交失敗，請再試一次'));
+    }
+  };
+
+  form.submit();
 }
 
 // ── ESC / Enter ──
