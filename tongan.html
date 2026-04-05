@@ -531,6 +531,18 @@
               </div>
               <button class="submit-btn" id="submitBtn" onclick="submitForm()">✅ 確認送出本月薪資</button>
             </div><!-- /form-wrap -->
+
+  <!-- ══ 送出進度 Modal ══ -->
+  <div id="progressOverlay" style="display:none;position:fixed;inset:0;background:rgba(20,15,5,0.6);z-index:500;align-items:center;justify-content:center;padding:24px;">
+    <div style="background:#fff;border-radius:20px;padding:32px 28px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;color:#3d2e1a;margin-bottom:20px;text-align:center;letter-spacing:1px;">📤 薪資送出進度</div>
+      <div id="progressSteps" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;"></div>
+      <div id="progressLog" style="background:#faf6ee;border:1px solid #e8dcc8;border-radius:10px;padding:12px;font-size:12px;color:#5a4a35;font-family:monospace;max-height:120px;overflow-y:auto;white-space:pre-wrap;line-height:1.6;"></div>
+      <div id="progressActions" style="margin-top:18px;display:none;">
+        <button onclick="closeProgress()" style="width:100%;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#2a6040,#3d8258);color:#fef3dc;font-family:'Noto Serif TC',serif;font-size:16px;font-weight:700;letter-spacing:2px;cursor:pointer;">確 認</button>
+      </div>
+    </div>
+  </div>
           </div><!-- /form-scroll -->
         </div><!-- /taFormArea -->
       </div><!-- /spanel0 -->
@@ -962,12 +974,67 @@ function resetForm() {
 // ════════════════════════════════════
 //  送出薪資
 // ════════════════════════════════════
+// ════════════════════════════════════
+//  進度顯示工具
+// ════════════════════════════════════
+let _progressSteps = [];
+
+function openProgress() {
+  _progressSteps = [];
+  document.getElementById('progressSteps').innerHTML = '';
+  document.getElementById('progressLog').textContent = '';
+  document.getElementById('progressActions').style.display = 'none';
+  document.getElementById('progressOverlay').style.display = 'flex';
+}
+function closeProgress() {
+  document.getElementById('progressOverlay').style.display = 'none';
+}
+function addStep(id, icon, label) {
+  const el = document.createElement('div');
+  el.id = 'step_' + id;
+  el.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:#faf6ee;border:1.5px solid #e8dcc8;font-size:14px;font-weight:600;color:#5a4a35;transition:all .3s;';
+  el.innerHTML = `<span id="step_icon_${id}" style="font-size:18px;width:24px;text-align:center;">${icon}</span><span>${label}</span><span id="step_status_${id}" style="margin-left:auto;font-size:12px;color:#8a7560;"></span>`;
+  document.getElementById('progressSteps').appendChild(el);
+  return el;
+}
+function setStep(id, state, statusText) {
+  const el = document.getElementById('step_' + id);
+  const icon = document.getElementById('step_icon_' + id);
+  const status = document.getElementById('step_status_' + id);
+  if (!el) return;
+  const states = {
+    running: { bg:'#fff8e1', border:'#f6c47e', color:'#7d4e08', icon:'⏳', text:'進行中…' },
+    ok:      { bg:'#e8f5e9', border:'#a5d6a7', color:'#2a6040', icon:'✅', text:'完成' },
+    warn:    { bg:'#fff3e0', border:'#ffcc80', color:'#8d4e00', icon:'⚠️', text:'注意' },
+    error:   { bg:'#ffebee', border:'#ef9a9a', color:'#b71c1c', icon:'❌', text:'失敗' },
+  };
+  const s = states[state] || states.running;
+  el.style.background = s.bg;
+  el.style.borderColor = s.border;
+  el.style.color = s.color;
+  icon.textContent = s.icon;
+  status.textContent = statusText || s.text;
+}
+function log(msg) {
+  const box = document.getElementById('progressLog');
+  const ts = new Date().toLocaleTimeString('zh-TW');
+  box.textContent += `[${ts}] ${msg}\n`;
+  box.scrollTop = box.scrollHeight;
+}
+function showProgressActions() {
+  document.getElementById('progressActions').style.display = 'block';
+}
+
+// ════════════════════════════════════
+//  送出薪資（含進度顯示）
+// ════════════════════════════════════
 function submitForm() {
   const nameEl = document.getElementById('empName');
   const name   = (nameEl ? nameEl.value : '').trim();
   const month  = document.getElementById('monthValue').value;
   if (!name)  { alert('請選擇（或輸入）員工姓名'); return; }
   if (!month) { alert('請選擇薪資月份'); return; }
+
   const base=parseFloat(document.getElementById('baseSalary').value)||0;
   const role=parseFloat(document.getElementById('roleAllowance').value)||0;
   const ot=calcOT(), asc=calcASC(), bonus=calcBonus(), union=calcUnion();
@@ -991,63 +1058,117 @@ function submitForm() {
     unionLabor:document.getElementById('cb_unionLabor').checked?(parseFloat(document.getElementById('amt_unionLabor').value)||0):0,
     unionTotal:union, totalSalary:total
   };
+
+  // ── 開啟進度視窗 ──
+  openProgress();
   const btn = document.getElementById('submitBtn');
-  btn.disabled=true; btn.textContent='⏳ 送出中…';
+  btn.disabled = true;
 
-  // Google Apps Script 須用隱藏 iframe + GET 表單送出
-  const iframeName = '_ta_submit_' + Date.now();
-  const iframe = document.createElement('iframe');
-  iframe.name = iframeName;
-  iframe.style.display = 'none';
-  document.body.appendChild(iframe);
+  addStep('prepare', '📋', '整理薪資資料');
+  addStep('send',    '📡', '傳送至 Google 試算表');
+  addStep('confirm', '📊', '確認寫入結果');
 
-  const form = document.createElement('form');
-  form.method = 'GET';
-  form.action = TA_SUBMIT_URL;
-  form.target = iframeName;
-  Object.entries(payload).forEach(([k, v]) => {
-    const inp = document.createElement('input');
-    inp.type='hidden'; inp.name=k; inp.value=v;
-    form.appendChild(inp);
-  });
-  document.body.appendChild(form);
+  // Step 1：整理資料
+  setStep('prepare', 'running');
+  log('開始整理資料…');
+  log(`員工：${name}　月份：${month}`);
+  log(`本薪 $${base.toLocaleString()}　職務加給 $${role.toLocaleString()}`);
+  log(`加班費 $${ot.toLocaleString()}　安親津貼 $${asc.toLocaleString()}`);
+  log(`獎金 $${bonus.toLocaleString()}　公會補貼 $${union.toLocaleString()}`);
+  log(`─────────────────────────`);
+  log(`應付薪資合計：$${total.toLocaleString()}`);
 
-  let done = false;
-  function cleanup() {
-    try { form.remove(); } catch(e) {}
-    setTimeout(() => { try { iframe.remove(); } catch(e) {} }, 500);
-  }
-  function resetBtn() { btn.disabled=false; btn.textContent='✅ 確認送出本月薪資'; }
+  setTimeout(() => {
+    setStep('prepare', 'ok', `共 ${Object.keys(payload).length} 個欄位`);
+    log('✅ 資料整理完成');
 
-  // 10 秒 timeout 保底（GAS 有時不觸發 onload）
-  const timeout = setTimeout(() => {
-    if (done) return; done = true;
-    cleanup(); resetBtn();
-    alert('✅ 薪資資料已送出！\n\n員工：'+name+'\n月份：'+month+'\n合計：'+fmt(total)+' 元\n\n（請至試算表確認是否新增一筆資料）');
-    resetForm();
-  }, 10000);
+    // Step 2：建立 iframe + form 送出
+    setStep('send', 'running');
+    log('建立送出通道（GET Form → GAS）…');
 
-  iframe.onload = function() {
-    if (done) return; done = true;
-    clearTimeout(timeout);
-    let result = null;
-    try {
-      const raw = iframe.contentDocument?.body?.innerText || iframe.contentWindow?.document?.body?.innerText || '';
-      result = raw.trim() ? JSON.parse(raw) : { success: true, message: '薪資資料已成功寫入！' };
-    } catch(e) {
-      result = { success: true, message: '薪資資料已送出！' };
+    const iframeName = '_ta_submit_' + Date.now();
+    const iframe = document.createElement('iframe');
+    iframe.name = iframeName;
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    const form = document.createElement('form');
+    form.method = 'GET';
+    form.action = TA_SUBMIT_URL;
+    form.target = iframeName;
+    Object.entries(payload).forEach(([k, v]) => {
+      const inp = document.createElement('input');
+      inp.type='hidden'; inp.name=k; inp.value=v;
+      form.appendChild(inp);
+    });
+    document.body.appendChild(form);
+
+    log(`送出目標：${TA_SUBMIT_URL.slice(0,60)}…`);
+    log('送出中，等待 GAS 回應…');
+
+    let done = false;
+    function cleanup() {
+      try { form.remove(); } catch(e) {}
+      setTimeout(() => { try { iframe.remove(); } catch(e) {} }, 500);
     }
-    cleanup(); resetBtn();
-    if (result.success) {
-      alert('✅ ' + result.message + '\n\n員工：'+name+'\n月份：'+month+'\n合計：'+fmt(total)+' 元');
-      resetForm();
-    } else {
-      alert('⚠️ ' + (result.message || '提交失敗，請再試一次'));
-    }
-  };
+    function resetBtn() { btn.disabled=false; btn.textContent='✅ 確認送出本月薪資'; }
 
-  form.submit();
+    // 10 秒 timeout
+    const timeout = setTimeout(() => {
+      if (done) return; done = true;
+      cleanup();
+      setStep('send', 'warn', 'Timeout（10 秒）');
+      setStep('confirm', 'warn', '無法確認');
+      log('⚠️ GAS 10 秒內未回應（這是正常的 GAS 行為）');
+      log('📌 資料已送出，請手動確認試算表是否新增一筆。');
+      log(`   員工：${name}　月份：${month}　合計：$${total.toLocaleString()}`);
+      resetBtn();
+      showProgressActions();
+    }, 10000);
+
+    iframe.onload = function() {
+      if (done) return; done = true;
+      clearTimeout(timeout);
+
+      setStep('send', 'ok', '已收到 GAS 回應');
+      log('✅ GAS 回應成功');
+
+      // Step 3：解析回傳結果
+      setStep('confirm', 'running');
+      log('解析回傳結果…');
+
+      let result = null;
+      try {
+        const raw = iframe.contentDocument?.body?.innerText
+                 || iframe.contentWindow?.document?.body?.innerText || '';
+        log(`GAS 原始回應：${raw.slice(0,200) || '（空）'}`);
+        result = raw.trim() ? JSON.parse(raw) : { success: true, message: '薪資資料已成功寫入！' };
+      } catch(e) {
+        log(`JSON 解析錯誤：${e.message}，視為成功`);
+        result = { success: true, message: '薪資資料已送出！' };
+      }
+
+      cleanup();
+      resetBtn();
+
+      if (result.success) {
+        setStep('confirm', 'ok', '寫入確認');
+        log('✅ ' + (result.message || '薪資資料已成功寫入試算表！'));
+        log(`   員工：${name}　月份：${month}　合計：$${total.toLocaleString()}`);
+        showProgressActions();
+        resetForm();
+      } else {
+        setStep('confirm', 'error', 'GAS 回報失敗');
+        log('❌ GAS 回報錯誤：' + (result.message || '未知錯誤'));
+        showProgressActions();
+      }
+    };
+
+    form.submit();
+    log('表單已送出，等待 iframe 回應…');
+  }, 600);
 }
+
 
 // ── ESC / Enter ──
 document.addEventListener('keydown', function(e) {
