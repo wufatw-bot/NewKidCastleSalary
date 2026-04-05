@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>🏮 莊敬校 – 獎金填報系統</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- Flatpickr for calendar picker -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/zh-tw.js"></script>
   <style>
     :root {
       --cream:#faf6ee;--warm:#e8dcc8;--brown:#8b6f47;
@@ -50,14 +54,11 @@
     .login-btn:active{transform:translateY(0)}
     .login-error{font-size:14px;color:#c0392b;text-align:center;min-height:18px;font-weight:600}
     .login-deco{position:absolute;top:-18px;left:50%;transform:translateX(-50%);background:var(--warm);border:2px solid #c9a96e;border-radius:999px;padding:5px 20px;font-size:13px;font-weight:700;color:var(--brown);letter-spacing:1px;white-space:nowrap}
-
-    /* ── 返回上一頁按鈕（獨立區塊） ── */
     .back-bar{display:flex;align-items:center;padding:10px 20px;background:var(--warm);border-bottom:1px solid #c9a96e;flex-shrink:0}
     .btn-back-page{display:inline-flex;align-items:center;gap:8px;padding:9px 22px;border-radius:999px;border:2px solid #9d6b3a;background:#fff;color:#7c3b18;font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;letter-spacing:1px;cursor:pointer;text-decoration:none;transition:background .2s,color .2s,box-shadow .2s,transform .15s;box-shadow:0 2px 8px rgba(139,58,26,0.10)}
     .btn-back-page:hover{background:linear-gradient(135deg,#6b4f2e,#9d6b3a);color:#fef3dc;border-color:transparent;box-shadow:0 4px 16px rgba(139,58,26,0.22);transform:translateY(-1px)}
     .btn-back-page:active{transform:translateY(0)}
     .btn-back-page .arrow{font-size:18px;line-height:1}
-
     .logout-btn{font-size:14px;color:var(--text-light);background:none;border:1px solid #c9a96e;border-radius:999px;padding:4px 16px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;margin-left:auto;display:block}
     .logout-btn:hover{background:var(--warm)}
     .frame-container{flex:1;position:relative;margin:0 16px 16px;border-radius:16px;overflow:hidden;box-shadow:0 0 0 3px #c9a96e,0 0 0 5px #e8d5b0,0 8px 32px rgba(0,0,0,0.15);background:#fff;min-height:400px}
@@ -101,9 +102,15 @@
     .field label .required{color:var(--red);margin-left:2px}
     .field label .rate{color:var(--green);font-size:0.78rem;margin-left:6px;font-weight:600}
     .field label .deduct{color:var(--red);font-size:0.78rem;margin-left:6px;font-weight:600}
-    select,input[type="text"],input[type="month"],input[type="number"]{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:0.92rem;font-family:'Noto Sans TC',sans-serif;color:var(--text-dark);background:var(--cream);transition:border .2s,box-shadow .2s;outline:none;-webkit-appearance:none}
+    select,input[type="text"],input[type="number"]{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:0.92rem;font-family:'Noto Sans TC',sans-serif;color:var(--text-dark);background:var(--cream);transition:border .2s,box-shadow .2s;outline:none;-webkit-appearance:none}
     select:focus,input:focus{border-color:var(--purple-light);box-shadow:0 0 0 3px rgba(107,95,187,0.12)}
+    /* Month picker styled as text input */
+    .month-picker-wrap{position:relative}
+    .month-picker-wrap input{width:100%;padding:9px 36px 9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:0.92rem;font-family:'Noto Sans TC',sans-serif;color:var(--text-dark);background:var(--cream);cursor:pointer;outline:none;transition:border .2s,box-shadow .2s}
+    .month-picker-wrap input:focus{border-color:var(--purple-light);box-shadow:0 0 0 3px rgba(107,95,187,0.12)}
+    .month-picker-wrap .cal-icon{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none;color:var(--gold)}
     .hint{font-size:0.75rem;color:var(--muted);margin-top:5px;line-height:1.7}
+    .hint.highlight{background:#fff8ee;border-left:3px solid var(--gold);padding:6px 8px;border-radius:0 6px 6px 0;font-size:0.77rem}
     .total-box{background:linear-gradient(135deg,#FFF5E0 0%,#FFE9C8 100%);border-radius:12px;padding:16px;text-align:center;margin-top:6px}
     .total-box .lbl{font-size:0.8rem;color:var(--gold);font-weight:600;margin-bottom:4px}
     .total-box .amt{font-size:2.2rem;font-weight:700;color:var(--purple);line-height:1}
@@ -111,15 +118,23 @@
     .btn-preview{width:100%;padding:16px;background:linear-gradient(90deg,#8b3a1a 0%,#c0522a 100%);color:#fef3dc;font-family:'Noto Serif TC',serif;font-size:1.1rem;font-weight:700;letter-spacing:3px;border:none;border-radius:12px;cursor:pointer;transition:opacity .2s,transform .15s}
     .btn-preview:hover{opacity:0.9;transform:translateY(-1px)}
     .btn-preview:disabled{opacity:0.5;cursor:not-allowed;transform:none}
-
-    /* 底部返回按鈕區 */
+    /* ── 節慶獎金 checkbox 群組 ── */
+    .bonus-checks{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+    .bonus-check-label{display:flex;align-items:center;gap:5px;font-size:0.83rem;font-weight:600;color:var(--text-mid);cursor:pointer;background:var(--warm);border-radius:8px;padding:6px 11px;border:1.5px solid transparent;transition:.15s;user-select:none;white-space:nowrap}
+    .bonus-check-label:has(input:checked){border-color:var(--gold);background:#fff8ee;color:var(--brown)}
+    .bonus-check-label input[type=checkbox]{width:14px;height:14px;accent-color:var(--gold);cursor:pointer}
+    .bonus-custom-row{display:flex;align-items:center;gap:6px;margin-top:4px}
+    .bonus-custom-row input[type=text]{flex:1;font-size:0.85rem}
+    /* ── 補貼欄位 ── */
+    .subsidy-group{display:flex;gap:8px}
+    .subsidy-group .field{flex:1;margin-bottom:0}
+    /* 底部返回 */
     .form-footer-nav{display:flex;justify-content:flex-start;margin-top:20px;padding-top:16px;border-top:1px dashed #c9a96e}
     .btn-back-bottom{display:inline-flex;align-items:center;gap:8px;padding:10px 26px;border-radius:999px;border:2px solid #9d6b3a;background:#fff;color:#7c3b18;font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;letter-spacing:1px;cursor:pointer;text-decoration:none;transition:background .2s,color .2s,box-shadow .2s,transform .15s;box-shadow:0 2px 8px rgba(139,58,26,0.10)}
     .btn-back-bottom:hover{background:linear-gradient(135deg,#6b4f2e,#9d6b3a);color:#fef3dc;border-color:transparent;box-shadow:0 4px 16px rgba(139,58,26,0.22);transform:translateY(-1px)}
-
     .modal-overlay{display:none;position:fixed;inset:0;background:rgba(30,20,70,0.45);z-index:200;align-items:center;justify-content:center;padding:24px}
     .modal-overlay.show{display:flex}
-    .modal{background:#fff;border-radius:20px;padding:32px 28px;max-width:500px;width:100%;box-shadow:0 16px 64px rgba(74,63,143,0.22)}
+    .modal{background:#fff;border-radius:20px;padding:32px 28px;max-width:520px;width:100%;box-shadow:0 16px 64px rgba(74,63,143,0.22);max-height:90vh;overflow-y:auto}
     .modal h2{font-family:'Noto Serif TC',serif;font-size:1.2rem;color:#8b3a1a;margin-bottom:16px;font-weight:700}
     .modal-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:0.9rem}
     .modal-row .k{color:var(--muted)}
@@ -138,6 +153,11 @@
     .toast.show{opacity:1}
     .footer{text-align:center;padding:8px;font-size:13px;color:var(--text-light);letter-spacing:1px;flex-shrink:0}
     @media(max-width:560px){.stab{font-size:14px;padding:12px 4px}.nav-title{font-size:15px}.btn-back-page{font-size:13px;padding:7px 14px}}
+    /* Flatpickr month-only overrides */
+    .flatpickr-months .flatpickr-month{background:var(--warm);color:var(--text-dark)}
+    .flatpickr-current-month .flatpickr-monthDropdown-months{background:var(--warm)}
+    .flatpickr-day.selected{background:var(--gold)!important;border-color:var(--gold)!important}
+    .flatpickr-day:hover{background:var(--warm)!important}
   </style>
 </head>
 <body>
@@ -145,14 +165,11 @@
     <span class="nav-title">🏮 莊敬校 – 獎金填報系統</span>
     <a class="nav-back" href="index.html">首頁</a>
   </nav>
-
-  <!-- ★ 返回上一頁獨立按鈕列 ★ -->
   <div class="back-bar">
     <a class="btn-back-page" href="javascript:history.back()">
       <span class="arrow">←</span> 返回上一頁
     </a>
   </div>
-
   <div class="divider"></div>
   <div class="tabs">
     <div class="stab active" id="stab0" onclick="switchSTab(0)">🏮 莊敬校每月工作輸入</div>
@@ -195,6 +212,7 @@
               <p>吉的堡莊敬校 ｜ 請確實填寫本月相關資料，每人每月僅限提交一次</p>
             </div>
             <div class="grid">
+              <!-- 基本資料 -->
               <div class="card">
                 <div class="card-title">👤 基本資料</div>
                 <div class="field">
@@ -203,13 +221,17 @@
                 </div>
                 <div class="field">
                   <label>月份 <span class="required">*</span></label>
-                  <input type="month" id="month">
+                  <div class="month-picker-wrap">
+                    <input type="text" id="month" placeholder="請選擇月份" readonly>
+                    <span class="cal-icon">📅</span>
+                  </div>
                 </div>
                 <div class="total-box">
                   <div class="lbl">💰 本月總獎金</div>
                   <span class="amt" id="total">0</span><span class="unit">元</span>
                 </div>
               </div>
+              <!-- 出勤資料 -->
               <div class="card">
                 <div class="card-title">⏰ 出勤資料</div>
                 <div class="field">
@@ -219,13 +241,18 @@
                 <div class="field">
                   <label>安親人數</label>
                   <input type="number" id="afterschool" min="0" value="0">
-                  <div class="hint">15人以下：無津貼<br>16－20人：$500/人<br>21人以上：$1000/人</div>
+                  <div class="hint highlight">
+                    1－15 人：無津貼<br>
+                    16－20 人：+$500 / 人<br>
+                    21 人以上：+$1,000 / 人
+                  </div>
                 </div>
                 <div class="field">
                   <label>混校人數</label>
                   <input type="number" id="mixed" min="0" value="0">
                 </div>
               </div>
+              <!-- 請假資料 -->
               <div class="card">
                 <div class="card-title">📅 請假資料</div>
                 <div class="field">
@@ -237,6 +264,7 @@
                   <input type="number" id="sick_leave" min="0" value="0">
                 </div>
               </div>
+              <!-- 獎金資料 -->
               <div class="card">
                 <div class="card-title">🎁 獎金資料</div>
                 <div class="field">
@@ -247,23 +275,56 @@
                   <label>考試獎金</label>
                   <input type="number" id="exam_bonus" min="0" value="0">
                 </div>
+
+                <!-- ★ 節慶獎金 checkboxes ★ -->
+                <div class="field">
+                  <label>節慶獎金</label>
+                  <div class="bonus-checks">
+                    <label class="bonus-check-label"><input type="checkbox" class="festival-cb" value="端午獎金"> 🎍 端午</label>
+                    <label class="bonus-check-label"><input type="checkbox" class="festival-cb" value="中秋獎金"> 🌕 中秋</label>
+                    <label class="bonus-check-label"><input type="checkbox" class="festival-cb" value="年終獎金"> 🧧 年終</label>
+                    <label class="bonus-check-label"><input type="checkbox" class="festival-cb" value="春節獎金"> 🏮 春節</label>
+                    <label class="bonus-check-label"><input type="checkbox" class="festival-cb" value="尾牙獎金"> 🍽 尾牙</label>
+                  </div>
+                  <div class="bonus-custom-row">
+                    <input type="text" id="festival_label_custom" placeholder="其他名稱（選填）" style="max-width:120px;font-size:0.82rem;">
+                    <input type="number" id="festival_amount" min="0" value="0" placeholder="金額" style="max-width:90px;">
+                  </div>
+                  <div class="hint" style="margin-top:6px;">勾選節慶後請在右側金額欄輸入金額；可多選</div>
+                </div>
+
+                <!-- ★ 其他獎金 ★ -->
                 <div class="field">
                   <label>其他獎金</label>
                   <input type="number" id="other_bonus" min="0" value="0">
                 </div>
               </div>
+
+              <!-- ★ 補貼欄位（新卡片，跨兩欄） ★ -->
+              <div class="card" style="grid-column:span 2;">
+                <div class="card-title">🏥 公會補貼</div>
+                <div class="subsidy-group">
+                  <div class="field">
+                    <label>補貼公會健保</label>
+                    <input type="number" id="union_health" min="0" value="0">
+                    <div class="hint">雇主補貼公會健保費用</div>
+                  </div>
+                  <div class="field">
+                    <label>補貼公會勞保</label>
+                    <input type="number" id="union_labor" min="0" value="0">
+                    <div class="hint">雇主補貼公會勞保費用</div>
+                  </div>
+                </div>
+              </div>
             </div>
             <button class="btn-preview" id="previewBtn" onclick="openPreview()">預 覽 資 料</button>
-
-            <!-- ★ 表單底部返回按鈕 ★ -->
             <div class="form-footer-nav">
-              <a class="btn-back-bottom" href="javascript:history.back()">
-                ← 返回上一頁
-              </a>
+              <a class="btn-back-bottom" href="javascript:history.back()">← 返回上一頁</a>
             </div>
           </div>
         </div>
       </div>
+
       <!-- 後台分頁 -->
       <div class="spanel" id="spanel1">
         <div class="fs-toolbar">
@@ -297,6 +358,8 @@
     </div>
   </div>
   <div class="footer">© 吉的堡托育機構 ・ 員工薪資系統</div>
+
+  <!-- 預覽 Modal -->
   <div class="modal-overlay" id="modal">
     <div class="modal">
       <h2>📋 資料預覽</h2>
@@ -308,6 +371,7 @@
     </div>
   </div>
   <div class="toast" id="toast"></div>
+
 <script>
 // ── 設定 ──
 const ZJ_SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbwpAJAJhf_6HKNiTO3iz7GS2keCFkEPjb30CHQllV9iLl1amJbSbpYWUKoHnXC0luNe/exec';
@@ -316,6 +380,126 @@ const ZJ_API_URL    = ZJ_SUBMIT_URL + '?action=getUsers';
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgL7mlWIHQD9Yu7oRyegwxndx-g1D4kJnY-wS0HAm1JpMK1BezydfW9xGjqZ8ksYE4i8NtqfPQPQcf/pub?gid=0&single=true&output=csv';
 const MAX_USERS = 10;
 let _creds = null;
+
+// ── Flatpickr 月曆（月份選擇） ──
+document.addEventListener('DOMContentLoaded', function() {
+  const now = new Date();
+  const defaultMonth = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  flatpickr('#month', {
+    locale: 'zh_tw',
+    plugins: [
+      new (function MonthSelectPlugin(cfg){
+        return function(fp){
+          return {
+            onReady(){
+              // replace day picker with month-only view
+              fp.calendarContainer.classList.add('flatpickr-monthSelect-theme');
+            }
+          };
+        };
+      })({})
+    ],
+    dateFormat: 'Y-m',
+    defaultDate: defaultMonth,
+    disableMobile: false,
+    onReady(selectedDates, dateStr, instance){
+      // Show month/year picker only — hide day grid
+      instance.calendarContainer.style.setProperty('--day-display','none');
+    },
+    onOpen(selectedDates, dateStr, instance){
+      // Jump to month view directly
+      instance.currentMonth = instance.currentMonth; // keep state
+    }
+  });
+
+  // ── Simpler approach: use a real month-select flatpickr ──
+  // Re-init with monthSelect plugin approach:
+  document.getElementById('month')._flatpickr && document.getElementById('month')._flatpickr.destroy();
+
+  flatpickr('#month', {
+    locale: window.flatpickr.l10ns.zh_tw,
+    dateFormat: 'Y-m',
+    defaultDate: defaultMonth,
+    plugins: [monthSelectPlugin({shorthand: false, dateFormat: 'Y-m', altFormat: 'Y年m月'})],
+  });
+});
+
+// ── Flatpickr monthSelect plugin (inline implementation) ──
+function monthSelectPlugin(pluginConfig) {
+  const cfg = Object.assign({ shorthand: false, dateFormat: 'Y-m', altFormat: 'Y年m月', theme: 'light' }, pluginConfig);
+  return function(fp) {
+    fp.config.dateFormat = cfg.dateFormat;
+    const months = cfg.shorthand
+      ? ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月']
+      : ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+    let selectedMonth = null;
+
+    function buildMonthGrid() {
+      const grid = document.createElement('div');
+      grid.className = 'fp-month-grid';
+      grid.style.cssText = 'display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:8px 10px 10px;';
+      months.forEach((m, i) => {
+        const btn = document.createElement('div');
+        btn.className = 'fp-month-btn';
+        btn.textContent = m;
+        btn.dataset.month = i;
+        btn.style.cssText = 'padding:9px 4px;text-align:center;cursor:pointer;border-radius:7px;font-size:13px;font-weight:600;font-family:Noto Serif TC,serif;background:#faf6ee;color:#5a4a35;border:1.5px solid #e8dcc8;transition:background .15s,color .15s;';
+        btn.addEventListener('mouseover', ()=>{ if(btn.dataset.month!=selectedMonth){btn.style.background='#e8dcc8';} });
+        btn.addEventListener('mouseout', ()=>{ if(btn.dataset.month!=selectedMonth){btn.style.background='#faf6ee';} });
+        btn.addEventListener('click', () => {
+          selectedMonth = i;
+          grid.querySelectorAll('.fp-month-btn').forEach(b => {
+            const sel = b.dataset.month == i;
+            b.style.background = sel ? '#c9922a' : '#faf6ee';
+            b.style.color = sel ? '#fff' : '#5a4a35';
+            b.style.borderColor = sel ? '#c9922a' : '#e8dcc8';
+          });
+          const yr = fp.currentYear;
+          const dateStr = yr + '-' + String(i+1).padStart(2,'0');
+          fp.setDate(yr + '-' + String(i+1).padStart(2,'0') + '-01', false, 'Y-m-d');
+          fp.input.value = dateStr;
+          fp.close();
+          calcTotal();
+        });
+        grid.appendChild(btn);
+      });
+      return grid;
+    }
+
+    return {
+      onReady() {
+        // Hide the day container and build month grid
+        const dayContainer = fp.calendarContainer.querySelector('.flatpickr-days');
+        if (dayContainer) dayContainer.style.display = 'none';
+        const weekdays = fp.calendarContainer.querySelector('.flatpickr-weekdays');
+        if (weekdays) weekdays.style.display = 'none';
+        fp.calendarContainer.querySelector('.flatpickr-innerContainer') &&
+          (fp.calendarContainer.querySelector('.flatpickr-innerContainer').style.display = 'none');
+
+        const monthGrid = buildMonthGrid();
+        fp.calendarContainer.appendChild(monthGrid);
+        fp._monthGrid = monthGrid;
+        fp.calendarContainer.style.minWidth = '260px';
+      },
+      onOpen() {
+        // Highlight current selection
+        if (!fp._monthGrid) return;
+        const curVal = fp.input.value; // YYYY-MM
+        const parts = curVal.split('-');
+        if (parts.length >= 2) {
+          const m = parseInt(parts[1], 10) - 1;
+          fp._monthGrid.querySelectorAll('.fp-month-btn').forEach(b => {
+            const sel = parseInt(b.dataset.month) === m;
+            b.style.background = sel ? '#c9922a' : '#faf6ee';
+            b.style.color = sel ? '#fff' : '#5a4a35';
+            b.style.borderColor = sel ? '#c9922a' : '#e8dcc8';
+          });
+        }
+      }
+    };
+  };
+}
+
 // ── CSV 解析 ──
 function parseCSVRow(row) {
   row = row.replace(/\r$/, '');
@@ -353,6 +537,7 @@ async function loadNames() {
     showToast('載入員工名單失敗：' + e.message);
   }
 }
+
 // ── 帳密 ──
 async function loadCreds() {
   if (_creds) return _creds;
@@ -371,6 +556,7 @@ async function getAllUsers() {
   if (creds && creds.length > 0) return creds;
   return getLocalUsers();
 }
+
 // ── 分頁 ──
 function switchSTab(i) {
   document.querySelectorAll('.stab').forEach((t,j)=>t.classList.toggle('active',i===j));
@@ -394,6 +580,7 @@ function roleTag(role) {
   if(role==='both')       return ' 【輸入+後台】';
   return ' 【工作輸入】';
 }
+
 // ── 登入 ──
 async function doLoginZJ() {
   const u = document.getElementById('zjUser').value.trim();
@@ -408,7 +595,6 @@ async function doLoginZJ() {
     const fa = document.getElementById('zjFormArea');
     fa.style.display = 'flex';
     document.getElementById('zjWelcome').textContent = '👋 歡迎，' + (match.n||u) + roleTag(match.role);
-    document.getElementById('month').value = new Date().toISOString().slice(0,7);
     loadNames(); err.textContent = '';
   } else if (match && match.role==='admin') {
     err.textContent = '❌ 您的帳號無工作輸入權限，請切換到後台分頁';
@@ -500,6 +686,17 @@ function saveUM() {
   ok.textContent='✅ 已儲存 '+arr.length+' 組帳密，正在進入後台…';
   setTimeout(()=>{ const um=document.getElementById('um_zj');if(um)um.style.display='none';showAdminIframe();},1200);
 }
+
+// ── 節慶獎金 ──
+function getFestivalBonus() {
+  const checked = [...document.querySelectorAll('.festival-cb:checked')].map(el=>el.value);
+  const customLabel = (document.getElementById('festival_label_custom').value||'').trim();
+  const amount = +document.getElementById('festival_amount').value || 0;
+  const labels = [...checked];
+  if (customLabel) labels.push(customLabel);
+  return { labels, amount, display: labels.join('、') || '無' };
+}
+
 // ── 計算 ──
 function calcTotal() {
   const overtime    = +document.getElementById('overtime').value||0;
@@ -509,16 +706,33 @@ function calcTotal() {
   const prepaid     = +document.getElementById('prepaid').value||0;
   const exam        = +document.getElementById('exam_bonus').value||0;
   const other       = +document.getElementById('other_bonus').value||0;
+  const union_health= +document.getElementById('union_health').value||0;
+  const union_labor = +document.getElementById('union_labor').value||0;
+  const festival    = +document.getElementById('festival_amount').value||0;
+
   const overtimePay = overtime * 170;
+
+  // ★ 安親津貼：正確計算
   let afterschoolPay = 0;
-  if (afterschool>=21) afterschoolPay=afterschool*1000;
-  else if (afterschool>=16) afterschoolPay=afterschool*500;
-  const total = overtimePay+afterschoolPay+prepaid+exam+other-personal*120-sick*60;
+  if (afterschool >= 21)      afterschoolPay = afterschool * 1000;
+  else if (afterschool >= 16) afterschoolPay = afterschool * 500;
+  // 1–15 人：無津貼
+
+  const total = overtimePay + afterschoolPay + prepaid + exam + festival + other
+              + union_health + union_labor
+              - personal * 120 - sick * 60;
+
   document.getElementById('total').textContent = total.toLocaleString();
   return { overtime, afterschool, afterschoolPay, mixed: +document.getElementById('mixed').value||0,
-           personal, sick, prepaid, exam, other, overtimePay, total };
+           personal, sick, prepaid, exam, other, festival, union_health, union_labor,
+           overtimePay, total };
 }
+
+// 監聽所有數值欄位
 document.querySelectorAll('input[type="number"]').forEach(el=>el.addEventListener('input',calcTotal));
+document.querySelectorAll('.festival-cb').forEach(el=>el.addEventListener('change',calcTotal));
+document.getElementById('festival_amount').addEventListener('input',calcTotal);
+
 // ── 預覽 ──
 function openPreview() {
   const name  = document.getElementById('name').value;
@@ -526,6 +740,7 @@ function openPreview() {
   if (!name)  { showToast('請選擇姓名'); return; }
   if (!month) { showToast('請選擇月份'); return; }
   const v = calcTotal();
+  const fest = getFestivalBonus();
   const rows = [
     ['姓名', name], ['月份', month],
     ['加班時數', `${v.overtime} 小時（+${v.overtimePay.toLocaleString()} 元）`],
@@ -535,7 +750,10 @@ function openPreview() {
     ['病假時數',  `${v.sick} 小時（-${(v.sick*60).toLocaleString()} 元）`],
     ['預繳獎金', `$${v.prepaid.toLocaleString()}`],
     ['考試獎金', `$${v.exam.toLocaleString()}`],
+    ['節慶獎金', `${fest.display}　$${fest.amount.toLocaleString()}`],
     ['其他獎金', `$${v.other.toLocaleString()}`],
+    ['補貼公會健保', `$${v.union_health.toLocaleString()}`],
+    ['補貼公會勞保', `$${v.union_labor.toLocaleString()}`],
   ];
   document.getElementById('modal-content').innerHTML =
     rows.map(([k,val])=>`<div class="modal-row"><span class="k">${k}</span><span class="v">${val}</span></div>`).join('') +
@@ -545,11 +763,13 @@ function openPreview() {
   document.getElementById('modal').classList.add('show');
 }
 function closeModal() { document.getElementById('modal').classList.remove('show'); }
+
 // ── 提交 ──
 function submitForm() {
   const name  = document.getElementById('name').value;
   const month = document.getElementById('month').value;
   const v     = calcTotal();
+  const fest  = getFestivalBonus();
   const submitBtn  = document.getElementById('submitBtn');
   const cancelBtn  = document.getElementById('cancelBtn');
   submitBtn.disabled = true;
@@ -573,7 +793,11 @@ function submitForm() {
     sickLeaveHours:    document.getElementById('sick_leave').value || 0,
     prepaidBonus:      document.getElementById('prepaid').value || 0,
     examBonus:         document.getElementById('exam_bonus').value || 0,
+    festivalBonusLabel:fest.labels.join('、'),
+    festivalBonusAmount:fest.amount,
     otherBonus:        document.getElementById('other_bonus').value || 0,
+    unionHealthSubsidy:document.getElementById('union_health').value || 0,
+    unionLaborSubsidy: document.getElementById('union_labor').value || 0,
     totalBonus:        v.total
   };
   Object.entries(params).forEach(([k,val])=>{
@@ -585,8 +809,7 @@ function submitForm() {
   let done = false;
   const timeout = setTimeout(()=>{
     if(done) return; done=true; cleanup();
-    resetSubmitBtn();
-    closeModal();
+    resetSubmitBtn(); closeModal();
     showToast('✅ 資料已送出！請確認試算表是否新增一筆資料。');
     clearForm();
   }, 10000);
@@ -613,19 +836,24 @@ function submitForm() {
   }
   form.submit();
 }
+
 // ── 清空 ──
 function clearForm() {
-  ['overtime','afterschool','mixed','personal_leave','sick_leave','prepaid','exam_bonus','other_bonus']
+  ['overtime','afterschool','mixed','personal_leave','sick_leave','prepaid','exam_bonus','festival_amount','other_bonus','union_health','union_labor']
     .forEach(id=>{ document.getElementById(id).value='0'; });
+  document.querySelectorAll('.festival-cb').forEach(el=>el.checked=false);
+  document.getElementById('festival_label_custom').value='';
   document.getElementById('name').value='';
   document.getElementById('total').textContent='0';
 }
+
 // ── Toast ──
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent=msg; t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'), 3500);
 }
+
 // ── ESC / Enter ──
 document.addEventListener('keydown', function(e) {
   if (e.key==='Escape' && document.body.classList.contains('fs-mode')){exitFullscreen();return;}
