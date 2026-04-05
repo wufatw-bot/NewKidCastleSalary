@@ -27,7 +27,6 @@
       flex-direction: column;
       overflow-x: hidden;
     }
-
     /* ── NAV ── */
     .nav {
       background: linear-gradient(90deg, #6b4f2e 0%, #8b6f47 50%, #6b4f2e 100%);
@@ -42,10 +41,8 @@
     .nav-title { font-family: 'Noto Serif TC', serif; font-size: 20px; font-weight: 700; color: #fef3dc; letter-spacing: 2px; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
     .nav-back { font-size: 14px; color: rgba(254,243,220,0.75); text-decoration: none; border: 1px solid rgba(254,243,220,0.35); border-radius: 999px; padding: 4px 14px; transition: background .2s; }
     .nav-back:hover { background: rgba(255,255,255,0.15); color: #fef3dc; }
-
     /* ── DIVIDER ── */
     .divider { width: 100%; height: 14px; background: repeating-linear-gradient(90deg, #c9a96e 0px, #c9a96e 8px, #e8d5b0 8px, #e8d5b0 16px); flex-shrink: 0; }
-
     /* ── TABS ── */
     .tabs { display: flex; background: var(--warm); border-bottom: 2px solid #c9a96e; flex-shrink: 0; }
     .stab {
@@ -58,13 +55,11 @@
     .stab:hover { background: #ede4d0; color: var(--text-mid); }
     .stab.active { color: #8b3a1a; border-bottom-color: #8b3a1a; background: var(--cream); }
     .stab.active.tab-admin { color: #4a1d96; border-bottom-color: #4a1d96; }
-
     /* ── MAIN ── */
     .main { flex: 1; display: flex; flex-direction: column; min-height: 0; }
     .panels { flex: 1; display: flex; flex-direction: column; }
     .spanel { display: none; flex: 1; flex-direction: column; }
     .spanel.active { display: flex; }
-
     /* ── LOGIN ── */
     .login-screen { flex: 1; display: flex; align-items: center; justify-content: center; background: radial-gradient(ellipse at 30% 70%, rgba(42,96,64,0.07) 0%, transparent 55%), radial-gradient(ellipse at 75% 25%, rgba(201,146,42,0.07) 0%, transparent 55%), var(--cream); padding: 24px; }
     .login-card { background: #fff; border-radius: 20px; padding: 36px 40px; box-shadow: 0 0 0 3px #c9a96e, 0 0 0 5px #e8d5b0, 0 12px 40px rgba(0,0,0,0.13); width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 18px; position: relative; }
@@ -80,7 +75,6 @@
     .login-btn:active { transform: translateY(0); }
     .login-error { font-size: 14px; color: #c0392b; text-align: center; min-height: 18px; font-weight: 600; }
     .login-deco { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); background: var(--warm); border: 2px solid #c9a96e; border-radius: 999px; padding: 5px 20px; font-size: 13px; font-weight: 700; color: var(--brown); letter-spacing: 1px; white-space: nowrap; }
-
     /* ── IFRAME（後台）── */
     .frame-container { flex: 1; position: relative; margin: 0 16px 16px; border-radius: 16px; overflow: hidden; box-shadow: 0 0 0 3px #c9a96e, 0 0 0 5px #e8d5b0, 0 8px 32px rgba(0,0,0,0.15); background: #fff; min-height: 500px; }
     .frame-corner { position: absolute; width: 20px; height: 20px; z-index: 5; pointer-events: none; }
@@ -94,7 +88,6 @@
     .spinner { width:32px; height:32px; border:3px solid var(--warm); border-top-color:var(--gold); border-radius:50%; animation:spin .9s linear infinite; }
     @keyframes spin { to { transform:rotate(360deg); } }
     iframe { width:100%; height:100%; min-height:600px; border:none; display:block; }
-
     /* ── FULLSCREEN ── */
     .fs-toolbar { display:flex; align-items:center; padding:6px 14px; background:#fff; border-bottom:1px solid #e8dcc8; flex-shrink:0; }
     .fs-label { display:flex; align-items:center; gap:6px; cursor:pointer; font-size:15px; font-weight:600; color:var(--text-mid); user-select:none; }
@@ -102,7 +95,6 @@
     body.fs-mode .nav, body.fs-mode .divider, body.fs-mode .tabs, body.fs-mode .footer { display:none !important; }
     body.fs-mode .main { position:fixed; inset:0; z-index:100; background:var(--cream); overflow-y:auto; }
     body.fs-mode .fs-toolbar { position:sticky; top:0; z-index:101; }
-
     /* ── USER MANAGE ── */
     .user-manage { padding:16px 20px; overflow-y:auto; }
     .um-title { font-family:'Noto Serif TC',serif; font-size:17px; font-weight:700; color:var(--text-mid); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
@@ -120,27 +112,48 @@
     .um-divider { border:none; border-top:1px dashed #c9a96e; margin:14px 0; }
     .logout-btn { font-size:14px; color:var(--text-light); background:none; border:1px solid #c9a96e; border-radius:999px; padding:4px 16px; cursor:pointer; font-family:'Noto Sans TC',sans-serif; }
     .logout-btn:hover { background:var(--warm); }
-
     /* ── 薪資表單 ── */
     .form-topbar { padding:8px 16px; display:flex; align-items:center; gap:8px; flex-shrink:0; background:#fff; border-bottom:1px solid var(--border); }
     .welcome-txt { font-size:15px; color:var(--text-mid); font-weight:600; flex:1; }
     .form-scroll { flex:1; overflow-y:auto; }
     .form-wrap { max-width:800px; margin:24px auto; padding:0 16px 40px; display:flex; flex-direction:column; gap:20px; }
-
     .card { background:#fff; border-radius:16px; box-shadow:0 0 0 2px var(--border),0 6px 24px rgba(0,0,0,0.09); overflow:hidden; }
     .card-head { background:linear-gradient(90deg,#f5ede0,#faf6ee); padding:14px 20px; border-bottom:2px solid var(--border); display:flex; align-items:center; gap:10px; }
     .card-head-icon { font-size:20px; }
     .card-head-title { font-family:'Noto Serif TC',serif; font-size:17px; font-weight:700; color:var(--text-mid); letter-spacing:1px; }
     .card-body { padding:20px; display:flex; flex-direction:column; gap:16px; }
-
     .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
     @media(max-width:600px){ .grid-2{ grid-template-columns:1fr; } }
-
     .field { display:flex; flex-direction:column; gap:6px; }
     .field-label { font-size:14px; font-weight:600; color:var(--text-mid); letter-spacing:0.5px; display:flex; align-items:center; gap:6px; }
     .badge { font-size:11px; padding:2px 7px; border-radius:999px; font-weight:700; }
     .badge-calc { background:#e8f5e9; color:#2a6040; border:1px solid #a5d6a7; }
     .badge-new  { background:#fff3e0; color:#b45309; border:1px solid #f6c47e; }
+    /* ★ 姓名下拉選單 ★ */
+    .field-select {
+      padding: 10px 13px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: 'Noto Sans TC', sans-serif;
+      color: var(--text-dark);
+      background: var(--cream);
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      width: 100%;
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7560' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+    .field-select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,146,42,0.12); }
+    .field-select.loading-state { color: var(--text-light); }
+    .name-load-status { font-size: 12px; margin-top: 3px; min-height: 16px; }
+    .name-load-status.ok  { color: #2a6040; }
+    .name-load-status.err { color: #c0392b; }
     .field-input { padding:10px 13px; border:1.5px solid var(--border); border-radius:10px; font-size:15px; font-family:'Noto Sans TC',sans-serif; color:var(--text-dark); background:var(--cream); outline:none; transition:border-color .2s,box-shadow .2s; width:100%; }
     .field-input:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,146,42,0.12); }
     .field-hint { font-size:12px; color:var(--text-light); margin-top:2px; }
@@ -148,7 +161,6 @@
     .input-with-unit .field-input,
     .input-with-unit .bonus-amt-input { padding-right:40px; }
     .input-unit { position:absolute; right:13px; top:50%; transform:translateY(-50%); font-size:13px; color:var(--text-light); font-weight:600; pointer-events:none; }
-
     /* Month picker */
     .month-pick-wrap { position:relative; }
     .month-display { padding:10px 13px; border:1.5px solid var(--border); border-radius:10px; font-size:15px; background:var(--cream); cursor:pointer; user-select:none; display:flex; align-items:center; justify-content:space-between; transition:border-color .2s; }
@@ -165,7 +177,6 @@
     .cal-month { padding:8px 4px; text-align:center; border-radius:8px; font-size:14px; font-weight:600; color:var(--text-mid); cursor:pointer; border:1.5px solid transparent; background:var(--cream); transition:all .15s; }
     .cal-month:hover { background:var(--warm); border-color:var(--border); }
     .cal-month.selected { background:var(--gold); color:#fff; border-color:var(--gold); }
-
     /* Result boxes */
     .ot-result { background:#e8f5e9; border:1.5px solid #a5d6a7; border-radius:10px; padding:10px 14px; display:flex; align-items:center; gap:8px; font-size:15px; color:#2a6040; font-weight:600; flex-wrap:wrap; }
     .ot-result .ot-amt { font-size:18px; font-weight:700; }
@@ -174,7 +185,6 @@
     .tier-none { background:#f0ece4; color:var(--text-light); }
     .tier-mid  { background:#fff3cd; color:#856404; border:1px solid #ffc107; }
     .tier-high { background:#ffe0b2; color:#8d3b00; border:1px solid #fb8c00; }
-
     /* Bonus */
     .bonus-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; }
     .bonus-item { display:flex; align-items:center; gap:8px; background:var(--cream); border:1.5px solid var(--border); border-radius:10px; padding:10px 12px; cursor:pointer; transition:all .15s; user-select:none; }
@@ -187,7 +197,6 @@
     .bonus-amt-label { font-size:12px; color:var(--text-light); }
     .bonus-amt-input { padding:7px 10px; border:1.5px solid var(--border); border-radius:8px; font-size:14px; font-family:'Noto Sans TC',sans-serif; background:var(--cream); color:var(--text-dark); outline:none; width:100%; transition:border-color .2s; }
     .bonus-amt-input:focus { border-color:var(--gold); }
-
     /* Union */
     .union-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
     @media(max-width:500px){ .union-grid{ grid-template-columns:1fr; } }
@@ -203,7 +212,6 @@
     .union-amount-label { font-size:13px; color:var(--text-light); }
     .union-amount-input { padding:8px 11px; border:1.5px solid #b0c4e8; border-radius:8px; font-size:14px; font-family:'Noto Sans TC',sans-serif; background:#fff; color:var(--text-dark); outline:none; transition:border-color .2s; width:100%; }
     .union-amount-input:focus { border-color:#3b6db5; }
-
     /* Summary */
     .summary-card { background:linear-gradient(135deg,#3d2e1a 0%,#6b4f2e 100%); border-radius:16px; padding:24px; color:#fef3dc; box-shadow:0 8px 32px rgba(0,0,0,0.2); }
     .summary-title { font-family:'Noto Serif TC',serif; font-size:17px; font-weight:700; letter-spacing:2px; margin-bottom:18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid rgba(254,243,220,0.2); padding-bottom:12px; }
@@ -213,15 +221,12 @@
     .summary-val { font-family:'Noto Serif TC',serif; font-weight:700; }
     .summary-total { text-align:center; font-family:'Noto Serif TC',serif; font-size:34px; font-weight:700; color:#f6c47e; letter-spacing:2px; padding:12px 0; }
     .summary-label { font-size:13px; color:rgba(254,243,220,0.6); text-align:center; margin-top:-8px; }
-
     /* Submit */
     .submit-btn { padding:16px; border:none; border-radius:14px; background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%); color:#fef3dc; font-family:'Noto Serif TC',serif; font-size:19px; font-weight:700; letter-spacing:3px; cursor:pointer; transition:opacity .2s,transform .1s; box-shadow:0 6px 20px rgba(42,96,64,0.35); width:100%; }
     .submit-btn:hover { opacity:0.88; transform:translateY(-2px); }
     .submit-btn:active { transform:translateY(0); }
     .submit-btn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
-
     .footer { text-align:center; padding:8px; font-size:13px; color:var(--text-light); letter-spacing:1px; flex-shrink:0; }
-
     @media(max-width:560px){
       .stab { font-size:14px; padding:12px 4px; }
       .nav-title { font-size:15px; }
@@ -229,24 +234,19 @@
   </style>
 </head>
 <body>
-
   <nav class="nav">
     <span class="nav-title">🌿 同安校 – 員工薪資系統</span>
     <a class="nav-back" href="index.html">← 首頁</a>
   </nav>
   <div class="divider"></div>
-
   <div class="tabs">
     <div class="stab active" id="stab0" onclick="switchSTab(0)">🌿 同安校每月工作輸入</div>
     <div class="stab tab-admin" id="stab1" onclick="switchSTab(1)">🔐 同安校後台</div>
   </div>
-
   <div class="main">
     <div class="panels">
-
       <!-- ══ TAB 0：每月工作輸入 ══ -->
       <div class="spanel active" id="spanel0">
-
         <!-- 登入畫面 -->
         <div class="login-screen" id="taLogin">
           <div class="login-card">
@@ -266,7 +266,6 @@
             <button class="login-btn" onclick="doLoginTA()">登 入</button>
           </div>
         </div>
-
         <!-- 登入後：薪資表單 -->
         <div id="taFormArea" style="display:none; flex:1; flex-direction:column; min-height:0;">
           <div class="form-topbar">
@@ -275,7 +274,6 @@
           </div>
           <div class="form-scroll">
             <div class="form-wrap">
-
               <!-- ① 基本資訊 -->
               <div class="card">
                 <div class="card-head">
@@ -284,9 +282,13 @@
                 </div>
                 <div class="card-body">
                   <div class="grid-2">
+                    <!-- ★ 員工姓名：下拉選單，從 CSV 載入 ★ -->
                     <div class="field">
                       <div class="field-label">👤 員工姓名</div>
-                      <input class="field-input" type="text" id="empName" placeholder="請輸入姓名">
+                      <select class="field-select loading-state" id="empName">
+                        <option value="">⏳ 載入員工名單中…</option>
+                      </select>
+                      <div class="name-load-status" id="nameLoadStatus"></div>
                     </div>
                     <div class="field">
                       <div class="field-label">📅 薪資月份 <span class="badge badge-new">月曆</span></div>
@@ -325,7 +327,6 @@
                   </div>
                 </div>
               </div>
-
               <!-- ② 加班費 -->
               <div class="card">
                 <div class="card-head">
@@ -353,7 +354,6 @@
                   </div>
                 </div>
               </div>
-
               <!-- ③ 安親人數津貼 -->
               <div class="card">
                 <div class="card-head">
@@ -368,7 +368,11 @@
                         <input class="field-input" type="number" id="ascCount" placeholder="0" min="0" oninput="calcAll()">
                         <span class="input-unit">人</span>
                       </div>
-                      <div class="field-hint">≤15人：0元　16–20人：(人數−15)×500　≥21人：2,500+(人數−20)×1,000</div>
+                      <div class="field-hint">
+                        ≤15人：0元<br>
+                        16–20人：(人數−15)×500<br>
+                        ≥21人：2,500+(人數−20)×1,000
+                      </div>
                     </div>
                     <div class="field">
                       <div class="field-label">安親津貼金額</div>
@@ -382,7 +386,6 @@
                   </div>
                 </div>
               </div>
-
               <!-- ④ 其他獎金 -->
               <div class="card">
                 <div class="card-head">
@@ -464,7 +467,6 @@
                   </div>
                 </div>
               </div>
-
               <!-- ⑤ 公會補貼 -->
               <div class="card">
                 <div class="card-head">
@@ -512,7 +514,6 @@
                   </div>
                 </div>
               </div>
-
               <!-- ⑥ 薪資總計 -->
               <div class="summary-card">
                 <div class="summary-title">📊 本月薪資總計</div>
@@ -528,9 +529,7 @@
                 <div class="summary-total" id="totalDisplay">$0</div>
                 <div class="summary-label">新台幣（NTD）</div>
               </div>
-
               <button class="submit-btn" id="submitBtn" onclick="submitForm()">✅ 確認送出本月薪資</button>
-
             </div><!-- /form-wrap -->
           </div><!-- /form-scroll -->
         </div><!-- /taFormArea -->
@@ -566,24 +565,27 @@
           <iframe id="taAdminIframe" onload="document.getElementById('loader1ta').classList.add('done')" allowfullscreen></iframe>
         </div>
       </div>
-
     </div><!-- /panels -->
   </div><!-- /main -->
-
   <div class="footer">© 吉的堡托育機構 ・ 員工薪資系統</div>
 
 <script>
 // ════════════════════════════════════════════════════════
-//  設定（請依實際情況修改 URL）
+//  設定
 // ════════════════════════════════════════════════════════
 const TA_ADMIN_URL  = 'https://script.google.com/macros/s/AKfycbzBHEndqfatexVF5ZgDQDwH8yWJorcxclbtvCSxvXyxZCFDjrNbAHmIPTWzUX322uNr/exec?page=admin';
 const TA_SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbzBHEndqfatexVF5ZgDQDwH8yWJorcxclbtvCSxvXyxZCFDjrNbAHmIPTWzUX322uNr/exec';
 const TA_CREDS_CSV  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQsJvhdokMZsltLadwONPrDe4vr3EQp1ayqkauCO34cF6F4jgZzBpktSK5z_5R6IIEy9dHh97FkCNKG/pub?gid=1519178890&single=true&output=csv';
 
+// ★ 員工名單 CSV（gid=0 工作表）
+const TA_NAMES_CSV  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQsJvhdokMZsltLadwONPrDe4vr3EQp1ayqkauCO34cF6F4jgZzBpktSK5z_5R6IIEy9dHh97FkCNKG/pub?gid=0&single=true&output=csv';
+
 const MAX_USERS = 10;
 let _creds = null;
 
-// ── CSV 帳密 ──
+// ════════════════════════════════════
+//  CSV 解析
+// ════════════════════════════════════
 function parseCSVRow(row) {
   row = row.replace(/\r$/, '');
   const result = []; let cur = '', inQ = false;
@@ -595,6 +597,65 @@ function parseCSVRow(row) {
   }
   result.push(cur.trim()); return result;
 }
+
+// ════════════════════════════════════
+//  ★ 員工名單載入
+// ════════════════════════════════════
+async function loadEmployeeNames() {
+  const sel    = document.getElementById('empName');
+  const status = document.getElementById('nameLoadStatus');
+  sel.innerHTML = '<option value="">⏳ 載入員工名單中…</option>';
+  sel.classList.add('loading-state');
+  status.textContent = '';
+  status.className   = 'name-load-status';
+
+  try {
+    const res = await fetch(TA_NAMES_CSV);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text  = await res.text();
+    const lines = text.trim().split('\n').filter(l => l.trim());
+    if (lines.length < 1) throw new Error('名單空白');
+
+    const header  = parseCSVRow(lines[0]);
+    // 找「姓名」欄（不限定第幾欄）
+    let nameCol = header.findIndex(h => h.includes('姓名') || h.toLowerCase().includes('name'));
+    if (nameCol < 0) nameCol = 0; // 找不到就用第一欄
+
+    const names = [];
+    for (let i = 1; i < lines.length; i++) {
+      const cols = parseCSVRow(lines[i]);
+      const n = (cols[nameCol] || '').trim();
+      if (n) names.push(n);
+    }
+    if (!names.length) throw new Error('找不到任何姓名資料');
+
+    sel.innerHTML = '<option value="">請選擇員工姓名</option>';
+    names.forEach(n => {
+      const o = document.createElement('option');
+      o.value = n; o.textContent = n;
+      sel.appendChild(o);
+    });
+    sel.classList.remove('loading-state');
+    status.textContent = `✅ 已載入 ${names.length} 位員工`;
+    status.className   = 'name-load-status ok';
+
+  } catch (e) {
+    sel.innerHTML = '<option value="">⚠ 無法載入名單，請手動輸入</option>';
+    sel.classList.remove('loading-state');
+    // 載入失敗時改回文字輸入
+    const wrap = sel.parentElement;
+    const fallback = document.createElement('input');
+    fallback.type = 'text'; fallback.id = 'empName';
+    fallback.className = 'field-input'; fallback.placeholder = '請輸入員工姓名';
+    sel.replaceWith(fallback);
+    status.textContent = `⚠ 名單載入失敗（${e.message}），請直接輸入姓名`;
+    status.className   = 'name-load-status err';
+  }
+}
+
+// ════════════════════════════════════
+//  帳密載入
+// ════════════════════════════════════
 async function loadCreds() {
   if (_creds) return _creds;
   try {
@@ -614,13 +675,13 @@ function getLocalUsers() { try { return JSON.parse(localStorage.getItem('users_t
 function saveLocalUsers(arr) { localStorage.setItem('users_ta', JSON.stringify(arr)); }
 async function getAllUsers() { const c = await loadCreds(); return (c && c.length > 0) ? c : getLocalUsers(); }
 
-// ── Tab 切換 ──
+// ════════════════════════════════════
+//  Tab 切換
+// ════════════════════════════════════
 function switchSTab(i) {
   document.querySelectorAll('.stab').forEach((t,j) => t.classList.toggle('active', i===j));
   document.querySelectorAll('.spanel').forEach((p,j) => p.classList.toggle('active', i===j));
 }
-
-// ── 全螢幕（後台用）──
 function toggleFS(cb) {
   document.body.classList.toggle('fs-mode', cb.checked);
   document.querySelectorAll('.fs-label input[type=checkbox]').forEach(el => { if (el!==cb) el.checked=false; });
@@ -633,7 +694,6 @@ function autoFullscreen() {
   const cb = document.getElementById('fscb1ta');
   if (cb && !cb.checked) { cb.checked=true; toggleFS(cb); }
 }
-
 function roleTag(role) {
   if (role==='superadmin') return ' 【超級管理員】';
   if (role==='admin')      return ' 【後台】';
@@ -641,7 +701,9 @@ function roleTag(role) {
   return ' 【工作輸入】';
 }
 
-// ── 登入 Tab0 ──
+// ════════════════════════════════════
+//  登入 Tab0
+// ════════════════════════════════════
 async function doLoginTA() {
   const u = document.getElementById('taUser').value.trim();
   const p = document.getElementById('taPass').value;
@@ -656,6 +718,8 @@ async function doLoginTA() {
     fa.style.display = 'flex';
     document.getElementById('taWelcome').textContent = '👋 歡迎，' + (match.n||u) + roleTag(match.role);
     err.textContent = '';
+    // ★ 登入後才載入員工名單
+    loadEmployeeNames();
     calcAll();
   } else if (match && match.role==='admin') {
     err.textContent = '❌ 您的帳號無工作輸入權限，請切換到後台分頁';
@@ -673,7 +737,9 @@ function doLogoutTA() {
   resetForm();
 }
 
-// ── 登入 Tab1 後台 ──
+// ════════════════════════════════════
+//  登入 Tab1 後台
+// ════════════════════════════════════
 async function doLoginTAAdmin() {
   const u = document.getElementById('taAdminUser').value.trim();
   const p = document.getElementById('taAdminPass').value;
@@ -697,8 +763,6 @@ function showAdminIframe() {
   if (!iframe.src || iframe.src==='about:blank') iframe.src = TA_ADMIN_URL;
   autoFullscreen();
 }
-
-// ── 超管帳密管理（可從後台頁呼叫）──
 function showAdminPanel() {
   const container = document.getElementById('spanel1');
   document.getElementById('taAdminFrame').style.display = 'none';
@@ -824,15 +888,14 @@ function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 //  計算邏輯
 // ════════════════════════════════════
 const OT_RATE = 170;
-
 function calcOT() {
   return Math.round((parseFloat(document.getElementById('otHours').value)||0) * OT_RATE);
 }
 function calcASC() {
   const n = parseInt(document.getElementById('ascCount').value) || 0;
   const tier = document.getElementById('ascTier');
-  if (n <= 0)  { tier.textContent='無津貼';    tier.className='asc-tier tier-none'; return 0; }
-  if (n <= 15) { tier.textContent='1–15人';    tier.className='asc-tier tier-none'; return 0; }
+  if (n <= 0)  { tier.textContent='無津貼';       tier.className='asc-tier tier-none'; return 0; }
+  if (n <= 15) { tier.textContent='1–15人';       tier.className='asc-tier tier-none'; return 0; }
   if (n <= 20) { tier.textContent='16–20人 ×500'; tier.className='asc-tier tier-mid';  return (n-15)*500; }
   tier.textContent='≥21人 累進'; tier.className='asc-tier tier-high';
   return 2500 + (n-20)*1000;
@@ -849,7 +912,6 @@ function calcUnion() {
   return t;
 }
 function fmt(n) { return '$' + n.toLocaleString('zh-TW'); }
-
 function calcAll() {
   const base  = parseFloat(document.getElementById('baseSalary').value)||0;
   const role  = parseFloat(document.getElementById('roleAllowance').value)||0;
@@ -873,7 +935,13 @@ function calcAll() {
 //  重置表單
 // ════════════════════════════════════
 function resetForm() {
-  ['baseSalary','roleAllowance','otHours','ascCount','empName'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  ['baseSalary','roleAllowance','otHours','ascCount'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value='';
+  });
+  // 重置姓名（select 或 input 皆相容）
+  const nameEl = document.getElementById('empName');
+  if (nameEl) { if (nameEl.tagName==='SELECT') nameEl.value=''; else nameEl.value=''; }
+
   BONUSES.forEach(k => {
     document.getElementById('cb_'+k).checked = false;
     document.getElementById('detail_'+k).classList.remove('show');
@@ -895,16 +963,15 @@ function resetForm() {
 //  送出薪資
 // ════════════════════════════════════
 async function submitForm() {
-  const name  = document.getElementById('empName').value.trim();
-  const month = document.getElementById('monthValue').value;
-  if (!name)  { alert('請填寫員工姓名'); return; }
+  const nameEl = document.getElementById('empName');
+  const name   = (nameEl ? nameEl.value : '').trim();
+  const month  = document.getElementById('monthValue').value;
+  if (!name)  { alert('請選擇（或輸入）員工姓名'); return; }
   if (!month) { alert('請選擇薪資月份'); return; }
-
   const base=parseFloat(document.getElementById('baseSalary').value)||0;
   const role=parseFloat(document.getElementById('roleAllowance').value)||0;
   const ot=calcOT(), asc=calcASC(), bonus=calcBonus(), union=calcUnion();
   const total=base+role+ot+asc+bonus+union;
-
   const bonusLabels = {dragonboat:'端午獎金',midautumn:'中秋獎金',yearend:'年終獎金',spring:'春節獎金',performance:'績效獎金',other:'其他獎金'};
   const bonusDetail = [];
   BONUSES.forEach(k => {
@@ -914,7 +981,6 @@ async function submitForm() {
       bonusDetail.push(n+':'+v);
     }
   });
-
   const payload = {
     action:'submitSalary', name, month,
     baseSalary:base, roleAllowance:role,
@@ -925,7 +991,6 @@ async function submitForm() {
     unionLabor:document.getElementById('cb_unionLabor').checked?(parseFloat(document.getElementById('amt_unionLabor').value)||0):0,
     unionTotal:union, totalSalary:total
   };
-
   const btn = document.getElementById('submitBtn');
   btn.disabled=true; btn.textContent='⏳ 送出中…';
   try {
