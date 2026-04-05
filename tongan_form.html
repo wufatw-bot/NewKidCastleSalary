@@ -798,11 +798,15 @@ function calcASC() {
   if (n <= 0) {
     tier.textContent = '無津貼'; tier.className = 'asc-tier tier-none'; return 0;
   } else if (n <= 15) {
-    tier.textContent = '1-15人'; tier.className = 'asc-tier tier-none'; amt = 0;
+    tier.textContent = '1–15人'; tier.className = 'asc-tier tier-none'; amt = 0;
   } else if (n <= 20) {
-    tier.textContent = '16-20人 ×500'; tier.className = 'asc-tier tier-mid'; amt = n * 500;
+    // (人數 - 15) × 500
+    amt = (n - 15) * 500;
+    tier.textContent = '16–20人 ×500'; tier.className = 'asc-tier tier-mid';
   } else {
-    tier.textContent = '≥21人 ×1000'; tier.className = 'asc-tier tier-high'; amt = n * 1000;
+    // (5 × 500) + (人數 - 20) × 1000
+    amt = (5 * 500) + (n - 20) * 1000;
+    tier.textContent = '≥21人 累進'; tier.className = 'asc-tier tier-high';
   }
   return amt;
 }
