@@ -7,230 +7,163 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --cream: #faf6ee;
-      --warm: #e8dcc8;
-      --brown: #8b6f47;
-      --text-dark: #2c2018;
-      --text-mid: #5a4a35;
-      --text-light: #8a7560;
-      --gold: #c9922a;
-      --green: #2a6040;
-      --green2: #3d8258;
-      --border: #d8c9a8;
+      --cream: #faf6ee; --warm: #e8dcc8; --brown: #8b6f47;
+      --text-dark: #2c2018; --text-mid: #5a4a35; --text-light: #8a7560;
+      --gold: #c9922a; --green: #2a6040; --green2: #3d8258; --border: #d8c9a8;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Noto Sans TC', sans-serif;
-      background: var(--cream);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-    }
-    /* ── NAV ── */
-    .nav {
-      background: linear-gradient(90deg, #6b4f2e 0%, #8b6f47 50%, #6b4f2e 100%);
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.25);
-      flex-shrink: 0;
-      z-index: 20;
-    }
-    .nav-title { font-family: 'Noto Serif TC', serif; font-size: 20px; font-weight: 700; color: #fef3dc; letter-spacing: 2px; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-    .nav-back { font-size: 14px; color: rgba(254,243,220,0.75); text-decoration: none; border: 1px solid rgba(254,243,220,0.35); border-radius: 999px; padding: 4px 14px; transition: background .2s; }
-    .nav-back:hover { background: rgba(255,255,255,0.15); color: #fef3dc; }
-    /* ── DIVIDER ── */
-    .divider { width: 100%; height: 14px; background: repeating-linear-gradient(90deg, #c9a96e 0px, #c9a96e 8px, #e8d5b0 8px, #e8d5b0 16px); flex-shrink: 0; }
-    /* ── TABS ── */
-    .tabs { display: flex; background: var(--warm); border-bottom: 2px solid #c9a96e; flex-shrink: 0; }
-    .stab {
-      flex: 1; padding: 14px 0; text-align: center; cursor: pointer;
-      font-family: 'Noto Serif TC', serif; font-size: 18px; font-weight: 700;
-      color: var(--text-light); border-bottom: 3px solid transparent;
-      transition: .2s; user-select: none; display: flex; align-items: center;
-      justify-content: center; gap: 7px; background: var(--warm);
-    }
-    .stab:hover { background: #ede4d0; color: var(--text-mid); }
-    .stab.active { color: #8b3a1a; border-bottom-color: #8b3a1a; background: var(--cream); }
-    .stab.active.tab-admin { color: #4a1d96; border-bottom-color: #4a1d96; }
-    /* ── MAIN ── */
-    .main { flex: 1; display: flex; flex-direction: column; min-height: 0; }
-    .panels { flex: 1; display: flex; flex-direction: column; }
-    .spanel { display: none; flex: 1; flex-direction: column; }
-    .spanel.active { display: flex; }
-    /* ── LOGIN ── */
-    .login-screen { flex: 1; display: flex; align-items: center; justify-content: center; background: radial-gradient(ellipse at 30% 70%, rgba(42,96,64,0.07) 0%, transparent 55%), radial-gradient(ellipse at 75% 25%, rgba(201,146,42,0.07) 0%, transparent 55%), var(--cream); padding: 24px; }
-    .login-card { background: #fff; border-radius: 20px; padding: 36px 40px; box-shadow: 0 0 0 3px #c9a96e, 0 0 0 5px #e8d5b0, 0 12px 40px rgba(0,0,0,0.13); width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 18px; position: relative; }
-    .login-icon { font-size: 44px; text-align: center; }
-    .login-title { font-family: 'Noto Serif TC', serif; font-size: 22px; font-weight: 700; color: var(--text-dark); text-align: center; letter-spacing: 2px; }
-    .login-sub { font-size: 14px; color: var(--text-light); text-align: center; letter-spacing: 1px; margin-top: -10px; }
-    .login-field { display: flex; flex-direction: column; gap: 6px; }
-    .login-label { font-size: 15px; font-weight: 700; color: var(--text-mid); letter-spacing: 1px; }
-    .login-input { padding: 12px 14px; border: 1.5px solid var(--warm); border-radius: 10px; font-size: 17px; font-family: 'Noto Sans TC', sans-serif; color: var(--text-dark); background: var(--cream); outline: none; transition: border-color .2s; }
-    .login-input:focus { border-color: #9d6b3a; }
-    .login-btn { padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, #6b4f2e 0%, #9d6b3a 100%); color: #fef3dc; font-family: 'Noto Serif TC', serif; font-size: 18px; font-weight: 700; letter-spacing: 2px; cursor: pointer; transition: opacity .2s, transform .1s; margin-top: 4px; }
-    .login-btn:hover { opacity: 0.88; transform: translateY(-1px); }
-    .login-btn:active { transform: translateY(0); }
-    .login-error { font-size: 14px; color: #c0392b; text-align: center; min-height: 18px; font-weight: 600; }
-    .login-deco { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); background: var(--warm); border: 2px solid #c9a96e; border-radius: 999px; padding: 5px 20px; font-size: 13px; font-weight: 700; color: var(--brown); letter-spacing: 1px; white-space: nowrap; }
-    /* ── IFRAME（後台）── */
-    .frame-container { flex: 1; position: relative; margin: 0 16px 16px; border-radius: 16px; overflow: hidden; box-shadow: 0 0 0 3px #c9a96e, 0 0 0 5px #e8d5b0, 0 8px 32px rgba(0,0,0,0.15); background: #fff; min-height: 500px; }
-    .frame-corner { position: absolute; width: 20px; height: 20px; z-index: 5; pointer-events: none; }
-    .fc-tl { top:6px; left:6px; border-top:3px solid var(--gold); border-left:3px solid var(--gold); border-radius:4px 0 0 0; }
-    .fc-tr { top:6px; right:6px; border-top:3px solid var(--gold); border-right:3px solid var(--gold); border-radius:0 4px 0 0; }
-    .fc-bl { bottom:6px; left:6px; border-bottom:3px solid var(--gold); border-left:3px solid var(--gold); border-radius:0 0 0 4px; }
-    .fc-br { bottom:6px; right:6px; border-bottom:3px solid var(--gold); border-right:3px solid var(--gold); border-radius:0 0 4px 0; }
-    .loading { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--cream); z-index:3; gap:12px; transition:opacity .5s; }
-    .loading.done { opacity:0; pointer-events:none; }
-    .loading-text { font-family:'Noto Serif TC',serif; font-size:15px; color:var(--text-light); letter-spacing:2px; }
-    .spinner { width:32px; height:32px; border:3px solid var(--warm); border-top-color:var(--gold); border-radius:50%; animation:spin .9s linear infinite; }
-    @keyframes spin { to { transform:rotate(360deg); } }
-    iframe { width:100%; height:100%; min-height:600px; border:none; display:block; }
-    /* ── FULLSCREEN ── */
-    .fs-toolbar { display:flex; align-items:center; padding:6px 14px; background:#fff; border-bottom:1px solid #e8dcc8; flex-shrink:0; }
-    .fs-label { display:flex; align-items:center; gap:6px; cursor:pointer; font-size:15px; font-weight:600; color:var(--text-mid); user-select:none; }
-    .fs-label input[type=checkbox] { width:17px; height:17px; accent-color:var(--gold); cursor:pointer; }
-    body.fs-mode .nav, body.fs-mode .divider, body.fs-mode .tabs, body.fs-mode .footer { display:none !important; }
-    body.fs-mode .main { position:fixed; inset:0; z-index:100; background:var(--cream); overflow-y:auto; }
-    body.fs-mode .fs-toolbar { position:sticky; top:0; z-index:101; }
-    /* ── USER MANAGE ── */
-    .user-manage { padding:16px 20px; overflow-y:auto; }
-    .um-title { font-family:'Noto Serif TC',serif; font-size:17px; font-weight:700; color:var(--text-mid); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
-    .um-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
-    .um-num { font-size:14px; font-weight:700; color:var(--text-light); width:22px; flex-shrink:0; text-align:right; }
-    .um-input { flex:1; padding:8px 10px; border:1.5px solid var(--warm); border-radius:8px; font-size:15px; font-family:'Noto Sans TC',sans-serif; color:var(--text-dark); background:var(--cream); outline:none; }
-    .um-input:focus { border-color:#9d6b3a; }
-    .um-perm { display:flex; gap:6px; flex-shrink:0; }
-    .um-perm-label { display:flex; align-items:center; gap:3px; font-size:14px; font-weight:600; color:var(--text-mid); cursor:pointer; background:var(--warm); border-radius:6px; padding:5px 9px; border:1.5px solid transparent; transition:.15s; user-select:none; white-space:nowrap; }
-    .um-perm-label:has(input:checked) { border-color:var(--gold); background:#fff8ee; color:var(--brown); }
-    .um-perm-label input { width:14px; height:14px; accent-color:var(--gold); cursor:pointer; }
-    .um-save-btn { margin-top:10px; padding:12px 32px; border:none; border-radius:10px; background:linear-gradient(135deg,#2a6040 0%,#3d8258 100%); color:#fef3dc; font-family:'Noto Serif TC',serif; font-size:17px; font-weight:700; letter-spacing:2px; cursor:pointer; transition:opacity .2s; }
-    .um-save-btn:hover { opacity:0.85; }
-    .um-ok { font-size:14px; color:#2a6040; font-weight:700; min-height:20px; margin-top:6px; }
-    .um-divider { border:none; border-top:1px dashed #c9a96e; margin:14px 0; }
-    .logout-btn { font-size:14px; color:var(--text-light); background:none; border:1px solid #c9a96e; border-radius:999px; padding:4px 16px; cursor:pointer; font-family:'Noto Sans TC',sans-serif; }
-    .logout-btn:hover { background:var(--warm); }
-    /* ── 薪資表單 ── */
-    .form-topbar { padding:8px 16px; display:flex; align-items:center; gap:8px; flex-shrink:0; background:#fff; border-bottom:1px solid var(--border); }
-    .welcome-txt { font-size:15px; color:var(--text-mid); font-weight:600; flex:1; }
-    .form-scroll { flex:1; overflow-y:auto; }
-    .form-wrap { max-width:800px; margin:24px auto; padding:0 16px 40px; display:flex; flex-direction:column; gap:20px; }
-    .card { background:#fff; border-radius:16px; box-shadow:0 0 0 2px var(--border),0 6px 24px rgba(0,0,0,0.09); overflow:hidden; }
-    .card-head { background:linear-gradient(90deg,#f5ede0,#faf6ee); padding:14px 20px; border-bottom:2px solid var(--border); display:flex; align-items:center; gap:10px; }
-    .card-head-icon { font-size:20px; }
-    .card-head-title { font-family:'Noto Serif TC',serif; font-size:17px; font-weight:700; color:var(--text-mid); letter-spacing:1px; }
-    .card-body { padding:20px; display:flex; flex-direction:column; gap:16px; }
-    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-    @media(max-width:600px){ .grid-2{ grid-template-columns:1fr; } }
-    .field { display:flex; flex-direction:column; gap:6px; }
-    .field-label { font-size:14px; font-weight:600; color:var(--text-mid); letter-spacing:0.5px; display:flex; align-items:center; gap:6px; }
-    .badge { font-size:11px; padding:2px 7px; border-radius:999px; font-weight:700; }
-    .badge-calc { background:#e8f5e9; color:#2a6040; border:1px solid #a5d6a7; }
-    .badge-new  { background:#fff3e0; color:#b45309; border:1px solid #f6c47e; }
-    /* ★ 姓名下拉選單 ★ */
-    .field-select {
-      padding: 10px 13px;
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      font-size: 15px;
-      font-family: 'Noto Sans TC', sans-serif;
-      color: var(--text-dark);
-      background: var(--cream);
-      outline: none;
-      transition: border-color .2s, box-shadow .2s;
-      width: 100%;
-      cursor: pointer;
-      -webkit-appearance: none;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7560' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      padding-right: 36px;
-    }
-    .field-select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,146,42,0.12); }
-    .field-select.loading-state { color: var(--text-light); }
-    .name-load-status { font-size: 12px; margin-top: 3px; min-height: 16px; }
-    .name-load-status.ok  { color: #2a6040; }
-    .name-load-status.err { color: #c0392b; }
-    .field-input { padding:10px 13px; border:1.5px solid var(--border); border-radius:10px; font-size:15px; font-family:'Noto Sans TC',sans-serif; color:var(--text-dark); background:var(--cream); outline:none; transition:border-color .2s,box-shadow .2s; width:100%; }
-    .field-input:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,146,42,0.12); }
-    .field-hint { font-size:12px; color:var(--text-light); margin-top:2px; }
-    .input-with-unit { position:relative; }
-    .input-with-unit .field-input,
-    .input-with-unit .bonus-amt-input { padding-right:40px; }
-    .input-unit { position:absolute; right:13px; top:50%; transform:translateY(-50%); font-size:13px; color:var(--text-light); font-weight:600; pointer-events:none; }
-    /* Month picker */
-    .month-pick-wrap { position:relative; }
-    .month-display { padding:10px 13px; border:1.5px solid var(--border); border-radius:10px; font-size:15px; background:var(--cream); cursor:pointer; user-select:none; display:flex; align-items:center; justify-content:space-between; transition:border-color .2s; }
-    .month-display:hover,.month-display.open { border-color:var(--gold); }
-    .month-display .caret { font-size:12px; color:var(--text-light); transition:transform .2s; }
-    .month-display.open .caret { transform:rotate(180deg); }
-    .month-calendar { display:none; position:absolute; top:calc(100% + 8px); left:0; z-index:200; background:#fff; border-radius:14px; box-shadow:0 0 0 2px var(--border),0 12px 32px rgba(0,0,0,0.18); padding:14px; width:280px; }
-    .month-calendar.open { display:block; }
-    .cal-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
-    .cal-year { font-family:'Noto Serif TC',serif; font-size:17px; font-weight:700; color:var(--text-mid); }
-    .cal-arr { background:var(--warm); border:none; border-radius:8px; width:30px; height:30px; font-size:16px; cursor:pointer; color:var(--text-mid); display:flex; align-items:center; justify-content:center; transition:background .15s; }
-    .cal-arr:hover { background:var(--border); }
-    .cal-months { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
-    .cal-month { padding:8px 4px; text-align:center; border-radius:8px; font-size:14px; font-weight:600; color:var(--text-mid); cursor:pointer; border:1.5px solid transparent; background:var(--cream); transition:all .15s; }
-    .cal-month:hover { background:var(--warm); border-color:var(--border); }
-    .cal-month.selected { background:var(--gold); color:#fff; border-color:var(--gold); }
-    /* Result boxes */
-    .ot-result { background:#e8f5e9; border:1.5px solid #a5d6a7; border-radius:10px; padding:10px 14px; display:flex; align-items:center; gap:8px; font-size:15px; color:#2a6040; font-weight:600; flex-wrap:wrap; }
-    .ot-result .ot-amt { font-size:18px; font-weight:700; }
-    .asc-result { background:#fff8e1; border:1.5px solid #f6c47e; border-radius:10px; padding:10px 14px; display:flex; align-items:center; gap:8px; font-size:15px; color:#7d4e08; font-weight:600; flex-wrap:wrap; }
-    .asc-tier { font-size:12px; font-weight:700; padding:2px 8px; border-radius:999px; margin-left:4px; }
-    .tier-none { background:#f0ece4; color:var(--text-light); }
-    .tier-mid  { background:#fff3cd; color:#856404; border:1px solid #ffc107; }
-    .tier-high { background:#ffe0b2; color:#8d3b00; border:1px solid #fb8c00; }
-    /* Bonus */
-    .bonus-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; }
-    .bonus-item { display:flex; align-items:center; gap:8px; background:var(--cream); border:1.5px solid var(--border); border-radius:10px; padding:10px 12px; cursor:pointer; transition:all .15s; user-select:none; }
-    .bonus-item:has(input:checked) { border-color:var(--gold); background:#fff8ee; }
-    .bonus-item input[type=checkbox] { width:16px; height:16px; accent-color:var(--gold); cursor:pointer; flex-shrink:0; }
-    .bonus-label { font-size:14px; font-weight:600; color:var(--text-mid); }
-    .bonus-detail { display:none; flex-direction:column; gap:8px; margin-top:4px; }
-    .bonus-detail.show { display:flex; }
-    .bonus-amt-wrap { display:flex; flex-direction:column; gap:4px; }
-    .bonus-amt-label { font-size:12px; color:var(--text-light); }
-    .bonus-amt-input { padding:7px 10px; border:1.5px solid var(--border); border-radius:8px; font-size:14px; font-family:'Noto Sans TC',sans-serif; background:var(--cream); color:var(--text-dark); outline:none; width:100%; transition:border-color .2s; }
-    .bonus-amt-input:focus { border-color:var(--gold); }
-    /* Union */
-    .union-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-    @media(max-width:500px){ .union-grid{ grid-template-columns:1fr; } }
-    .union-item { border:1.5px solid var(--border); border-radius:12px; padding:14px; background:var(--cream); display:flex; flex-direction:column; gap:10px; transition:border-color .2s,background .2s; }
-    .union-item.active { border-color:#5b8dd9; background:#f0f4ff; }
-    .union-header { display:flex; align-items:center; gap:10px; }
-    .union-toggle { display:flex; align-items:center; gap:8px; cursor:pointer; }
-    .union-toggle input[type=checkbox] { width:17px; height:17px; accent-color:#3b6db5; cursor:pointer; }
-    .union-name { font-size:15px; font-weight:700; color:var(--text-mid); }
-    .union-icon { font-size:20px; }
-    .union-amount-row { display:none; flex-direction:column; gap:5px; }
-    .union-amount-row.show { display:flex; }
-    .union-amount-label { font-size:13px; color:var(--text-light); }
-    .union-amount-input { padding:8px 11px; border:1.5px solid #b0c4e8; border-radius:8px; font-size:14px; font-family:'Noto Sans TC',sans-serif; background:#fff; color:var(--text-dark); outline:none; transition:border-color .2s; width:100%; }
-    .union-amount-input:focus { border-color:#3b6db5; }
-    /* Summary */
-    .summary-card { background:linear-gradient(135deg,#3d2e1a 0%,#6b4f2e 100%); border-radius:16px; padding:24px; color:#fef3dc; box-shadow:0 8px 32px rgba(0,0,0,0.2); }
-    .summary-title { font-family:'Noto Serif TC',serif; font-size:17px; font-weight:700; letter-spacing:2px; margin-bottom:18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid rgba(254,243,220,0.2); padding-bottom:12px; }
-    .summary-rows { display:flex; flex-direction:column; gap:8px; margin-bottom:18px; }
-    .summary-row { display:flex; align-items:center; justify-content:space-between; font-size:14px; color:rgba(254,243,220,0.8); padding:4px 0; }
-    .summary-row.bold { color:#fef3dc; font-weight:700; font-size:15px; border-top:1px solid rgba(254,243,220,0.2); padding-top:10px; margin-top:4px; }
-    .summary-val { font-family:'Noto Serif TC',serif; font-weight:700; }
-    .summary-total { text-align:center; font-family:'Noto Serif TC',serif; font-size:34px; font-weight:700; color:#f6c47e; letter-spacing:2px; padding:12px 0; }
-    .summary-label { font-size:13px; color:rgba(254,243,220,0.6); text-align:center; margin-top:-8px; }
-    /* Submit */
-    .submit-btn { padding:16px; border:none; border-radius:14px; background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%); color:#fef3dc; font-family:'Noto Serif TC',serif; font-size:19px; font-weight:700; letter-spacing:3px; cursor:pointer; transition:opacity .2s,transform .1s; box-shadow:0 6px 20px rgba(42,96,64,0.35); width:100%; }
-    .submit-btn:hover { opacity:0.88; transform:translateY(-2px); }
-    .submit-btn:active { transform:translateY(0); }
-    .submit-btn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
-    .footer { text-align:center; padding:8px; font-size:13px; color:var(--text-light); letter-spacing:1px; flex-shrink:0; }
-    @media(max-width:560px){
-      .stab { font-size:14px; padding:12px 4px; }
-      .nav-title { font-size:15px; }
-    }
+    body { font-family: 'Noto Sans TC', sans-serif; background: var(--cream); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    .nav { background: linear-gradient(90deg,#6b4f2e 0%,#8b6f47 50%,#6b4f2e 100%); padding:14px 24px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 3px 12px rgba(0,0,0,0.25); flex-shrink:0; z-index:20; }
+    .nav-title { font-family:'Noto Serif TC',serif; font-size:20px; font-weight:700; color:#fef3dc; letter-spacing:2px; text-shadow:0 1px 3px rgba(0,0,0,0.3); }
+    .nav-back { font-size:14px; color:rgba(254,243,220,0.75); text-decoration:none; border:1px solid rgba(254,243,220,0.35); border-radius:999px; padding:4px 14px; transition:background .2s; }
+    .nav-back:hover { background:rgba(255,255,255,0.15); color:#fef3dc; }
+    .divider { width:100%; height:14px; background:repeating-linear-gradient(90deg,#c9a96e 0px,#c9a96e 8px,#e8d5b0 8px,#e8d5b0 16px); flex-shrink:0; }
+    .tabs { display:flex; background:var(--warm); border-bottom:2px solid #c9a96e; flex-shrink:0; }
+    .stab { flex:1; padding:14px 0; text-align:center; cursor:pointer; font-family:'Noto Serif TC',serif; font-size:18px; font-weight:700; color:var(--text-light); border-bottom:3px solid transparent; transition:.2s; user-select:none; display:flex; align-items:center; justify-content:center; gap:7px; background:var(--warm); }
+    .stab:hover { background:#ede4d0; color:var(--text-mid); }
+    .stab.active { color:#8b3a1a; border-bottom-color:#8b3a1a; background:var(--cream); }
+    .stab.active.tab-admin { color:#4a1d96; border-bottom-color:#4a1d96; }
+    .main { flex:1; display:flex; flex-direction:column; min-height:0; }
+    .panels { flex:1; display:flex; flex-direction:column; }
+    .spanel { display:none; flex:1; flex-direction:column; }
+    .spanel.active { display:flex; }
+    .login-screen { flex:1; display:flex; align-items:center; justify-content:center; background:radial-gradient(ellipse at 30% 70%,rgba(42,96,64,0.07) 0%,transparent 55%),radial-gradient(ellipse at 75% 25%,rgba(201,146,42,0.07) 0%,transparent 55%),var(--cream); padding:24px; }
+    .login-card { background:#fff; border-radius:20px; padding:36px 40px; box-shadow:0 0 0 3px #c9a96e,0 0 0 5px #e8d5b0,0 12px 40px rgba(0,0,0,0.13); width:100%; max-width:400px; display:flex; flex-direction:column; gap:18px; position:relative; }
+    .login-icon { font-size:44px; text-align:center; }
+    .login-title { font-family:'Noto Serif TC',serif; font-size:22px; font-weight:700; color:var(--text-dark); text-align:center; letter-spacing:2px; }
+    .login-sub { font-size:14px; color:var(--text-light); text-align:center; letter-spacing:1px; margin-top:-10px; }
+    .login-field { display:flex; flex-direction:column; gap:6px; }
+    .login-label { font-size:15px; font-weight:700; color:var(--text-mid); letter-spacing:1px; }
+    .login-input { padding:12px 14px; border:1.5px solid var(--warm); border-radius:10px; font-size:17px; font-family:'Noto Sans TC',sans-serif; color:var(--text-dark); background:var(--cream); outline:none; transition:border-color .2s; }
+    .login-input:focus { border-color:#9d6b3a; }
+    .login-btn { padding:14px; border:none; border-radius:12px; background:linear-gradient(135deg,#6b4f2e 0%,#9d6b3a 100%); color:#fef3dc; font-family:'Noto Serif TC',serif; font-size:18px; font-weight:700; letter-spacing:2px; cursor:pointer; transition:opacity .2s,transform .1s; margin-top:4px; }
+    .login-btn:hover { opacity:0.88; transform:translateY(-1px); }
+    .login-btn:active { transform:translateY(0); }
+    .login-error { font-size:14px; color:#c0392b; text-align:center; min-height:18px; font-weight:600; }
+    .login-deco { position:absolute; top:-18px; left:50%; transform:translateX(-50%); background:var(--warm); border:2px solid #c9a96e; border-radius:999px; padding:5px 20px; font-size:13px; font-weight:700; color:var(--brown); letter-spacing:1px; white-space:nowrap; }
+    .frame-container { flex:1; position:relative; margin:0 16px 16px; border-radius:16px; overflow:hidden; box-shadow:0 0 0 3px #c9a96e,0 0 0 5px #e8d5b0,0 8px 32px rgba(0,0,0,0.15); background:#fff; min-height:500px; }
+    .frame-corner { position:absolute; width:20px; height:20px; z-index:5; pointer-events:none; }
+    .fc-tl{top:6px;left:6px;border-top:3px solid var(--gold);border-left:3px solid var(--gold);border-radius:4px 0 0 0;}
+    .fc-tr{top:6px;right:6px;border-top:3px solid var(--gold);border-right:3px solid var(--gold);border-radius:0 4px 0 0;}
+    .fc-bl{bottom:6px;left:6px;border-bottom:3px solid var(--gold);border-left:3px solid var(--gold);border-radius:0 0 0 4px;}
+    .fc-br{bottom:6px;right:6px;border-bottom:3px solid var(--gold);border-right:3px solid var(--gold);border-radius:0 0 4px 0;}
+    .loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--cream);z-index:3;gap:12px;transition:opacity .5s;}
+    .loading.done{opacity:0;pointer-events:none;}
+    .loading-text{font-family:'Noto Serif TC',serif;font-size:15px;color:var(--text-light);letter-spacing:2px;}
+    .spinner{width:32px;height:32px;border:3px solid var(--warm);border-top-color:var(--gold);border-radius:50%;animation:spin .9s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    iframe{width:100%;height:100%;min-height:600px;border:none;display:block;}
+    .fs-toolbar{display:flex;align-items:center;padding:6px 14px;background:#fff;border-bottom:1px solid #e8dcc8;flex-shrink:0;}
+    .fs-label{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:15px;font-weight:600;color:var(--text-mid);user-select:none;}
+    .fs-label input[type=checkbox]{width:17px;height:17px;accent-color:var(--gold);cursor:pointer;}
+    body.fs-mode .nav,body.fs-mode .divider,body.fs-mode .tabs,body.fs-mode .footer{display:none !important;}
+    body.fs-mode .main{position:fixed;inset:0;z-index:100;background:var(--cream);overflow-y:auto;}
+    body.fs-mode .fs-toolbar{position:sticky;top:0;z-index:101;}
+    .user-manage{padding:16px 20px;overflow-y:auto;}
+    .um-title{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;color:var(--text-mid);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+    .um-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+    .um-num{font-size:14px;font-weight:700;color:var(--text-light);width:22px;flex-shrink:0;text-align:right;}
+    .um-input{flex:1;padding:8px 10px;border:1.5px solid var(--warm);border-radius:8px;font-size:15px;font-family:'Noto Sans TC',sans-serif;color:var(--text-dark);background:var(--cream);outline:none;}
+    .um-input:focus{border-color:#9d6b3a;}
+    .um-perm{display:flex;gap:6px;flex-shrink:0;}
+    .um-perm-label{display:flex;align-items:center;gap:3px;font-size:14px;font-weight:600;color:var(--text-mid);cursor:pointer;background:var(--warm);border-radius:6px;padding:5px 9px;border:1.5px solid transparent;transition:.15s;user-select:none;white-space:nowrap;}
+    .um-perm-label:has(input:checked){border-color:var(--gold);background:#fff8ee;color:var(--brown);}
+    .um-perm-label input{width:14px;height:14px;accent-color:var(--gold);cursor:pointer;}
+    .um-save-btn{margin-top:10px;padding:12px 32px;border:none;border-radius:10px;background:linear-gradient(135deg,#2a6040 0%,#3d8258 100%);color:#fef3dc;font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:opacity .2s;}
+    .um-save-btn:hover{opacity:0.85;}
+    .um-ok{font-size:14px;color:#2a6040;font-weight:700;min-height:20px;margin-top:6px;}
+    .um-divider{border:none;border-top:1px dashed #c9a96e;margin:14px 0;}
+    .logout-btn{font-size:14px;color:var(--text-light);background:none;border:1px solid #c9a96e;border-radius:999px;padding:4px 16px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;}
+    .logout-btn:hover{background:var(--warm);}
+    .form-topbar{padding:8px 16px;display:flex;align-items:center;gap:8px;flex-shrink:0;background:#fff;border-bottom:1px solid var(--border);}
+    .welcome-txt{font-size:15px;color:var(--text-mid);font-weight:600;flex:1;}
+    .form-scroll{flex:1;overflow-y:auto;}
+    .form-wrap{max-width:800px;margin:24px auto;padding:0 16px 40px;display:flex;flex-direction:column;gap:20px;}
+    .card{background:#fff;border-radius:16px;box-shadow:0 0 0 2px var(--border),0 6px 24px rgba(0,0,0,0.09);overflow:hidden;}
+    .card-head{background:linear-gradient(90deg,#f5ede0,#faf6ee);padding:14px 20px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:10px;}
+    .card-head-icon{font-size:20px;}
+    .card-head-title{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;color:var(--text-mid);letter-spacing:1px;}
+    .card-body{padding:20px;display:flex;flex-direction:column;gap:16px;}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    @media(max-width:600px){.grid-2{grid-template-columns:1fr;}}
+    .field{display:flex;flex-direction:column;gap:6px;}
+    .field-label{font-size:14px;font-weight:600;color:var(--text-mid);letter-spacing:0.5px;display:flex;align-items:center;gap:6px;}
+    .badge{font-size:11px;padding:2px 7px;border-radius:999px;font-weight:700;}
+    .badge-calc{background:#e8f5e9;color:#2a6040;border:1px solid #a5d6a7;}
+    .badge-new{background:#fff3e0;color:#b45309;border:1px solid #f6c47e;}
+    .field-select{padding:10px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;font-family:'Noto Sans TC',sans-serif;color:var(--text-dark);background:var(--cream);outline:none;transition:border-color .2s,box-shadow .2s;width:100%;cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7560' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;}
+    .field-select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,146,42,0.12);}
+    .field-select.loading-state{color:var(--text-light);}
+    .name-load-status{font-size:12px;margin-top:3px;min-height:16px;}
+    .name-load-status.ok{color:#2a6040;}
+    .name-load-status.err{color:#c0392b;}
+    .field-input{padding:10px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;font-family:'Noto Sans TC',sans-serif;color:var(--text-dark);background:var(--cream);outline:none;transition:border-color .2s,box-shadow .2s;width:100%;}
+    .field-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,146,42,0.12);}
+    .field-hint{font-size:12px;color:var(--text-light);margin-top:2px;}
+    .input-with-unit{position:relative;}
+    .input-with-unit .field-input,.input-with-unit .bonus-amt-input{padding-right:40px;}
+    .input-unit{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-light);font-weight:600;pointer-events:none;}
+    .month-pick-wrap{position:relative;}
+    .month-display{padding:10px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;background:var(--cream);cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between;transition:border-color .2s;}
+    .month-display:hover,.month-display.open{border-color:var(--gold);}
+    .month-display .caret{font-size:12px;color:var(--text-light);transition:transform .2s;}
+    .month-display.open .caret{transform:rotate(180deg);}
+    .month-calendar{display:none;position:absolute;top:calc(100% + 8px);left:0;z-index:200;background:#fff;border-radius:14px;box-shadow:0 0 0 2px var(--border),0 12px 32px rgba(0,0,0,0.18);padding:14px;width:280px;}
+    .month-calendar.open{display:block;}
+    .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+    .cal-year{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;color:var(--text-mid);}
+    .cal-arr{background:var(--warm);border:none;border-radius:8px;width:30px;height:30px;font-size:16px;cursor:pointer;color:var(--text-mid);display:flex;align-items:center;justify-content:center;transition:background .15s;}
+    .cal-arr:hover{background:var(--border);}
+    .cal-months{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+    .cal-month{padding:8px 4px;text-align:center;border-radius:8px;font-size:14px;font-weight:600;color:var(--text-mid);cursor:pointer;border:1.5px solid transparent;background:var(--cream);transition:all .15s;}
+    .cal-month:hover{background:var(--warm);border-color:var(--border);}
+    .cal-month.selected{background:var(--gold);color:#fff;border-color:var(--gold);}
+    .ot-result{background:#e8f5e9;border:1.5px solid #a5d6a7;border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:15px;color:#2a6040;font-weight:600;flex-wrap:wrap;}
+    .ot-result .ot-amt{font-size:18px;font-weight:700;}
+    .asc-result{background:#fff8e1;border:1.5px solid #f6c47e;border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:15px;color:#7d4e08;font-weight:600;flex-wrap:wrap;}
+    .asc-tier{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:4px;}
+    .tier-none{background:#f0ece4;color:var(--text-light);}
+    .tier-mid{background:#fff3cd;color:#856404;border:1px solid #ffc107;}
+    .tier-high{background:#ffe0b2;color:#8d3b00;border:1px solid #fb8c00;}
+    .bonus-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
+    .bonus-item{display:flex;align-items:center;gap:8px;background:var(--cream);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .15s;user-select:none;}
+    .bonus-item:has(input:checked){border-color:var(--gold);background:#fff8ee;}
+    .bonus-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold);cursor:pointer;flex-shrink:0;}
+    .bonus-label{font-size:14px;font-weight:600;color:var(--text-mid);}
+    .bonus-detail{display:none;flex-direction:column;gap:8px;margin-top:4px;}
+    .bonus-detail.show{display:flex;}
+    .bonus-amt-wrap{display:flex;flex-direction:column;gap:4px;}
+    .bonus-amt-label{font-size:12px;color:var(--text-light);}
+    .bonus-amt-input{padding:7px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'Noto Sans TC',sans-serif;background:var(--cream);color:var(--text-dark);outline:none;width:100%;transition:border-color .2s;}
+    .bonus-amt-input:focus{border-color:var(--gold);}
+    .union-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    @media(max-width:500px){.union-grid{grid-template-columns:1fr;}}
+    .union-item{border:1.5px solid var(--border);border-radius:12px;padding:14px;background:var(--cream);display:flex;flex-direction:column;gap:10px;transition:border-color .2s,background .2s;}
+    .union-item.active{border-color:#5b8dd9;background:#f0f4ff;}
+    .union-header{display:flex;align-items:center;gap:10px;}
+    .union-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;}
+    .union-toggle input[type=checkbox]{width:17px;height:17px;accent-color:#3b6db5;cursor:pointer;}
+    .union-name{font-size:15px;font-weight:700;color:var(--text-mid);}
+    .union-icon{font-size:20px;}
+    .union-amount-row{display:none;flex-direction:column;gap:5px;}
+    .union-amount-row.show{display:flex;}
+    .union-amount-label{font-size:13px;color:var(--text-light);}
+    .union-amount-input{padding:8px 11px;border:1.5px solid #b0c4e8;border-radius:8px;font-size:14px;font-family:'Noto Sans TC',sans-serif;background:#fff;color:var(--text-dark);outline:none;transition:border-color .2s;width:100%;}
+    .union-amount-input:focus{border-color:#3b6db5;}
+    .summary-card{background:linear-gradient(135deg,#3d2e1a 0%,#6b4f2e 100%);border-radius:16px;padding:24px;color:#fef3dc;box-shadow:0 8px 32px rgba(0,0,0,0.2);}
+    .summary-title{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;letter-spacing:2px;margin-bottom:18px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(254,243,220,0.2);padding-bottom:12px;}
+    .summary-rows{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+    .summary-row{display:flex;align-items:center;justify-content:space-between;font-size:14px;color:rgba(254,243,220,0.8);padding:4px 0;}
+    .summary-row.bold{color:#fef3dc;font-weight:700;font-size:15px;border-top:1px solid rgba(254,243,220,0.2);padding-top:10px;margin-top:4px;}
+    .summary-val{font-family:'Noto Serif TC',serif;font-weight:700;}
+    .summary-total{text-align:center;font-family:'Noto Serif TC',serif;font-size:34px;font-weight:700;color:#f6c47e;letter-spacing:2px;padding:12px 0;}
+    .summary-label{font-size:13px;color:rgba(254,243,220,0.6);text-align:center;margin-top:-8px;}
+    .submit-btn{padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);color:#fef3dc;font-family:'Noto Serif TC',serif;font-size:19px;font-weight:700;letter-spacing:3px;cursor:pointer;transition:opacity .2s,transform .1s;box-shadow:0 6px 20px rgba(42,96,64,0.35);width:100%;}
+    .submit-btn:hover{opacity:0.88;transform:translateY(-2px);}
+    .submit-btn:active{transform:translateY(0);}
+    .submit-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+    .footer{text-align:center;padding:8px;font-size:13px;color:var(--text-light);letter-spacing:1px;flex-shrink:0;}
+    @media(max-width:560px){.stab{font-size:14px;padding:12px 4px;}.nav-title{font-size:15px;}}
   </style>
 </head>
 <body>
@@ -245,29 +178,21 @@
   </div>
   <div class="main">
     <div class="panels">
-      <!-- ══ TAB 0：每月工作輸入 ══ -->
+      <!-- TAB 0 -->
       <div class="spanel active" id="spanel0">
-        <!-- 登入畫面 -->
         <div class="login-screen" id="taLogin">
           <div class="login-card">
             <div class="login-deco">🌿 同安校每月工作輸入</div>
             <div class="login-icon">📋</div>
             <div class="login-title">請先登入</div>
             <div class="login-sub">請輸入您的帳號與密碼</div>
-            <div class="login-field">
-              <div class="login-label">帳號 Username</div>
-              <input class="login-input" id="taUser" type="text" placeholder="請輸入帳號" autocomplete="username">
-            </div>
-            <div class="login-field">
-              <div class="login-label">密碼 Password</div>
-              <input class="login-input" id="taPass" type="password" placeholder="請輸入密碼" autocomplete="current-password">
-            </div>
+            <div class="login-field"><div class="login-label">帳號 Username</div><input class="login-input" id="taUser" type="text" placeholder="請輸入帳號" autocomplete="username"></div>
+            <div class="login-field"><div class="login-label">密碼 Password</div><input class="login-input" id="taPass" type="password" placeholder="請輸入密碼" autocomplete="current-password"></div>
             <div class="login-error" id="taError"></div>
             <button class="login-btn" onclick="doLoginTA()">登 入</button>
           </div>
         </div>
-        <!-- 登入後：薪資表單 -->
-        <div id="taFormArea" style="display:none; flex:1; flex-direction:column; min-height:0;">
+        <div id="taFormArea" style="display:none;flex:1;flex-direction:column;min-height:0;">
           <div class="form-topbar">
             <span class="welcome-txt" id="taWelcome"></span>
             <button class="logout-btn" onclick="doLogoutTA()">登出</button>
@@ -276,33 +201,20 @@
             <div class="form-wrap">
               <!-- ① 基本資訊 -->
               <div class="card">
-                <div class="card-head">
-                  <div class="card-head-icon">📋</div>
-                  <div class="card-head-title">基本資訊</div>
-                </div>
+                <div class="card-head"><div class="card-head-icon">📋</div><div class="card-head-title">基本資訊</div></div>
                 <div class="card-body">
                   <div class="grid-2">
-                    <!-- ★ 員工姓名：下拉選單，從 CSV 載入 ★ -->
                     <div class="field">
                       <div class="field-label">👤 員工姓名</div>
-                      <select class="field-select loading-state" id="empName">
-                        <option value="">⏳ 載入員工名單中…</option>
-                      </select>
+                      <select class="field-select loading-state" id="empName"><option value="">⏳ 載入員工名單中…</option></select>
                       <div class="name-load-status" id="nameLoadStatus"></div>
                     </div>
                     <div class="field">
                       <div class="field-label">📅 薪資月份 <span class="badge badge-new">月曆</span></div>
                       <div class="month-pick-wrap">
-                        <div class="month-display" id="monthDisplay" onclick="toggleCal()">
-                          <span id="monthDisplayText">請選擇月份</span>
-                          <span class="caret">▼</span>
-                        </div>
+                        <div class="month-display" id="monthDisplay" onclick="toggleCal()"><span id="monthDisplayText">請選擇月份</span><span class="caret">▼</span></div>
                         <div class="month-calendar" id="monthCalendar">
-                          <div class="cal-nav">
-                            <button class="cal-arr" onclick="changeYear(-1)">◀</button>
-                            <div class="cal-year" id="calYear"></div>
-                            <button class="cal-arr" onclick="changeYear(1)">▶</button>
-                          </div>
+                          <div class="cal-nav"><button class="cal-arr" onclick="changeYear(-1)">◀</button><div class="cal-year" id="calYear"></div><button class="cal-arr" onclick="changeYear(1)">▶</button></div>
                           <div class="cal-months" id="calMonths"></div>
                         </div>
                       </div>
@@ -310,208 +222,76 @@
                     </div>
                   </div>
                   <div class="grid-2">
-                    <div class="field">
-                      <div class="field-label">💰 本薪（底薪）</div>
-                      <div class="input-with-unit">
-                        <input class="field-input" type="number" id="baseSalary" placeholder="0" oninput="calcAll()">
-                        <span class="input-unit">元</span>
-                      </div>
-                    </div>
-                    <div class="field">
-                      <div class="field-label">📊 職務加給</div>
-                      <div class="input-with-unit">
-                        <input class="field-input" type="number" id="roleAllowance" placeholder="0" oninput="calcAll()">
-                        <span class="input-unit">元</span>
-                      </div>
-                    </div>
+                    <div class="field"><div class="field-label">💰 本薪（底薪）</div><div class="input-with-unit"><input class="field-input" type="number" id="baseSalary" placeholder="0" oninput="calcAll()"><span class="input-unit">元</span></div></div>
+                    <div class="field"><div class="field-label">📊 職務加給</div><div class="input-with-unit"><input class="field-input" type="number" id="roleAllowance" placeholder="0" oninput="calcAll()"><span class="input-unit">元</span></div></div>
                   </div>
                 </div>
               </div>
               <!-- ② 加班費 -->
               <div class="card">
-                <div class="card-head">
-                  <div class="card-head-icon">⏰</div>
-                  <div class="card-head-title">加班費 <span style="font-size:13px;font-weight:400;color:var(--text-light);margin-left:8px;">170元／時</span></div>
-                </div>
+                <div class="card-head"><div class="card-head-icon">⏰</div><div class="card-head-title">加班費 <span style="font-size:13px;font-weight:400;color:var(--text-light);margin-left:8px;">170元／時</span></div></div>
                 <div class="card-body">
                   <div class="grid-2">
-                    <div class="field">
-                      <div class="field-label">加班時數 <span class="badge badge-calc">自動計算</span></div>
-                      <div class="input-with-unit">
-                        <input class="field-input" type="number" id="otHours" placeholder="0" step="0.5" min="0" oninput="calcAll()">
-                        <span class="input-unit">小時</span>
-                      </div>
-                      <div class="field-hint">每小時 170 元</div>
-                    </div>
-                    <div class="field">
-                      <div class="field-label">加班費金額</div>
-                      <div class="ot-result">
-                        <span>💵</span>
-                        <span class="ot-amt" id="otResult">0</span>
-                        <span>元</span>
-                      </div>
-                    </div>
+                    <div class="field"><div class="field-label">加班時數 <span class="badge badge-calc">自動計算</span></div><div class="input-with-unit"><input class="field-input" type="number" id="otHours" placeholder="0" step="0.5" min="0" oninput="calcAll()"><span class="input-unit">小時</span></div><div class="field-hint">每小時 170 元</div></div>
+                    <div class="field"><div class="field-label">加班費金額</div><div class="ot-result"><span>💵</span><span class="ot-amt" id="otResult">0</span><span>元</span></div></div>
                   </div>
                 </div>
               </div>
               <!-- ③ 安親人數津貼 -->
               <div class="card">
-                <div class="card-head">
-                  <div class="card-head-icon">👧</div>
-                  <div class="card-head-title">安親人數津貼</div>
-                </div>
+                <div class="card-head"><div class="card-head-icon">👧</div><div class="card-head-title">安親人數津貼</div></div>
                 <div class="card-body">
                   <div class="grid-2">
                     <div class="field">
                       <div class="field-label">當月安親人數</div>
-                      <div class="input-with-unit">
-                        <input class="field-input" type="number" id="ascCount" placeholder="0" min="0" oninput="calcAll()">
-                        <span class="input-unit">人</span>
-                      </div>
-                      <div class="field-hint">
-                        ≤15人：0元<br>
-                        16–20人：(人數−15)×500<br>
-                        ≥21人：2,500+(人數−20)×1,000
-                      </div>
+                      <div class="input-with-unit"><input class="field-input" type="number" id="ascCount" placeholder="0" min="0" oninput="calcAll()"><span class="input-unit">人</span></div>
+                      <div class="field-hint">≤15人：0元<br>16–20人：(人數−15)×500<br>≥21人：2,500+(人數−20)×1,000</div>
                     </div>
-                    <div class="field">
-                      <div class="field-label">安親津貼金額</div>
-                      <div class="asc-result">
-                        <span>🎯</span>
-                        <span id="ascResult" style="font-size:18px;font-weight:700;">0</span>
-                        <span>元</span>
-                        <span class="asc-tier tier-none" id="ascTier">無津貼</span>
-                      </div>
-                    </div>
+                    <div class="field"><div class="field-label">安親津貼金額</div><div class="asc-result"><span>🎯</span><span id="ascResult" style="font-size:18px;font-weight:700;">0</span><span>元</span><span class="asc-tier tier-none" id="ascTier">無津貼</span></div></div>
                   </div>
                 </div>
               </div>
               <!-- ④ 其他獎金 -->
               <div class="card">
-                <div class="card-head">
-                  <div class="card-head-icon">🎁</div>
-                  <div class="card-head-title">其他獎金 <span class="badge badge-new" style="margin-left:8px;">勾選啟用</span></div>
-                </div>
+                <div class="card-head"><div class="card-head-icon">🎁</div><div class="card-head-title">其他獎金 <span class="badge badge-new" style="margin-left:8px;">勾選啟用</span></div></div>
                 <div class="card-body">
                   <div class="bonus-grid">
-                    <label class="bonus-item" onclick="toggleBonus('dragonboat')">
-                      <input type="checkbox" id="cb_dragonboat" onchange="syncBonus('dragonboat')">
-                      <span class="bonus-label">🐉 端午獎金</span>
-                    </label>
-                    <label class="bonus-item" onclick="toggleBonus('midautumn')">
-                      <input type="checkbox" id="cb_midautumn" onchange="syncBonus('midautumn')">
-                      <span class="bonus-label">🥮 中秋獎金</span>
-                    </label>
-                    <label class="bonus-item" onclick="toggleBonus('yearend')">
-                      <input type="checkbox" id="cb_yearend" onchange="syncBonus('yearend')">
-                      <span class="bonus-label">🎊 年終獎金</span>
-                    </label>
-                    <label class="bonus-item" onclick="toggleBonus('spring')">
-                      <input type="checkbox" id="cb_spring" onchange="syncBonus('spring')">
-                      <span class="bonus-label">🧧 春節獎金</span>
-                    </label>
-                    <label class="bonus-item" onclick="toggleBonus('performance')">
-                      <input type="checkbox" id="cb_performance" onchange="syncBonus('performance')">
-                      <span class="bonus-label">⭐ 績效獎金</span>
-                    </label>
-                    <label class="bonus-item" onclick="toggleBonus('other')">
-                      <input type="checkbox" id="cb_other" onchange="syncBonus('other')">
-                      <span class="bonus-label">💝 其他獎金</span>
-                    </label>
+                    <label class="bonus-item" onclick="toggleBonus('dragonboat')"><input type="checkbox" id="cb_dragonboat" onchange="syncBonus('dragonboat')"><span class="bonus-label">🐉 端午獎金</span></label>
+                    <label class="bonus-item" onclick="toggleBonus('midautumn')"><input type="checkbox" id="cb_midautumn" onchange="syncBonus('midautumn')"><span class="bonus-label">🥮 中秋獎金</span></label>
+                    <label class="bonus-item" onclick="toggleBonus('yearend')"><input type="checkbox" id="cb_yearend" onchange="syncBonus('yearend')"><span class="bonus-label">🎊 年終獎金</span></label>
+                    <label class="bonus-item" onclick="toggleBonus('spring')"><input type="checkbox" id="cb_spring" onchange="syncBonus('spring')"><span class="bonus-label">🧧 春節獎金</span></label>
+                    <label class="bonus-item" onclick="toggleBonus('performance')"><input type="checkbox" id="cb_performance" onchange="syncBonus('performance')"><span class="bonus-label">⭐ 績效獎金</span></label>
+                    <label class="bonus-item" onclick="toggleBonus('other')"><input type="checkbox" id="cb_other" onchange="syncBonus('other')"><span class="bonus-label">💝 其他獎金</span></label>
                   </div>
                   <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
-                    <div class="bonus-detail" id="detail_dragonboat">
-                      <div class="bonus-amt-wrap">
-                        <div class="bonus-amt-label">🐉 端午獎金金額</div>
-                        <div class="input-with-unit"><input class="bonus-amt-input" type="number" id="amt_dragonboat" placeholder="0" oninput="calcAll()"><span class="input-unit" style="font-size:12px;">元</span></div>
-                      </div>
-                    </div>
-                    <div class="bonus-detail" id="detail_midautumn">
-                      <div class="bonus-amt-wrap">
-                        <div class="bonus-amt-label">🥮 中秋獎金金額</div>
-                        <div class="input-with-unit"><input class="bonus-amt-input" type="number" id="amt_midautumn" placeholder="0" oninput="calcAll()"><span class="input-unit" style="font-size:12px;">元</span></div>
-                      </div>
-                    </div>
-                    <div class="bonus-detail" id="detail_yearend">
-                      <div class="bonus-amt-wrap">
-                        <div class="bonus-amt-label">🎊 年終獎金金額</div>
-                        <div class="input-with-unit"><input class="bonus-amt-input" type="number" id="amt_yearend" placeholder="0" oninput="calcAll()"><span class="input-unit" style="font-size:12px;">元</span></div>
-                      </div>
-                    </div>
-                    <div class="bonus-detail" id="detail_spring">
-                      <div class="bonus-amt-wrap">
-                        <div class="bonus-amt-label">🧧 春節獎金金額</div>
-                        <div class="input-with-unit"><input class="bonus-amt-input" type="number" id="amt_spring" placeholder="0" oninput="calcAll()"><span class="input-unit" style="font-size:12px;">元</span></div>
-                      </div>
-                    </div>
-                    <div class="bonus-detail" id="detail_performance">
-                      <div class="bonus-amt-wrap">
-                        <div class="bonus-amt-label">⭐ 績效獎金金額</div>
-                        <div class="input-with-unit"><input class="bonus-amt-input" type="number" id="amt_performance" placeholder="0" oninput="calcAll()"><span class="input-unit" style="font-size:12px;">元</span></div>
-                      </div>
-                    </div>
+                    <div class="bonus-detail" id="detail_dragonboat"><div class="bonus-amt-wrap"><div class="bonus-amt-label">🐉 端午獎金金額</div><div class="input-with-unit"><input class="bonus-amt-input" type="number" id="amt_dragonboat" placeholder="0" oninput="calcAll()"><span class="input-unit" style="font-size:12px;">元</span></div></div></div>
+                    <div class="bonus-detail" id="detail_midautumn"><div class="bonus-amt-wrap"><div class="bonus-amt-label">🥮 中秋獎金金額</div><div class="input-with-unit"><input class="bonus-amt-input" type="number" id="amt_midautumn" placeholder="0" oninput="calcAll()"><span class="input-unit" style="font-size:12px;">元</span></div></div></div>
+                    <div class="bonus-detail" id="detail_yearend"><div class="bonus-amt-wrap"><div class="bonus-amt-label">🎊 年終獎金金額</div><div class="input-with-unit"><input class="bonus-amt-input" type="number" id="amt_yearend" placeholder="0" oninput="calcAll()"><span class="input-unit" style="font-size:12px;">元</span></div></div></div>
+                    <div class="bonus-detail" id="detail_spring"><div class="bonus-amt-wrap"><div class="bonus-amt-label">🧧 春節獎金金額</div><div class="input-with-unit"><input class="bonus-amt-input" type="number" id="amt_spring" placeholder="0" oninput="calcAll()"><span class="input-unit" style="font-size:12px;">元</span></div></div></div>
+                    <div class="bonus-detail" id="detail_performance"><div class="bonus-amt-wrap"><div class="bonus-amt-label">⭐ 績效獎金金額</div><div class="input-with-unit"><input class="bonus-amt-input" type="number" id="amt_performance" placeholder="0" oninput="calcAll()"><span class="input-unit" style="font-size:12px;">元</span></div></div></div>
                     <div class="bonus-detail" id="detail_other">
-                      <div class="bonus-amt-wrap">
-                        <div class="bonus-amt-label">💝 其他獎金名稱</div>
-                        <input class="bonus-amt-input" type="text" id="name_other" placeholder="請輸入獎金名稱">
-                      </div>
-                      <div class="bonus-amt-wrap">
-                        <div class="bonus-amt-label">💝 其他獎金金額</div>
-                        <div class="input-with-unit"><input class="bonus-amt-input" type="number" id="amt_other" placeholder="0" oninput="calcAll()"><span class="input-unit" style="font-size:12px;">元</span></div>
-                      </div>
+                      <div class="bonus-amt-wrap"><div class="bonus-amt-label">💝 其他獎金名稱</div><input class="bonus-amt-input" type="text" id="name_other" placeholder="請輸入獎金名稱"></div>
+                      <div class="bonus-amt-wrap"><div class="bonus-amt-label">💝 其他獎金金額</div><div class="input-with-unit"><input class="bonus-amt-input" type="number" id="amt_other" placeholder="0" oninput="calcAll()"><span class="input-unit" style="font-size:12px;">元</span></div></div>
                     </div>
                   </div>
-                  <div class="ot-result" style="background:#f0f4ff;border-color:#b0c4e8;color:#1a4a6b;">
-                    <span>🎁</span><span>獎金合計：</span>
-                    <span class="ot-amt" id="bonusTotal">0</span><span>元</span>
-                  </div>
+                  <div class="ot-result" style="background:#f0f4ff;border-color:#b0c4e8;color:#1a4a6b;"><span>🎁</span><span>獎金合計：</span><span class="ot-amt" id="bonusTotal">0</span><span>元</span></div>
                 </div>
               </div>
               <!-- ⑤ 公會補貼 -->
               <div class="card">
-                <div class="card-head">
-                  <div class="card-head-icon">🏛️</div>
-                  <div class="card-head-title">公會補貼 <span class="badge badge-new" style="margin-left:8px;">勾選啟用</span></div>
-                </div>
+                <div class="card-head"><div class="card-head-icon">🏛️</div><div class="card-head-title">公會補貼 <span class="badge badge-new" style="margin-left:8px;">勾選啟用</span></div></div>
                 <div class="card-body">
                   <div class="union-grid">
                     <div class="union-item" id="union_health_card">
-                      <div class="union-header">
-                        <span class="union-icon">🏥</span>
-                        <label class="union-toggle">
-                          <input type="checkbox" id="cb_unionHealth" onchange="toggleUnion('health')">
-                          <div>
-                            <div class="union-name">補貼公會健保</div>
-                            <div style="font-size:12px;color:var(--text-light);margin-top:2px;">公會健保費補貼</div>
-                          </div>
-                        </label>
-                      </div>
-                      <div class="union-amount-row" id="union_health_amt">
-                        <div class="union-amount-label">補貼金額（元）</div>
-                        <input class="union-amount-input" type="number" id="amt_unionHealth" placeholder="0" oninput="calcAll()">
-                      </div>
+                      <div class="union-header"><span class="union-icon">🏥</span><label class="union-toggle"><input type="checkbox" id="cb_unionHealth" onchange="toggleUnion('health')"><div><div class="union-name">補貼公會健保</div><div style="font-size:12px;color:var(--text-light);margin-top:2px;">公會健保費補貼</div></div></label></div>
+                      <div class="union-amount-row" id="union_health_amt"><div class="union-amount-label">補貼金額（元）</div><input class="union-amount-input" type="number" id="amt_unionHealth" placeholder="0" oninput="calcAll()"></div>
                     </div>
                     <div class="union-item" id="union_labor_card">
-                      <div class="union-header">
-                        <span class="union-icon">👷</span>
-                        <label class="union-toggle">
-                          <input type="checkbox" id="cb_unionLabor" onchange="toggleUnion('labor')">
-                          <div>
-                            <div class="union-name">補貼公會勞保</div>
-                            <div style="font-size:12px;color:var(--text-light);margin-top:2px;">公會勞保費補貼</div>
-                          </div>
-                        </label>
-                      </div>
-                      <div class="union-amount-row" id="union_labor_amt">
-                        <div class="union-amount-label">補貼金額（元）</div>
-                        <input class="union-amount-input" type="number" id="amt_unionLabor" placeholder="0" oninput="calcAll()">
-                      </div>
+                      <div class="union-header"><span class="union-icon">👷</span><label class="union-toggle"><input type="checkbox" id="cb_unionLabor" onchange="toggleUnion('labor')"><div><div class="union-name">補貼公會勞保</div><div style="font-size:12px;color:var(--text-light);margin-top:2px;">公會勞保費補貼</div></div></label></div>
+                      <div class="union-amount-row" id="union_labor_amt"><div class="union-amount-label">補貼金額（元）</div><input class="union-amount-input" type="number" id="amt_unionLabor" placeholder="0" oninput="calcAll()"></div>
                     </div>
                   </div>
-                  <div class="ot-result" style="background:#eef2ff;border-color:#c3cff5;color:#3b5bdb;">
-                    <span>🏛️</span><span>公會補貼合計：</span>
-                    <span class="ot-amt" id="unionTotal">0</span><span>元</span>
-                  </div>
+                  <div class="ot-result" style="background:#eef2ff;border-color:#c3cff5;color:#3b5bdb;"><span>🏛️</span><span>公會補貼合計：</span><span class="ot-amt" id="unionTotal">0</span><span>元</span></div>
                 </div>
               </div>
               <!-- ⑥ 薪資總計 -->
@@ -530,9 +310,37 @@
                 <div class="summary-label">新台幣（NTD）</div>
               </div>
               <button class="submit-btn" id="submitBtn" onclick="submitForm()">✅ 確認送出本月薪資</button>
-            </div><!-- /form-wrap -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- TAB 1 後台 -->
+      <div class="spanel" id="spanel1">
+        <div class="fs-toolbar"><label class="fs-label"><input type="checkbox" id="fscb1ta" onchange="toggleFS(this)"> 全螢幕</label></div>
+        <div class="login-screen" id="taAdminLogin">
+          <div class="login-card">
+            <div class="login-deco">🔑 管理員專區</div>
+            <div class="login-icon">🏯</div>
+            <div class="login-title">同安校後台</div>
+            <div class="login-sub">請輸入管理員帳號密碼</div>
+            <div class="login-field"><div class="login-label">帳號 Username</div><input class="login-input" id="taAdminUser" type="text" placeholder="請輸入帳號" autocomplete="username"></div>
+            <div class="login-field"><div class="login-label">密碼 Password</div><input class="login-input" id="taAdminPass" type="password" placeholder="請輸入密碼" autocomplete="current-password"></div>
+            <div class="login-error" id="taAdminError"></div>
+            <button class="login-btn" onclick="doLoginTAAdmin()">登 入</button>
+          </div>
+        </div>
+        <div class="frame-container" id="taAdminFrame" style="display:none;flex:1;margin:0 16px 16px;">
+          <div class="fc-tl frame-corner"></div><div class="fc-tr frame-corner"></div>
+          <div class="fc-bl frame-corner"></div><div class="fc-br frame-corner"></div>
+          <div class="loading" id="loader1ta"><div class="spinner"></div><div class="loading-text">後台載入中...</div></div>
+          <iframe id="taAdminIframe" onload="document.getElementById('loader1ta').classList.add('done')" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">© 吉的堡托育機構 ・ 員工薪資系統</div>
 
-  <!-- ══ 送出進度 Modal ══ -->
+  <!-- 送出進度 Modal -->
   <div id="progressOverlay" style="display:none;position:fixed;inset:0;background:rgba(20,15,5,0.6);z-index:500;align-items:center;justify-content:center;padding:24px;">
     <div style="background:#fff;border-radius:20px;padding:32px 28px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
       <div style="font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;color:#3d2e1a;margin-bottom:20px;text-align:center;letter-spacing:1px;">📤 薪資送出進度</div>
@@ -543,61 +351,23 @@
       </div>
     </div>
   </div>
-          </div><!-- /form-scroll -->
-        </div><!-- /taFormArea -->
-      </div><!-- /spanel0 -->
-
-      <!-- ══ TAB 1：後台（iframe）══ -->
-      <div class="spanel" id="spanel1">
-        <div class="fs-toolbar">
-          <label class="fs-label"><input type="checkbox" id="fscb1ta" onchange="toggleFS(this)"> 全螢幕</label>
-        </div>
-        <div class="login-screen" id="taAdminLogin">
-          <div class="login-card">
-            <div class="login-deco">🔑 管理員專區</div>
-            <div class="login-icon">🏮</div>
-            <div class="login-title">同安校後台</div>
-            <div class="login-sub">請輸入管理員帳號密碼</div>
-            <div class="login-field">
-              <div class="login-label">帳號 Username</div>
-              <input class="login-input" id="taAdminUser" type="text" placeholder="請輸入帳號" autocomplete="username">
-            </div>
-            <div class="login-field">
-              <div class="login-label">密碼 Password</div>
-              <input class="login-input" id="taAdminPass" type="password" placeholder="請輸入密碼" autocomplete="current-password">
-            </div>
-            <div class="login-error" id="taAdminError"></div>
-            <button class="login-btn" onclick="doLoginTAAdmin()">登 入</button>
-          </div>
-        </div>
-        <div class="frame-container" id="taAdminFrame" style="display:none; flex:1; margin:0 16px 16px;">
-          <div class="fc-tl frame-corner"></div><div class="fc-tr frame-corner"></div>
-          <div class="fc-bl frame-corner"></div><div class="fc-br frame-corner"></div>
-          <div class="loading" id="loader1ta"><div class="spinner"></div><div class="loading-text">後台載入中...</div></div>
-          <iframe id="taAdminIframe" onload="document.getElementById('loader1ta').classList.add('done')" allowfullscreen></iframe>
-        </div>
-      </div>
-    </div><!-- /panels -->
-  </div><!-- /main -->
-  <div class="footer">© 吉的堡托育機構 ・ 員工薪資系統</div>
 
 <script>
-// ════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 //  設定
-// ════════════════════════════════════════════════════════
-const TA_ADMIN_URL  = 'https://script.google.com/macros/s/AKfycbzBHEndqfatexVF5ZgDQDwH8yWJorcxclbtvCSxvXyxZCFDjrNbAHmIPTWzUX322uNr/exec?page=admin';
+// ══════════════════════════════════════════════════════
 const TA_SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbzBHEndqfatexVF5ZgDQDwH8yWJorcxclbtvCSxvXyxZCFDjrNbAHmIPTWzUX322uNr/exec';
-const TA_CREDS_CSV  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQsJvhdokMZsltLadwONPrDe4vr3EQp1ayqkauCO34cF6F4jgZzBpktSK5z_5R6IIEy9dHh97FkCNKG/pub?gid=1519178890&single=true&output=csv';
+const TA_ADMIN_URL  = TA_SUBMIT_URL + '?page=admin';
 
-// ★ 員工名單 CSV（gid=0 工作表）
+// ★ 員工名單 CSV（發布為公開 CSV 的員工名單工作表）
 const TA_NAMES_CSV  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQsJvhdokMZsltLadwONPrDe4vr3EQp1ayqkauCO34cF6F4jgZzBpktSK5z_5R6IIEy9dHh97FkCNKG/pub?gid=0&single=true&output=csv';
 
 const MAX_USERS = 10;
 let _creds = null;
 
-// ════════════════════════════════════
-//  CSV 解析
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════════
+//  CSV 解析（只用於員工名單，帳密改用 API）
+// ══════════════════════════════════════════════════════
 function parseCSVRow(row) {
   row = row.replace(/\r$/, '');
   const result = []; let cur = '', inQ = false;
@@ -610,475 +380,271 @@ function parseCSVRow(row) {
   result.push(cur.trim()); return result;
 }
 
-// ════════════════════════════════════
-//  ★ 員工名單載入
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════════
+//  ★ 員工名單載入（從 CSV）
+// ══════════════════════════════════════════════════════
 async function loadEmployeeNames() {
   const sel    = document.getElementById('empName');
   const status = document.getElementById('nameLoadStatus');
   sel.innerHTML = '<option value="">⏳ 載入員工名單中…</option>';
   sel.classList.add('loading-state');
-  status.textContent = '';
-  status.className   = 'name-load-status';
-
+  status.textContent = ''; status.className = 'name-load-status';
   try {
     const res = await fetch(TA_NAMES_CSV);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const text  = await res.text();
     const lines = text.trim().split('\n').filter(l => l.trim());
-    if (lines.length < 1) throw new Error('名單空白');
-
+    if (!lines.length) throw new Error('名單空白');
     const header  = parseCSVRow(lines[0]);
-    // 找「姓名」欄（不限定第幾欄）
     let nameCol = header.findIndex(h => h.includes('姓名') || h.toLowerCase().includes('name'));
-    if (nameCol < 0) nameCol = 0; // 找不到就用第一欄
-
+    if (nameCol < 0) nameCol = 0;
     const names = [];
     for (let i = 1; i < lines.length; i++) {
-      const cols = parseCSVRow(lines[i]);
-      const n = (cols[nameCol] || '').trim();
+      const n = (parseCSVRow(lines[i])[nameCol] || '').trim();
       if (n) names.push(n);
     }
-    if (!names.length) throw new Error('找不到任何姓名資料');
-
+    if (!names.length) throw new Error('找不到姓名資料');
     sel.innerHTML = '<option value="">請選擇員工姓名</option>';
-    names.forEach(n => {
-      const o = document.createElement('option');
-      o.value = n; o.textContent = n;
-      sel.appendChild(o);
-    });
+    names.forEach(n => { const o = document.createElement('option'); o.value=n; o.textContent=n; sel.appendChild(o); });
     sel.classList.remove('loading-state');
     status.textContent = `✅ 已載入 ${names.length} 位員工`;
-    status.className   = 'name-load-status ok';
-
+    status.className = 'name-load-status ok';
   } catch (e) {
     sel.innerHTML = '<option value="">⚠ 無法載入名單，請手動輸入</option>';
     sel.classList.remove('loading-state');
-    // 載入失敗時改回文字輸入
-    const wrap = sel.parentElement;
     const fallback = document.createElement('input');
-    fallback.type = 'text'; fallback.id = 'empName';
-    fallback.className = 'field-input'; fallback.placeholder = '請輸入員工姓名';
+    fallback.type='text'; fallback.id='empName'; fallback.className='field-input'; fallback.placeholder='請輸入員工姓名';
     sel.replaceWith(fallback);
-    status.textContent = `⚠ 名單載入失敗（${e.message}），請直接輸入姓名`;
-    status.className   = 'name-load-status err';
+    status.textContent = `⚠ 名單載入失敗（${e.message}），請直接輸入`;
+    status.className = 'name-load-status err';
   }
 }
 
-// ════════════════════════════════════
-//  帳密載入
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════════
+//  ★ 帳密載入（改用 Apps Script getUsers API）
+// ══════════════════════════════════════════════════════
 async function loadCreds() {
   if (_creds) return _creds;
   try {
-    const res = await fetch(TA_CREDS_CSV);
+    const res = await fetch(TA_SUBMIT_URL + '?action=getUsers');
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const lines = (await res.text()).trim().split('\n').filter(l => l.trim());
-    const users = [];
-    for (let i = 1; i < lines.length; i++) {
-      const cols = parseCSVRow(lines[i]);
-      const u=(cols[0]||'').trim(), p=(cols[1]||'').trim(), role=(cols[2]||'input').trim(), n=(cols[3]||'').trim();
-      if (u && p) users.push({u,p,role,n});
-    }
-    _creds = users; return _creds;
-  } catch(e) { console.warn('[同安] 帳密載入失敗：', e.message); return null; }
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message || 'API 錯誤');
+    _creds = json.users;
+    return _creds;
+  } catch(e) {
+    console.warn('[同安] 帳密載入失敗：', e.message);
+    return null;
+  }
 }
 function getLocalUsers() { try { return JSON.parse(localStorage.getItem('users_ta')||'[]'); } catch { return []; } }
 function saveLocalUsers(arr) { localStorage.setItem('users_ta', JSON.stringify(arr)); }
 async function getAllUsers() { const c = await loadCreds(); return (c && c.length > 0) ? c : getLocalUsers(); }
 
-// ════════════════════════════════════
-//  Tab 切換
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════════
+//  Tab / FS
+// ══════════════════════════════════════════════════════
 function switchSTab(i) {
-  document.querySelectorAll('.stab').forEach((t,j) => t.classList.toggle('active', i===j));
-  document.querySelectorAll('.spanel').forEach((p,j) => p.classList.toggle('active', i===j));
+  document.querySelectorAll('.stab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.spanel').forEach((p,j)=>p.classList.toggle('active',i===j));
 }
 function toggleFS(cb) {
   document.body.classList.toggle('fs-mode', cb.checked);
-  document.querySelectorAll('.fs-label input[type=checkbox]').forEach(el => { if (el!==cb) el.checked=false; });
+  document.querySelectorAll('.fs-label input[type=checkbox]').forEach(el=>{ if(el!==cb) el.checked=false; });
 }
-function exitFullscreen() {
-  document.body.classList.remove('fs-mode');
-  document.querySelectorAll('.fs-label input[type=checkbox]').forEach(el => el.checked=false);
-}
-function autoFullscreen() {
-  const cb = document.getElementById('fscb1ta');
-  if (cb && !cb.checked) { cb.checked=true; toggleFS(cb); }
-}
+function exitFullscreen() { document.body.classList.remove('fs-mode'); document.querySelectorAll('.fs-label input[type=checkbox]').forEach(el=>el.checked=false); }
+function autoFullscreen() { const cb=document.getElementById('fscb1ta'); if(cb&&!cb.checked){cb.checked=true;toggleFS(cb);} }
 function roleTag(role) {
-  if (role==='superadmin') return ' 【超級管理員】';
-  if (role==='admin')      return ' 【後台】';
-  if (role==='both')       return ' 【輸入+後台】';
+  if(role==='superadmin') return ' 【超級管理員】';
+  if(role==='admin')      return ' 【後台】';
+  if(role==='both')       return ' 【輸入+後台】';
   return ' 【工作輸入】';
 }
 
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════════
 //  登入 Tab0
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════════
 async function doLoginTA() {
-  const u = document.getElementById('taUser').value.trim();
-  const p = document.getElementById('taPass').value;
-  const err = document.getElementById('taError');
-  err.textContent = '⏳ 驗證中…';
-  const users = await getAllUsers();
-  if (!users) { err.textContent = '❌ 無法連接帳密來源，請稍後再試'; return; }
-  const match = users.find(x => x.u===u && x.p===p);
+  const u=document.getElementById('taUser').value.trim(), p=document.getElementById('taPass').value;
+  const err=document.getElementById('taError');
+  err.textContent='⏳ 驗證中…';
+  const users=await getAllUsers();
+  if (!users) { err.textContent='❌ 無法連接帳密來源，請稍後再試'; return; }
+  const match=users.find(x=>x.u===u&&x.p===p);
   if (match && ['input','both','superadmin'].includes(match.role)) {
-    document.getElementById('taLogin').style.display = 'none';
-    const fa = document.getElementById('taFormArea');
-    fa.style.display = 'flex';
-    document.getElementById('taWelcome').textContent = '👋 歡迎，' + (match.n||u) + roleTag(match.role);
-    err.textContent = '';
-    // ★ 登入後才載入員工名單
-    loadEmployeeNames();
-    calcAll();
+    document.getElementById('taLogin').style.display='none';
+    const fa=document.getElementById('taFormArea'); fa.style.display='flex';
+    document.getElementById('taWelcome').textContent='👋 歡迎，'+(match.n||u)+roleTag(match.role);
+    err.textContent='';
+    loadEmployeeNames(); calcAll();
   } else if (match && match.role==='admin') {
-    err.textContent = '❌ 您的帳號無工作輸入權限，請切換到後台分頁';
+    err.textContent='❌ 您的帳號無工作輸入權限，請切換到後台分頁';
   } else {
-    err.textContent = '❌ 帳號或密碼錯誤，請再試一次';
-    document.getElementById('taPass').value = '';
+    err.textContent='❌ 帳號或密碼錯誤，請再試一次';
+    document.getElementById('taPass').value='';
   }
 }
 function doLogoutTA() {
-  document.getElementById('taFormArea').style.display = 'none';
-  document.getElementById('taLogin').style.display = 'flex';
-  document.getElementById('taUser').value = '';
-  document.getElementById('taPass').value = '';
-  document.getElementById('taError').textContent = '';
-  resetForm();
+  document.getElementById('taFormArea').style.display='none';
+  document.getElementById('taLogin').style.display='flex';
+  document.getElementById('taUser').value=''; document.getElementById('taPass').value='';
+  document.getElementById('taError').textContent=''; resetForm();
 }
 
-// ════════════════════════════════════
-//  登入 Tab1 後台
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════════
+//  登入後台
+// ══════════════════════════════════════════════════════
 async function doLoginTAAdmin() {
-  const u = document.getElementById('taAdminUser').value.trim();
-  const p = document.getElementById('taAdminPass').value;
-  const err = document.getElementById('taAdminError');
-  err.textContent = '⏳ 驗證中…';
-  const users = await getAllUsers();
-  if (!users) { err.textContent = '❌ 無法連接帳密來源，請稍後再試'; return; }
-  const match = users.find(x => x.u===u && x.p===p);
+  const u=document.getElementById('taAdminUser').value.trim(), p=document.getElementById('taAdminPass').value;
+  const err=document.getElementById('taAdminError');
+  err.textContent='⏳ 驗證中…';
+  const users=await getAllUsers();
+  if (!users) { err.textContent='❌ 無法連接帳密來源，請稍後再試'; return; }
+  const match=users.find(x=>x.u===u&&x.p===p);
   if (match && ['admin','both','superadmin'].includes(match.role)) {
-    document.getElementById('taAdminLogin').style.display = 'none';
-    err.textContent = '';
-    showAdminIframe();
+    document.getElementById('taAdminLogin').style.display='none'; err.textContent=''; showAdminIframe();
   } else {
-    err.textContent = '❌ 帳號或密碼錯誤，或無後台權限';
-    document.getElementById('taAdminPass').value = '';
+    err.textContent='❌ 帳號或密碼錯誤，或無後台權限';
+    document.getElementById('taAdminPass').value='';
   }
 }
 function showAdminIframe() {
-  document.getElementById('taAdminFrame').style.display = 'flex';
-  const iframe = document.getElementById('taAdminIframe');
-  if (!iframe.src || iframe.src==='about:blank') iframe.src = TA_ADMIN_URL;
+  document.getElementById('taAdminFrame').style.display='flex';
+  const iframe=document.getElementById('taAdminIframe');
+  if (!iframe.src||iframe.src==='about:blank') iframe.src=TA_ADMIN_URL;
   autoFullscreen();
 }
-function showAdminPanel() {
-  const container = document.getElementById('spanel1');
-  document.getElementById('taAdminFrame').style.display = 'none';
-  let um = document.getElementById('um_ta');
-  if (!um) {
-    um = document.createElement('div');
-    um.id = 'um_ta';
-    um.className = 'user-manage';
-    um.style.flex = '1';
-    um.style.overflowY = 'auto';
-    um.innerHTML = buildUMHtml();
-    container.appendChild(um);
-  }
-  um.style.display = 'block';
-}
-function buildUMHtml() {
-  const users = getLocalUsers();
-  let rows = '';
-  for (let i = 0; i < MAX_USERS; i++) {
-    const usr=users[i]||{}, u=usr.u||'', p=usr.p||'', n=usr.n||'';
-    const ri=usr.role==='input'||(!usr.role&&!u), ra=usr.role==='admin', rb=usr.role==='both'||(!usr.role&&!!u);
-    rows += `<div class="um-row">
-      <span class="um-num">${i+1}</span>
-      <input class="um-input" id="um_n_${i}" type="text" placeholder="姓名" value="${n}" style="max-width:90px;">
-      <input class="um-input" id="um_u_${i}" type="text" placeholder="帳號" value="${u}" style="max-width:110px;">
-      <input class="um-input" id="um_p_${i}" type="password" placeholder="密碼" value="${p}" style="max-width:110px;">
-      <div class="um-perm">
-        <label class="um-perm-label"><input type="radio" name="role_${i}" value="input" ${ri?'checked':''}> 輸入</label>
-        <label class="um-perm-label"><input type="radio" name="role_${i}" value="admin" ${ra?'checked':''}> 後台</label>
-        <label class="um-perm-label"><input type="radio" name="role_${i}" value="both"  ${rb?'checked':''}> 兩者</label>
-      </div>
-    </div>`;
-  }
-  return `<div class="um-title">⚙️ 🌿 同安校 使用者帳密管理（最多10組）</div>
-    <div style="font-size:13px;color:var(--text-light);margin-bottom:10px;padding-left:30px;">輸入＝每月工作輸入　後台＝後台系統　兩者＝皆可</div>
-    ${rows}
-    <hr class="um-divider">
-    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:10px;">
-      <button class="um-save-btn" onclick="saveUM()">儲 存 並 進 入 後 台</button>
-      <button class="um-save-btn" style="background:linear-gradient(135deg,#1a4a6b,#2471a3);" onclick="showAdminIframe()">直 接 進 入 後 台</button>
-    </div>
-    <div class="um-ok" id="um_ok"></div>`;
-}
-function saveUM() {
-  const arr = [];
-  for (let i = 0; i < MAX_USERS; i++) {
-    const n=(document.getElementById(`um_n_${i}`)?.value||'').trim();
-    const u=(document.getElementById(`um_u_${i}`)?.value||'').trim();
-    const p=(document.getElementById(`um_p_${i}`)?.value||'').trim();
-    const roleEl=document.querySelector(`input[name="role_${i}"]:checked`);
-    const role=roleEl?roleEl.value:'input';
-    if (u && p) arr.push({n,u,p,role});
-  }
-  saveLocalUsers(arr);
-  document.getElementById('um_ok').textContent = '✅ 已儲存 ' + arr.length + ' 組帳密，正在進入後台…';
-  setTimeout(() => { document.getElementById('um_ta').style.display='none'; showAdminIframe(); }, 1200);
-}
 
-// ════════════════════════════════════
-//  月曆選擇器
-// ════════════════════════════════════
-const MONTHS_ZH = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
-let calYear = new Date().getFullYear(), selectedYear = null, selectedMonth = null;
-
+// ══════════════════════════════════════════════════════
+//  月曆
+// ══════════════════════════════════════════════════════
+const MONTHS_ZH=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+let calYear=new Date().getFullYear(), selectedYear=null, selectedMonth=null;
 function renderCal() {
-  document.getElementById('calYear').textContent = calYear + '年';
-  const grid = document.getElementById('calMonths');
-  grid.innerHTML = '';
-  MONTHS_ZH.forEach((m, i) => {
-    const div = document.createElement('div');
-    div.className = 'cal-month' + (selectedYear===calYear && selectedMonth===i+1 ? ' selected' : '');
-    div.textContent = m;
-    div.onclick = (e) => { e.stopPropagation(); pickMonth(calYear, i+1); };
+  document.getElementById('calYear').textContent=calYear+'年';
+  const grid=document.getElementById('calMonths'); grid.innerHTML='';
+  MONTHS_ZH.forEach((m,i)=>{
+    const div=document.createElement('div');
+    div.className='cal-month'+(selectedYear===calYear&&selectedMonth===i+1?' selected':'');
+    div.textContent=m; div.onclick=(e)=>{e.stopPropagation();pickMonth(calYear,i+1);};
     grid.appendChild(div);
   });
 }
-function toggleCal() {
-  const disp = document.getElementById('monthDisplay');
-  const cal  = document.getElementById('monthCalendar');
-  const open = cal.classList.toggle('open');
-  disp.classList.toggle('open', open);
-  if (open) renderCal();
-}
-function changeYear(d) { calYear += d; renderCal(); }
-function pickMonth(y, m) {
+function toggleCal() { const disp=document.getElementById('monthDisplay'),cal=document.getElementById('monthCalendar'); const open=cal.classList.toggle('open'); disp.classList.toggle('open',open); if(open)renderCal(); }
+function changeYear(d) { calYear+=d; renderCal(); }
+function pickMonth(y,m) {
   selectedYear=y; selectedMonth=m;
-  document.getElementById('monthDisplayText').textContent = y + '年 ' + MONTHS_ZH[m-1];
-  document.getElementById('monthValue').value = y + '-' + String(m).padStart(2,'0');
+  document.getElementById('monthDisplayText').textContent=y+'年 '+MONTHS_ZH[m-1];
+  document.getElementById('monthValue').value=y+'-'+String(m).padStart(2,'0');
   document.getElementById('monthDisplay').classList.remove('open');
   document.getElementById('monthCalendar').classList.remove('open');
 }
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('.month-pick-wrap')) {
-    document.getElementById('monthDisplay').classList.remove('open');
-    document.getElementById('monthCalendar').classList.remove('open');
-  }
-});
+document.addEventListener('click',(e)=>{ if(!e.target.closest('.month-pick-wrap')){ document.getElementById('monthDisplay').classList.remove('open'); document.getElementById('monthCalendar').classList.remove('open'); } });
 
-// ════════════════════════════════════
-//  獎金 Checkbox
-// ════════════════════════════════════
-const BONUSES = ['dragonboat','midautumn','yearend','spring','performance','other'];
-function toggleBonus(key) { setTimeout(() => syncBonus(key), 0); }
-function syncBonus(key) {
-  const checked = document.getElementById('cb_'+key).checked;
-  const detail  = document.getElementById('detail_'+key);
-  if (checked) detail.classList.add('show'); else detail.classList.remove('show');
-  calcAll();
-}
+// ══════════════════════════════════════════════════════
+//  獎金 / 公會
+// ══════════════════════════════════════════════════════
+const BONUSES=['dragonboat','midautumn','yearend','spring','performance','other'];
+function toggleBonus(key){setTimeout(()=>syncBonus(key),0);}
+function syncBonus(key){const c=document.getElementById('cb_'+key).checked; document.getElementById('detail_'+key).classList.toggle('show',c); calcAll();}
+function toggleUnion(key){const c=document.getElementById('cb_union'+cap(key)).checked; document.getElementById('union_'+key+'_card').classList.toggle('active',c); document.getElementById('union_'+key+'_amt').classList.toggle('show',c); calcAll();}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 
-// ════════════════════════════════════
-//  公會補貼 Toggle
-// ════════════════════════════════════
-function toggleUnion(key) {
-  const checked = document.getElementById('cb_union'+cap(key)).checked;
-  document.getElementById('union_'+key+'_card').classList.toggle('active', checked);
-  document.getElementById('union_'+key+'_amt').classList.toggle('show', checked);
-  calcAll();
+// ══════════════════════════════════════════════════════
+//  計算
+// ══════════════════════════════════════════════════════
+const OT_RATE=170;
+function calcOT(){return Math.round((parseFloat(document.getElementById('otHours').value)||0)*OT_RATE);}
+function calcASC(){
+  const n=parseInt(document.getElementById('ascCount').value)||0;
+  const tier=document.getElementById('ascTier');
+  if(n<=0){tier.textContent='無津貼';tier.className='asc-tier tier-none';return 0;}
+  if(n<=15){tier.textContent='1–15人';tier.className='asc-tier tier-none';return 0;}
+  if(n<=20){tier.textContent='16–20人 ×500';tier.className='asc-tier tier-mid';return(n-15)*500;}
+  tier.textContent='≥21人 累進';tier.className='asc-tier tier-high';return 2500+(n-20)*1000;
 }
-function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-
-// ════════════════════════════════════
-//  計算邏輯
-// ════════════════════════════════════
-const OT_RATE = 170;
-function calcOT() {
-  return Math.round((parseFloat(document.getElementById('otHours').value)||0) * OT_RATE);
-}
-function calcASC() {
-  const n = parseInt(document.getElementById('ascCount').value) || 0;
-  const tier = document.getElementById('ascTier');
-  if (n <= 0)  { tier.textContent='無津貼';       tier.className='asc-tier tier-none'; return 0; }
-  if (n <= 15) { tier.textContent='1–15人';       tier.className='asc-tier tier-none'; return 0; }
-  if (n <= 20) { tier.textContent='16–20人 ×500'; tier.className='asc-tier tier-mid';  return (n-15)*500; }
-  tier.textContent='≥21人 累進'; tier.className='asc-tier tier-high';
-  return 2500 + (n-20)*1000;
-}
-function calcBonus() {
-  let t = 0;
-  BONUSES.forEach(k => { if (document.getElementById('cb_'+k).checked) t += parseFloat(document.getElementById('amt_'+k)?.value)||0; });
-  return t;
-}
-function calcUnion() {
-  let t = 0;
-  if (document.getElementById('cb_unionHealth').checked) t += parseFloat(document.getElementById('amt_unionHealth').value)||0;
-  if (document.getElementById('cb_unionLabor').checked)  t += parseFloat(document.getElementById('amt_unionLabor').value)||0;
-  return t;
-}
-function fmt(n) { return '$' + n.toLocaleString('zh-TW'); }
-function calcAll() {
-  const base  = parseFloat(document.getElementById('baseSalary').value)||0;
-  const role  = parseFloat(document.getElementById('roleAllowance').value)||0;
-  const ot=calcOT(), asc=calcASC(), bonus=calcBonus(), union=calcUnion();
-  const total = base + role + ot + asc + bonus + union;
-  document.getElementById('otResult').textContent    = ot.toLocaleString('zh-TW');
-  document.getElementById('ascResult').textContent   = asc.toLocaleString('zh-TW');
-  document.getElementById('bonusTotal').textContent  = bonus.toLocaleString('zh-TW');
-  document.getElementById('unionTotal').textContent  = union.toLocaleString('zh-TW');
-  document.getElementById('s_base').textContent  = fmt(base);
-  document.getElementById('s_role').textContent  = fmt(role);
-  document.getElementById('s_ot').textContent    = fmt(ot);
-  document.getElementById('s_asc').textContent   = fmt(asc);
-  document.getElementById('s_bonus').textContent = fmt(bonus);
-  document.getElementById('s_union').textContent = fmt(union);
-  document.getElementById('s_total').textContent = fmt(total);
-  document.getElementById('totalDisplay').textContent = fmt(total);
+function calcBonus(){let t=0; BONUSES.forEach(k=>{if(document.getElementById('cb_'+k).checked)t+=parseFloat(document.getElementById('amt_'+k)?.value)||0;}); return t;}
+function calcUnion(){let t=0; if(document.getElementById('cb_unionHealth').checked)t+=parseFloat(document.getElementById('amt_unionHealth').value)||0; if(document.getElementById('cb_unionLabor').checked)t+=parseFloat(document.getElementById('amt_unionLabor').value)||0; return t;}
+function fmt(n){return '$'+n.toLocaleString('zh-TW');}
+function calcAll(){
+  const base=parseFloat(document.getElementById('baseSalary').value)||0;
+  const role=parseFloat(document.getElementById('roleAllowance').value)||0;
+  const ot=calcOT(),asc=calcASC(),bonus=calcBonus(),union=calcUnion();
+  const total=base+role+ot+asc+bonus+union;
+  document.getElementById('otResult').textContent=ot.toLocaleString('zh-TW');
+  document.getElementById('ascResult').textContent=asc.toLocaleString('zh-TW');
+  document.getElementById('bonusTotal').textContent=bonus.toLocaleString('zh-TW');
+  document.getElementById('unionTotal').textContent=union.toLocaleString('zh-TW');
+  document.getElementById('s_base').textContent=fmt(base);
+  document.getElementById('s_role').textContent=fmt(role);
+  document.getElementById('s_ot').textContent=fmt(ot);
+  document.getElementById('s_asc').textContent=fmt(asc);
+  document.getElementById('s_bonus').textContent=fmt(bonus);
+  document.getElementById('s_union').textContent=fmt(union);
+  document.getElementById('s_total').textContent=fmt(total);
+  document.getElementById('totalDisplay').textContent=fmt(total);
 }
 
-// ════════════════════════════════════
-//  重置表單
-// ════════════════════════════════════
-function resetForm() {
-  ['baseSalary','roleAllowance','otHours','ascCount'].forEach(id => {
-    const el = document.getElementById(id); if(el) el.value='';
-  });
-  // 重置姓名（select 或 input 皆相容）
-  const nameEl = document.getElementById('empName');
-  if (nameEl) { if (nameEl.tagName==='SELECT') nameEl.value=''; else nameEl.value=''; }
-
-  BONUSES.forEach(k => {
-    document.getElementById('cb_'+k).checked = false;
-    document.getElementById('detail_'+k).classList.remove('show');
-    const amt = document.getElementById('amt_'+k); if (amt) amt.value = '';
-  });
-  ['Health','Labor'].forEach(k => {
-    document.getElementById('cb_union'+k).checked = false;
-    document.getElementById('union_'+k.toLowerCase()+'_card').classList.remove('active');
-    document.getElementById('union_'+k.toLowerCase()+'_amt').classList.remove('show');
-    document.getElementById('amt_union'+k).value = '';
-  });
-  document.getElementById('monthDisplayText').textContent = '請選擇月份';
-  document.getElementById('monthValue').value = '';
-  selectedYear=null; selectedMonth=null;
-  calcAll();
+// ══════════════════════════════════════════════════════
+//  重置
+// ══════════════════════════════════════════════════════
+function resetForm(){
+  ['baseSalary','roleAllowance','otHours','ascCount'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const nameEl=document.getElementById('empName'); if(nameEl){if(nameEl.tagName==='SELECT')nameEl.value='';else nameEl.value='';}
+  BONUSES.forEach(k=>{document.getElementById('cb_'+k).checked=false;document.getElementById('detail_'+k).classList.remove('show');const a=document.getElementById('amt_'+k);if(a)a.value='';});
+  ['Health','Labor'].forEach(k=>{document.getElementById('cb_union'+k).checked=false;document.getElementById('union_'+k.toLowerCase()+'_card').classList.remove('active');document.getElementById('union_'+k.toLowerCase()+'_amt').classList.remove('show');document.getElementById('amt_union'+k).value='';});
+  document.getElementById('monthDisplayText').textContent='請選擇月份';
+  document.getElementById('monthValue').value='';
+  selectedYear=null; selectedMonth=null; calcAll();
 }
 
-// ════════════════════════════════════
-//  送出薪資
-// ════════════════════════════════════
-// ════════════════════════════════════
-//  進度顯示工具
-// ════════════════════════════════════
-let _progressSteps = [];
+// ══════════════════════════════════════════════════════
+//  進度 Modal
+// ══════════════════════════════════════════════════════
+function openProgress(){document.getElementById('progressSteps').innerHTML='';document.getElementById('progressLog').textContent='';document.getElementById('progressActions').style.display='none';document.getElementById('progressOverlay').style.display='flex';}
+function closeProgress(){document.getElementById('progressOverlay').style.display='none';}
+function addStep(id,icon,label){const el=document.createElement('div');el.id='step_'+id;el.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:#faf6ee;border:1.5px solid #e8dcc8;font-size:14px;font-weight:600;color:#5a4a35;transition:all .3s;';el.innerHTML=`<span id="step_icon_${id}" style="font-size:18px;width:24px;text-align:center;">${icon}</span><span>${label}</span><span id="step_status_${id}" style="margin-left:auto;font-size:12px;color:#8a7560;"></span>`;document.getElementById('progressSteps').appendChild(el);}
+function setStep(id,state,statusText){const el=document.getElementById('step_'+id);if(!el)return;const s={running:{bg:'#fff8e1',border:'#f6c47e',color:'#7d4e08',icon:'⏳'},ok:{bg:'#e8f5e9',border:'#a5d6a7',color:'#2a6040',icon:'✅'},warn:{bg:'#fff3e0',border:'#ffcc80',color:'#8d4e00',icon:'⚠️'},error:{bg:'#ffebee',border:'#ef9a9a',color:'#b71c1c',icon:'❌'}}[state]||{};el.style.background=s.bg;el.style.borderColor=s.border;el.style.color=s.color;document.getElementById('step_icon_'+id).textContent=s.icon;document.getElementById('step_status_'+id).textContent=statusText||'';}
+function log(msg){const box=document.getElementById('progressLog');box.textContent+=`[${new Date().toLocaleTimeString('zh-TW')}] ${msg}\n`;box.scrollTop=box.scrollHeight;}
+function showProgressActions(success){const div=document.getElementById('progressActions'),btn=div.querySelector('button');btn.style.background=success?'linear-gradient(135deg,#2a6040,#3d8258)':'linear-gradient(135deg,#7c2d12,#b45309)';btn.textContent=success?'✅ 確 認 完 成':'關 閉（資料未寫入）';div.style.display='block';}
 
-function openProgress() {
-  _progressSteps = [];
-  document.getElementById('progressSteps').innerHTML = '';
-  document.getElementById('progressLog').textContent = '';
-  document.getElementById('progressActions').style.display = 'none';
-  document.getElementById('progressOverlay').style.display = 'flex';
-}
-function closeProgress() {
-  document.getElementById('progressOverlay').style.display = 'none';
-}
-function addStep(id, icon, label) {
-  const el = document.createElement('div');
-  el.id = 'step_' + id;
-  el.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:#faf6ee;border:1.5px solid #e8dcc8;font-size:14px;font-weight:600;color:#5a4a35;transition:all .3s;';
-  el.innerHTML = `<span id="step_icon_${id}" style="font-size:18px;width:24px;text-align:center;">${icon}</span><span>${label}</span><span id="step_status_${id}" style="margin-left:auto;font-size:12px;color:#8a7560;"></span>`;
-  document.getElementById('progressSteps').appendChild(el);
-  return el;
-}
-function setStep(id, state, statusText) {
-  const el = document.getElementById('step_' + id);
-  const icon = document.getElementById('step_icon_' + id);
-  const status = document.getElementById('step_status_' + id);
-  if (!el) return;
-  const states = {
-    running: { bg:'#fff8e1', border:'#f6c47e', color:'#7d4e08', icon:'⏳', text:'進行中…' },
-    ok:      { bg:'#e8f5e9', border:'#a5d6a7', color:'#2a6040', icon:'✅', text:'完成' },
-    warn:    { bg:'#fff3e0', border:'#ffcc80', color:'#8d4e00', icon:'⚠️', text:'注意' },
-    error:   { bg:'#ffebee', border:'#ef9a9a', color:'#b71c1c', icon:'❌', text:'失敗' },
-  };
-  const s = states[state] || states.running;
-  el.style.background = s.bg;
-  el.style.borderColor = s.border;
-  el.style.color = s.color;
-  icon.textContent = s.icon;
-  status.textContent = statusText || s.text;
-}
-function log(msg) {
-  const box = document.getElementById('progressLog');
-  const ts = new Date().toLocaleTimeString('zh-TW');
-  box.textContent += `[${ts}] ${msg}\n`;
-  box.scrollTop = box.scrollHeight;
-}
-function showProgressActions(success) {
-  const div = document.getElementById('progressActions');
-  const btn = div.querySelector('button');
-  if (success === false) {
-    btn.style.background = 'linear-gradient(135deg,#7c2d12,#b45309)';
-    btn.textContent = '關 閉（資料未寫入）';
-  } else {
-    btn.style.background = 'linear-gradient(135deg,#2a6040,#3d8258)';
-    btn.textContent = '✅ 確 認 完 成';
-  }
-  div.style.display = 'block';
-}
-
-// ════════════════════════════════════
-//  送出薪資（含進度顯示）
-// ════════════════════════════════════
-function submitForm() {
-  const nameEl = document.getElementById('empName');
-  const name   = (nameEl ? nameEl.value : '').trim();
-  const month  = document.getElementById('monthValue').value;
-  if (!name)  { alert('請選擇（或輸入）員工姓名'); return; }
-  if (!month) { alert('請選擇薪資月份'); return; }
-
+// ══════════════════════════════════════════════════════
+//  ★ 送出薪資（JSON 打包，解決 CORS / 姓名遺失問題）
+// ══════════════════════════════════════════════════════
+function submitForm(){
+  const nameEl=document.getElementById('empName');
+  const name=(nameEl?nameEl.value:'').trim();
+  const month=document.getElementById('monthValue').value;
+  if(!name){alert('請選擇（或輸入）員工姓名');return;}
+  if(!month){alert('請選擇薪資月份');return;}
   const base=parseFloat(document.getElementById('baseSalary').value)||0;
   const role=parseFloat(document.getElementById('roleAllowance').value)||0;
   const ot=calcOT(), asc=calcASC(), bonus=calcBonus(), union=calcUnion();
   const total=base+role+ot+asc+bonus+union;
-  const bonusLabels = {dragonboat:'端午獎金',midautumn:'中秋獎金',yearend:'年終獎金',spring:'春節獎金',performance:'績效獎金',other:'其他獎金'};
-  const bonusDetail = [];
-  BONUSES.forEach(k => {
-    if (document.getElementById('cb_'+k).checked) {
-      const n = k==='other' ? (document.getElementById('name_other').value||'其他獎金') : bonusLabels[k];
-      const v = parseFloat(document.getElementById('amt_'+k)?.value)||0;
-      bonusDetail.push(n+':'+v);
-    }
-  });
-  const payload = {
-    action:'submitSalary', name, month,
-    baseSalary:base, roleAllowance:role,
-    otHours:parseFloat(document.getElementById('otHours').value)||0, otAmount:ot,
-    ascCount:parseInt(document.getElementById('ascCount').value)||0, ascAmount:asc,
-    bonusDetail:bonusDetail.join(','), bonusTotal:bonus,
-    unionHealth:document.getElementById('cb_unionHealth').checked?(parseFloat(document.getElementById('amt_unionHealth').value)||0):0,
-    unionLabor:document.getElementById('cb_unionLabor').checked?(parseFloat(document.getElementById('amt_unionLabor').value)||0):0,
-    unionTotal:union, totalSalary:total
+  const bonusLabels={dragonboat:'端午獎金',midautumn:'中秋獎金',yearend:'年終獎金',spring:'春節獎金',performance:'績效獎金',other:'其他獎金'};
+  const bonusDetail=[];
+  BONUSES.forEach(k=>{if(document.getElementById('cb_'+k).checked){const n=k==='other'?(document.getElementById('name_other').value||'其他獎金'):bonusLabels[k];const v=parseFloat(document.getElementById('amt_'+k)?.value)||0;bonusDetail.push(n+':'+v);}});
+
+  // ★ 所有欄位打包成 JSON → 避免 CORS 與 URL 長度問題
+  const dataObj = {
+    name, month,
+    baseSalary: base, roleAllowance: role,
+    otHours: parseFloat(document.getElementById('otHours').value)||0, otAmount: ot,
+    ascCount: parseInt(document.getElementById('ascCount').value)||0, ascAmount: asc,
+    bonusDetail: bonusDetail.join(','), bonusTotal: bonus,
+    unionHealth: document.getElementById('cb_unionHealth').checked?(parseFloat(document.getElementById('amt_unionHealth').value)||0):0,
+    unionLabor:  document.getElementById('cb_unionLabor').checked?(parseFloat(document.getElementById('amt_unionLabor').value)||0):0,
+    unionTotal: union, totalSalary: total
   };
+  const params = new URLSearchParams({ action: 'submitSalary', data: JSON.stringify(dataObj) });
+  const fullURL = TA_SUBMIT_URL + '?' + params.toString();
 
-  // ── 開啟進度視窗 ──
   openProgress();
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-
-  addStep('prepare', '📋', '整理薪資資料');
-  addStep('send',    '📡', '傳送至 Google 試算表');
-  addStep('confirm', '📊', '確認寫入結果');
-
-  // Step 1：整理資料
-  setStep('prepare', 'running');
+  const btn=document.getElementById('submitBtn'); btn.disabled=true;
+  addStep('prepare','📋','整理薪資資料');
+  addStep('send','📡','傳送至 Google 試算表');
+  addStep('confirm','📊','確認寫入結果');
+  setStep('prepare','running');
   log('開始整理資料…');
   log(`員工：${name}　月份：${month}`);
   log(`本薪 $${base.toLocaleString()}　職務加給 $${role.toLocaleString()}`);
@@ -1086,94 +652,47 @@ function submitForm() {
   log(`獎金 $${bonus.toLocaleString()}　公會補貼 $${union.toLocaleString()}`);
   log(`─────────────────────────`);
   log(`應付薪資合計：$${total.toLocaleString()}`);
-
-  setTimeout(() => {
-    setStep('prepare', 'ok', `共 ${Object.keys(payload).length} 個欄位`);
-    log('✅ 資料整理完成');
-
-    // Step 2：改用 fetch GET（解決 Cross-Origin iframe 無法讀取問題）
-    setStep('send', 'running');
-    log('準備 fetch 送出…');
-
-    const testParams = new URLSearchParams(payload);
-    const fullURL = TA_SUBMIT_URL + '?' + testParams.toString();
-    log(`URL 長度：${fullURL.length} 字元，參數 ${testParams.size} 個`);
-
-    // 在 log 下方加入「直接測試」連結
-    const logBox = document.getElementById('progressLog');
-    const testLinkDiv = document.createElement('div');
-    testLinkDiv.style.cssText = 'margin-top:8px;padding:8px 12px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;font-size:12px;';
-    testLinkDiv.innerHTML = `🔗 <a href="${fullURL}" target="_blank" style="color:#2a6040;font-weight:700;">點此直接在瀏覽器測試 GAS（新分頁）</a>`;
-    logBox.parentNode.insertBefore(testLinkDiv, logBox.nextSibling);
-
-    function resetBtn() { btn.disabled=false; btn.textContent='✅ 確認送出本月薪資'; }
-
-    log('送出中（fetch GET）…');
-    fetch(fullURL, { method: 'GET' })
-      .then(res => {
-        setStep('send', 'ok', `HTTP ${res.status}`);
-        log(`HTTP 回應：${res.status} ${res.statusText}`);
-        setStep('confirm', 'running');
-        log('讀取 GAS 回傳內容…');
+  setTimeout(()=>{
+    setStep('prepare','ok',`共 ${Object.keys(dataObj).length} 個欄位`);
+    log('✅ 資料整理完成（JSON 打包）');
+    setStep('send','running');
+    log('送出中…');
+    function resetBtn(){btn.disabled=false;btn.textContent='✅ 確認送出本月薪資';}
+    fetch(fullURL,{method:'GET'})
+      .then(res=>{
+        setStep('send','ok',`HTTP ${res.status}`);
+        log(`HTTP 回應：${res.status}`);
+        setStep('confirm','running'); log('讀取 GAS 回傳內容…');
         return res.text();
       })
-      .then(raw => {
-        log(`GAS 原始回應：
-${raw.slice(0, 600) || '（空白）'}`);
+      .then(raw=>{
+        log(`GAS 原始回應：\n${raw.slice(0,400)||'（空白）'}`);
         let result;
-        if (!raw.trim()) {
-          result = { success: false, message: 'GAS 回傳空白。請確認 doGet() 最後有 return ContentService.createTextOutput(JSON.stringify({success:true,...})).setMimeType(ContentService.MimeType.JSON)' };
-        } else if (raw.includes('<!DOCTYPE') || raw.includes('<html')) {
-          result = { success: false, message: 'GAS 回傳 HTML 頁面 → 部署問題：請到 GAS「部署」>「管理部署」確認「誰可以存取」= 所有人（含匿名使用者）' };
-        } else {
-          try   { result = JSON.parse(raw); }
-          catch (e) { result = { success: false, message: `JSON 解析失敗：${e.message}
-回傳內容：${raw.slice(0,300)}` }; }
-        }
-
+        if(!raw.trim()) result={success:false,message:'GAS 回傳空白，請確認部署設定'};
+        else if(raw.includes('<!DOCTYPE')||raw.includes('<html')) result={success:false,message:'GAS 回傳 HTML → 請確認「誰可以存取」設定為「所有人」'};
+        else { try{result=JSON.parse(raw);}catch(e){result={success:false,message:'JSON 解析失敗：'+e.message};} }
         resetBtn();
-        if (result.success) {
-          setStep('confirm', 'ok', '寫入成功');
-          log('✅ ' + (result.message || '薪資資料已成功寫入試算表！'));
-          log(`   員工：${name}　月份：${month}　合計：$${total.toLocaleString()}`);
-          showProgressActions(true);
-          resetForm();
-        } else {
-          setStep('confirm', 'error', '寫入失敗');
-          log('❌ ' + result.message);
-          showProgressActions(false);
-        }
+        if(result.success){ setStep('confirm','ok','寫入成功'); log('✅ '+(result.message||'薪資資料已成功寫入！')); showProgressActions(true); resetForm(); }
+        else { setStep('confirm','error','寫入失敗'); log('❌ '+result.message); showProgressActions(false); }
       })
-      .catch(err => {
-        // fetch 被 CORS 擋住時走這裡（GAS 部署後通常不會，但以防萬一）
-        setStep('send', 'warn', 'CORS 限制');
-        setStep('confirm', 'warn', '需手動確認');
-        log(`fetch 例外：${err.message}`);
-        log('');
-        log('⚠️ 瀏覽器 CORS 阻擋了讀取 GAS 回應。');
-        log('   但資料可能已送達 GAS，請點上方連結確認。');
-        log('');
-        log('   要徹底解決：GAS doGet() 需回傳：');
-        log('   ContentService.createTextOutput(JSON.stringify({success:true}))');
-        log('   .setMimeType(ContentService.MimeType.JSON)');
-        resetBtn();
-        showProgressActions(false);
+      .catch(err=>{
+        setStep('send','warn','網路錯誤'); setStep('confirm','warn','需手動確認');
+        log('fetch 失敗：'+err.message);
+        log('請直接開啟以下連結確認 GAS 是否收到資料：');
+        log(fullURL.slice(0,200)+'…');
+        resetBtn(); showProgressActions(false);
       });
-  }, 600);
+  },600);
 }
 
-
-// ── ESC / Enter ──
-document.addEventListener('keydown', function(e) {
-  if (e.key==='Escape' && document.body.classList.contains('fs-mode')) { exitFullscreen(); return; }
-  if (e.key!=='Enter') return;
-  const active = document.querySelector('.spanel.active');
-  if (!active) return;
-  if (active.id==='spanel0' && document.getElementById('taLogin').style.display!=='none') doLoginTA();
-  else if (active.id==='spanel1') doLoginTAAdmin();
+// ESC / Enter
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&document.body.classList.contains('fs-mode')){exitFullscreen();return;}
+  if(e.key!=='Enter')return;
+  const active=document.querySelector('.spanel.active');if(!active)return;
+  if(active.id==='spanel0'&&document.getElementById('taLogin').style.display!=='none')doLoginTA();
+  else if(active.id==='spanel1')doLoginTAAdmin();
 });
-
-// 初始化
 calcAll();
 </script>
 </body>
