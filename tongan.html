@@ -1021,8 +1021,17 @@ function log(msg) {
   box.textContent += `[${ts}] ${msg}\n`;
   box.scrollTop = box.scrollHeight;
 }
-function showProgressActions() {
-  document.getElementById('progressActions').style.display = 'block';
+function showProgressActions(success) {
+  const div = document.getElementById('progressActions');
+  const btn = div.querySelector('button');
+  if (success === false) {
+    btn.style.background = 'linear-gradient(135deg,#7c2d12,#b45309)';
+    btn.textContent = '關 閉（資料未寫入）';
+  } else {
+    btn.style.background = 'linear-gradient(135deg,#2a6040,#3d8258)';
+    btn.textContent = '✅ 確 認 完 成';
+  }
+  div.style.display = 'block';
 }
 
 // ════════════════════════════════════
@@ -1103,8 +1112,20 @@ function submitForm() {
     });
     document.body.appendChild(form);
 
-    log(`送出目標：${TA_SUBMIT_URL.slice(0,60)}…`);
-    log('送出中，等待 GAS 回應…');
+    // 產生完整測試 URL
+    const testParams = new URLSearchParams(payload);
+    const fullTestURL = TA_SUBMIT_URL + '?' + testParams.toString();
+    log(`送出目標（前80字）：${TA_SUBMIT_URL.slice(0,80)}…`);
+    log(`完整參數數量：${testParams.size} 個`);
+    
+    // 在 log 區下方加入「直接測試」連結
+    const logBox = document.getElementById('progressLog');
+    const testLinkDiv = document.createElement('div');
+    testLinkDiv.style.cssText = 'margin-top:8px;padding:8px 12px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;font-size:12px;';
+    testLinkDiv.innerHTML = `🔗 <a href="${fullTestURL}" target="_blank" style="color:#2a6040;font-weight:700;word-break:break-all;">點此直接在瀏覽器測試 GAS（新分頁開啟）</a>`;
+    logBox.parentNode.insertBefore(testLinkDiv, logBox.nextSibling);
+    
+    log('表單送出中，等待 GAS 回應…');
 
     let done = false;
     function cleanup() {
@@ -1141,11 +1162,27 @@ function submitForm() {
       try {
         const raw = iframe.contentDocument?.body?.innerText
                  || iframe.contentWindow?.document?.body?.innerText || '';
-        log(`GAS 原始回應：${raw.slice(0,200) || '（空）'}`);
-        result = raw.trim() ? JSON.parse(raw) : { success: true, message: '薪資資料已成功寫入！' };
+        const rawPreview = raw.slice(0, 500) || '（空白，GAS 未回傳內容）';
+        log(`GAS 原始回應（前500字）：\n${rawPreview}`);
+        
+        // 判斷常見 GAS 問題
+        if (!raw.trim()) {
+          log('⚠️ GAS 回傳空白 → 可能 doGet() 沒有 return ContentService');
+          result = { success: false, message: 'GAS 回傳空白，請確認 Apps Script 有正確 return ContentService.createTextOutput(JSON)' };
+        } else if (raw.includes('<!DOCTYPE') || raw.includes('<html')) {
+          log('⚠️ GAS 回傳 HTML → 通常是權限問題或 GAS 未部署為「任何人可存取」');
+          result = { success: false, message: 'GAS 回傳 HTML 頁面，請確認：1) 部署設定「執行身分」= 我、「誰可以存取」= 所有人' };
+        } else if (raw.includes('error') || raw.includes('Error')) {
+          log('⚠️ GAS 回傳錯誤訊息');
+          result = { success: false, message: 'GAS 錯誤：' + raw.slice(0,200) };
+        } else {
+          result = raw.trim() ? JSON.parse(raw) : { success: true, message: '薪資資料已成功寫入！' };
+        }
       } catch(e) {
-        log(`JSON 解析錯誤：${e.message}，視為成功`);
-        result = { success: true, message: '薪資資料已送出！' };
+        log(`JSON 解析例外：${e.message}`);
+        log(`原始內容：${raw.slice(0,300)}`);
+        // 如果 raw 有內容但無法解析 JSON，顯示給使用者看
+        result = { success: false, message: `GAS 回傳無法解析的內容：${raw.slice(0,150)}` };
       }
 
       cleanup();
@@ -1155,12 +1192,19 @@ function submitForm() {
         setStep('confirm', 'ok', '寫入確認');
         log('✅ ' + (result.message || '薪資資料已成功寫入試算表！'));
         log(`   員工：${name}　月份：${month}　合計：$${total.toLocaleString()}`);
-        showProgressActions();
+        showProgressActions(true);
         resetForm();
       } else {
         setStep('confirm', 'error', 'GAS 回報失敗');
-        log('❌ GAS 回報錯誤：' + (result.message || '未知錯誤'));
-        showProgressActions();
+        log('');
+        log('❌ 失敗原因：' + (result.message || '未知錯誤'));
+        log('');
+        log('📋 排查步驟：');
+        log('  1. 點上方「直接在瀏覽器測試 GAS」連結');
+        log('  2. 看瀏覽器是否顯示 {"success":true,...}');
+        log('  3. 若顯示 HTML 或要求登入 → GAS 部署設定問題');
+        log('  4. 若顯示錯誤 → 把錯誤訊息回報給管理員');
+        showProgressActions(false);
       }
     };
 
